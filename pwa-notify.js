@@ -95,19 +95,20 @@
   }
 
   function saveSubscriptionToRemote(role, studentWaqf, subJson) {
-    var RS = w.RemoteSync;
-    if (!RS || !RS.isRemote || !RS.isRemote()) return Promise.resolve();
-    var sb = RS.getClient && RS.getClient();
-    if (!sb) return Promise.resolve();
     var id = role === 'teacher' ? 'teacher' : (studentWaqf ? String(studentWaqf) : null);
-    if (!id) return Promise.resolve();
-    // Save directly to pwa_subscriptions table via RPC (no PIN required)
+    if (!id) return Promise.resolve(false);
+    var sb = getSupabaseClient();
+    if (!sb) return Promise.resolve(false);
     return sb.rpc('madrasa_rel_save_pwa_subscription', {
       p_id: id,
       p_role: role,
       p_subscription: subJson,
     }).then(function (res) {
-      if (res.error) console.warn('MadrasaPwa sub save:', res.error);
+      if (res.error) { console.warn('MadrasaPwa sub save:', res.error); return false; }
+      return true;
+    }).catch(function (e) {
+      console.warn('MadrasaPwa sub save exception:', e);
+      return false;
     });
   }
 
@@ -185,27 +186,49 @@
     }
   }
 
-  async function enableAfterAuth(role, opts) {
+  async function subscribeAndSave(role, opts, requestPermission) {
     opts = opts || {};
-    if (!('Notification' in w)) return;
+    if (!('Notification' in w)) return false;
     await register();
-    var reg = await navigator.serviceWorker.ready;
     var perm = Notification.permission;
-    if (perm === 'default') perm = await Notification.requestPermission();
-    if (perm !== 'granted') return;
+    if (perm === 'default' && requestPermission) perm = await Notification.requestPermission();
+    if (perm !== 'granted') return false;
 
     var vapid = w.__PWA_VAPID_PUBLIC_KEY__;
-    if (!vapid || typeof vapid !== 'string' || !vapid.trim()) return;
+    if (!vapid || typeof vapid !== 'string' || !vapid.trim()) return false;
 
     try {
+      var reg = await navigator.serviceWorker.ready;
       var sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlB64ToUint8Array(vapid.trim()),
       });
-      await saveSubscriptionToRemote(role, opts.waqfId, sub.toJSON());
+      var subJson = sub.toJSON();
+      var saved = await saveSubscriptionToRemote(role, opts.waqfId, subJson);
+      if (!saved) {
+        var _retried = false;
+        async function _retrySave() {
+          if (_retried) return;
+          _retried = true;
+          w.removeEventListener('madrasa-remote-sync', _retrySave);
+          await saveSubscriptionToRemote(role, opts.waqfId, subJson);
+        }
+        w.addEventListener('madrasa-remote-sync', _retrySave);
+        setTimeout(function () { if (!_retried) _retrySave(); }, 8000);
+      }
+      return true;
     } catch (err) {
       console.warn('MadrasaPwa push subscribe:', err);
+      return false;
     }
+  }
+
+  async function enableAfterAuth(role, opts) {
+    return subscribeAndSave(role, opts, true);
+  }
+
+  async function refreshPushSubscription(role, opts) {
+    return subscribeAndSave(role, opts, false);
   }
 
   // Each physical device gets a unique stable ID stored in localStorage
@@ -233,5 +256,11 @@
   // Expose device ID so Edge Function lookup works
   function getSharedDeviceId() { return getOrCreateSharedDeviceId(); }
 
-  w.MadrasaPwa = { register: register, enableAfterAuth: enableAfterAuth, enableSharedStudentDevice: enableSharedStudentDevice, getSharedDeviceId: getSharedDeviceId };
+  w.MadrasaPwa = {
+    register: register,
+    enableAfterAuth: enableAfterAuth,
+    refreshPushSubscription: refreshPushSubscription,
+    enableSharedStudentDevice: enableSharedStudentDevice,
+    getSharedDeviceId: getSharedDeviceId,
+  };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -1230,6 +1230,11 @@ const API = (() => {
         if (!win || !win.MadrasaPwa) return Promise.resolve();
         return win.MadrasaPwa.enableAfterAuth(role, opts || {});
       },
+      refreshPushSubscription(role, opts) {
+        const win = typeof window !== 'undefined' ? window : null;
+        if (!win || !win.MadrasaPwa) return Promise.resolve();
+        return win.MadrasaPwa.refreshPushSubscription(role, opts || {});
+      },
       enableSharedStudentDevice() {
         const win = typeof window !== 'undefined' ? window : null;
         if (!win || !win.MadrasaPwa) return Promise.resolve();

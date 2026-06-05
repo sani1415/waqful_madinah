@@ -26,9 +26,22 @@
   padding:0;
 }
 .lock-soft-top{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:max(24px,env(safe-area-inset-top)) 20px 16px;min-height:0}
+.lock-soft-head-cluster{display:flex;align-items:center;justify-content:center;gap:10px;max-width:100%}
 .lock-soft-brand{text-align:center;max-width:300px}
 .lock-soft-app-name{font-family:'Noto Naskh Arabic',serif;font-weight:600;font-size:20px;line-height:1.35;color:#0f172a}
 .lock-soft-app-name.lock-soft-app-name--err{font-family:var(--font);font-size:14px;font-weight:600;color:#b91c1c}
+.lock-soft-notif-btn{
+  flex-shrink:0;width:42px;height:42px;padding:0;
+  display:inline-flex;align-items:center;justify-content:center;
+  background:none;border:none;cursor:pointer;border-radius:12px;
+  color:#075E54;
+}
+.lock-soft-notif-btn:active{background:#E0F2F1}
+.lock-soft-notif-btn.is-muted{opacity:.48}
+.lock-soft-notif-btn.is-blocked{color:#64748b}
+.lock-soft-notif-svg{display:block;width:22px;height:22px;flex-shrink:0}
+@keyframes lock-soft-notif-spin{to{transform:rotate(360deg)}}
+.lock-soft-notif-svg.lock-soft-notif-spin{animation:lock-soft-notif-spin .65s linear infinite;transform-origin:center}
 .lock-soft-dock{
   width:100%;max-width:430px;margin:0 auto;
   background:rgba(255,255,255,.94);
@@ -219,8 +232,11 @@
 <!-- ══ LOCK ══════════════════════════════════════════════ -->
 <div id="lockScreen" class="lock-screen-soft">
   <div class="lock-soft-top">
-    <div class="lock-soft-brand">
-      <div class="lock-soft-app-name" dir="rtl" lang="ar" id="lockAppName">وقف المدينة</div>
+    <div class="lock-soft-head-cluster">
+      <div class="lock-soft-brand">
+        <div class="lock-soft-app-name" dir="rtl" lang="ar" id="lockAppName">وقف المدينة</div>
+      </div>
+      <button type="button" id="teaNotifBtn" class="lock-soft-notif-btn" onclick="enableTeacherNotif()" title="নোটিফিকেশন চালু করুন" aria-label="নোটিফিকেশন চালু করুন"><svg class="lock-soft-notif-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
     </div>
   </div>
   <div class="lock-soft-dock">
@@ -711,9 +727,63 @@ function init(){
     document.getElementById('hTitle').textContent=t.madrasa||'Waqful Madinah';
     document.getElementById('t_dl').value=API.nextDate(3);
     document.querySelectorAll('.modal-overlay').forEach(el=>el.addEventListener('click',e=>{ if(e.target===el) closeModal(el.id); }));
+    updateTeacherNotifBtn();
+    setTimeout(()=>void API.Pwa.refreshPushSubscription('teacher').then(updateTeacherNotifBtn),2000);
+    document.addEventListener('visibilitychange',()=>{
+      if(document.visibilityState==='visible') void API.Pwa.refreshPushSubscription('teacher').then(updateTeacherNotifBtn);
+    });
   }).catch(e=>{ console.error(e); const la=document.getElementById('lockAppName'); if(la){ la.textContent='সার্ভার সংযোগ ব্যর্থ'; la.removeAttribute('dir'); la.removeAttribute('lang'); la.classList.add('lock-soft-app-name--err'); } });
 }
-window.addEventListener('madrasa-remote-sync',()=>{ try{ if(document.getElementById('lockScreen').style.display==='none') renderAll(); }catch(e){ console.error(e); } });
+window.addEventListener('madrasa-remote-sync',()=>{
+  void API.Pwa.refreshPushSubscription('teacher').then(updateTeacherNotifBtn);
+  try{ if(document.getElementById('lockScreen').style.display==='none') renderAll(); }catch(e){ console.error(e); }
+});
+
+// ══ NOTIFICATION (lock screen) ═════════════════════════════
+function teaNotifBtnSvgBell(){
+  return '<svg class="lock-soft-notif-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>';
+}
+function teaNotifBtnSvgBellOff(){
+  return '<svg class="lock-soft-notif-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/><line x1="2" y1="2" x2="22" y2="22"/></svg>';
+}
+function teaNotifBtnSvgSpinner(){
+  return '<svg class="lock-soft-notif-svg lock-soft-notif-spin" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9" opacity=".25"/><path d="M21 12a9 9 0 0 0-9-9"/></svg>';
+}
+function updateTeacherNotifBtn(){
+  const btn=document.getElementById('teaNotifBtn');
+  if(!btn) return;
+  btn.style.opacity='';
+  btn.classList.remove('is-muted','is-blocked');
+  if(!('Notification' in window)){ btn.style.display='none'; return; }
+  btn.style.display='';
+  const perm=Notification.permission;
+  if(perm==='granted'){
+    btn.innerHTML=teaNotifBtnSvgBell();
+    btn.classList.add('is-muted');
+    btn.title='নোটিফিকেশন চালু আছে — চাপলে পুনরায় নিবন্ধন করবে';
+    btn.setAttribute('aria-label','নোটিফিকেশন চালু আছে');
+  } else if(perm==='denied'){
+    btn.innerHTML=teaNotifBtnSvgBellOff();
+    btn.classList.add('is-blocked');
+    btn.title='নোটিফিকেশন বন্ধ আছে — browser সেটিং থেকে চালু করুন';
+    btn.setAttribute('aria-label','নোটিফিকেশন বন্ধ');
+  } else {
+    btn.innerHTML=teaNotifBtnSvgBell();
+    btn.title='নোটিফিকেশন চালু করুন';
+    btn.setAttribute('aria-label','নোটিফিকেশন চালু করুন');
+  }
+}
+async function enableTeacherNotif(){
+  const btn=document.getElementById('teaNotifBtn');
+  if(btn){ btn.innerHTML=teaNotifBtnSvgSpinner(); btn.disabled=true; btn.setAttribute('aria-label','নোটিফিকেশন চালু করা হচ্ছে'); }
+  try{
+    await API.Pwa.enableNotificationsAfterAuth('teacher');
+    updateTeacherNotifBtn();
+    if(Notification.permission==='granted') showToast('নোটিফিকেশন চালু হয়েছে।');
+    else showToast('নোটিফিকেশন অনুমতি দেওয়া হয়নি।');
+  }catch(e){ console.error('teacher notif error',e); updateTeacherNotifBtn(); }
+  finally{ if(btn) btn.disabled=false; }
+}
 
 // ══ PIN ════════════════════════════════════════════════════
 function pk(k){ if(!k||pin.length>=4) return; pin+=k; dots(); if(pin.length===4) setTimeout(chkPin,150); }
@@ -729,7 +799,7 @@ async function chkPin(){
       var _tn=document.getElementById('teaBottomNav'); if(_tn) _tn.style.display='block';
       pin=''; dots();
       renderAll();
-      void API.Pwa.enableNotificationsAfterAuth('teacher');
+      void API.Pwa.enableNotificationsAfterAuth('teacher').then(updateTeacherNotifBtn);
     } catch(e){
       document.getElementById('pinErr').textContent='পিন ভুল হয়েছে';
       pin=''; dots();
@@ -737,7 +807,7 @@ async function chkPin(){
     }
     return;
   }
-  if(API.Auth.checkTeacherPin(pin)){ localStorage.setItem('madrasa_lastPanel','teacher'); document.getElementById('lockScreen').style.display='none'; var _tn2=document.getElementById('teaBottomNav'); if(_tn2) _tn2.style.display='block'; renderAll(); void API.Pwa.enableNotificationsAfterAuth('teacher'); }
+  if(API.Auth.checkTeacherPin(pin)){ localStorage.setItem('madrasa_lastPanel','teacher'); document.getElementById('lockScreen').style.display='none'; var _tn2=document.getElementById('teaBottomNav'); if(_tn2) _tn2.style.display='block'; renderAll(); void API.Pwa.enableNotificationsAfterAuth('teacher').then(updateTeacherNotifBtn); }
   else { document.getElementById('pinErr').textContent='পিন ভুল হয়েছে'; pin=''; dots(); setTimeout(()=>document.getElementById('pinErr').textContent='',2000); }
 }
 function refreshBCReadCounts(){
