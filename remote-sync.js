@@ -520,12 +520,33 @@
     if (w.dispatchEvent) w.dispatchEvent(new CustomEvent('madrasa-remote-sync'));
   }
 
+  function applyRealtimeMessagePatch(payload) {
+    const row = payload && payload.new;
+    if (!mem.loaded || !mem.core || !mem.core.chats || !row || payload.eventType !== 'UPDATE') return false;
+    const threadId = row.thread_id === '_bc' ? '_bc' : row.thread_id;
+    const thread = mem.core.chats[threadId];
+    if (!Array.isArray(thread)) return false;
+    const idx = thread.findIndex(m => m && m.id === row.id);
+    if (idx < 0) return false;
+    thread[idx] = msgFromDB(row);
+    _savedMsgIds.add(row.id);
+    if (w.dispatchEvent) w.dispatchEvent(new CustomEvent('madrasa-remote-sync'));
+    return true;
+  }
+
   function startRealtimeSync() {
     if (!isRemote()) return;
     const sb = getClient(); if (!sb || realtimeChannel) return;
     const pull = () => setTimeout(() => void pullRemoteSnapshot(), 200);
+    const onMessageChange = (payload) => {
+      if (applyRealtimeMessagePatch(payload)) {
+        setTimeout(() => void pullRemoteSnapshot(), 1200);
+        return;
+      }
+      pull();
+    };
     realtimeChannel = sb.channel('madrasa_rel_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, pull)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, onMessageChange)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'students' }, pull)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, pull)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'task_assignments' }, pull)
