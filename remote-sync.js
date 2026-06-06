@@ -344,7 +344,11 @@
     const r = roleStr || role();
     const pin = r === 'teacher' ? _teacherPin : _studentPin;
     if (!pin) return;
-    try { await sb.rpc('madrasa_rel_mark_messages_read', { p_pin: pin, p_role: r, p_thread_id: threadId }); }
+    try {
+      await sb.rpc('madrasa_rel_mark_messages_read', { p_pin: pin, p_role: r, p_thread_id: threadId });
+      applyReadReceiptPatch(threadId, r);
+      sendReadReceiptBroadcast(threadId, r);
+    }
     catch (e) { console.warn('markMessagesReadRemote:', e); }
   }
 
@@ -534,6 +538,34 @@
     return true;
   }
 
+  function applyReadReceiptPatch(threadId, readerRole) {
+    if (!mem.loaded || !mem.core || !mem.core.chats || !threadId) return false;
+    const thread = mem.core.chats[threadId === '_broadcast' ? '_bc' : threadId];
+    if (!Array.isArray(thread)) return false;
+    const msgRole = readerRole === 'teacher' ? 'in' : 'out';
+    let changed = false;
+    thread.forEach(m => {
+      if (m && m.role === msgRole && !m.read) {
+        m.read = true;
+        changed = true;
+      }
+    });
+    if (changed && w.dispatchEvent) w.dispatchEvent(new CustomEvent('madrasa-remote-sync'));
+    return changed;
+  }
+
+  function sendReadReceiptBroadcast(threadId, readerRole) {
+    if (!realtimeChannel || !threadId || !readerRole) return;
+    try {
+      const sent = realtimeChannel.send({
+        type: 'broadcast',
+        event: 'read_receipt',
+        payload: { threadId, readerRole },
+      });
+      if (sent && typeof sent.catch === 'function') sent.catch(e => console.warn('sendReadReceiptBroadcast:', e));
+    } catch (e) { console.warn('sendReadReceiptBroadcast:', e); }
+  }
+
   function startRealtimeSync() {
     if (!isRemote()) return;
     const sb = getClient(); if (!sb || realtimeChannel) return;
@@ -546,6 +578,10 @@
       pull();
     };
     realtimeChannel = sb.channel('madrasa_rel_changes')
+      .on('broadcast', { event: 'read_receipt' }, payload => {
+        const p = payload && payload.payload;
+        if (p) applyReadReceiptPatch(p.threadId, p.readerRole);
+      })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, onMessageChange)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'students' }, pull)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, pull)
