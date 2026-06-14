@@ -157,6 +157,7 @@
     if (!vapid || typeof vapid !== 'string' || !vapid.trim()) return;
 
     try {
+      await dropExistingPushSubscription(reg);
       var sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlB64ToUint8Array(vapid.trim()),
@@ -186,6 +187,15 @@
     }
   }
 
+  async function dropExistingPushSubscription(reg) {
+    try {
+      var existing = await reg.pushManager.getSubscription();
+      if (existing) await existing.unsubscribe();
+    } catch (e) {
+      console.warn('MadrasaPwa unsub:', e);
+    }
+  }
+
   async function subscribeAndSave(role, opts, requestPermission) {
     opts = opts || {};
     if (!('Notification' in w)) return false;
@@ -199,6 +209,8 @@
 
     try {
       var reg = await navigator.serviceWorker.ready;
+      // VAPID rotation: stale FCM subscription must be dropped before re-subscribe
+      await dropExistingPushSubscription(reg);
       var sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlB64ToUint8Array(vapid.trim()),
