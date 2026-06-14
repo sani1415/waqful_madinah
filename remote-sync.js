@@ -344,7 +344,11 @@
     const r = roleStr || role();
     const pin = r === 'teacher' ? _teacherPin : _studentPin;
     if (!pin) return;
-    try { await sb.rpc('madrasa_rel_mark_messages_read', { p_pin: pin, p_role: r, p_thread_id: threadId }); }
+    try {
+      await sb.rpc('madrasa_rel_mark_messages_read', { p_pin: pin, p_role: r, p_thread_id: threadId });
+      applyReadReceiptPatch(threadId, r);
+      sendReadReceiptBroadcast(threadId, r);
+    }
     catch (e) { console.warn('markMessagesReadRemote:', e); }
   }
 
@@ -520,12 +524,65 @@
     if (w.dispatchEvent) w.dispatchEvent(new CustomEvent('madrasa-remote-sync'));
   }
 
+  function applyRealtimeMessagePatch(payload) {
+    const row = payload && payload.new;
+    if (!mem.loaded || !mem.core || !mem.core.chats || !row || payload.eventType !== 'UPDATE') return false;
+    const threadId = row.thread_id === '_bc' ? '_bc' : row.thread_id;
+    const thread = mem.core.chats[threadId];
+    if (!Array.isArray(thread)) return false;
+    const idx = thread.findIndex(m => m && m.id === row.id);
+    if (idx < 0) return false;
+    thread[idx] = msgFromDB(row);
+    _savedMsgIds.add(row.id);
+    if (w.dispatchEvent) w.dispatchEvent(new CustomEvent('madrasa-remote-sync'));
+    return true;
+  }
+
+  function applyReadReceiptPatch(threadId, readerRole) {
+    if (!mem.loaded || !mem.core || !mem.core.chats || !threadId) return false;
+    const thread = mem.core.chats[threadId === '_broadcast' ? '_bc' : threadId];
+    if (!Array.isArray(thread)) return false;
+    const msgRole = readerRole === 'teacher' ? 'in' : 'out';
+    let changed = false;
+    thread.forEach(m => {
+      if (m && m.role === msgRole && !m.read) {
+        m.read = true;
+        changed = true;
+      }
+    });
+    if (changed && w.dispatchEvent) w.dispatchEvent(new CustomEvent('madrasa-remote-sync'));
+    return changed;
+  }
+
+  function sendReadReceiptBroadcast(threadId, readerRole) {
+    if (!realtimeChannel || !threadId || !readerRole) return;
+    try {
+      const sent = realtimeChannel.send({
+        type: 'broadcast',
+        event: 'read_receipt',
+        payload: { threadId, readerRole },
+      });
+      if (sent && typeof sent.catch === 'function') sent.catch(e => console.warn('sendReadReceiptBroadcast:', e));
+    } catch (e) { console.warn('sendReadReceiptBroadcast:', e); }
+  }
+
   function startRealtimeSync() {
     if (!isRemote()) return;
     const sb = getClient(); if (!sb || realtimeChannel) return;
     const pull = () => setTimeout(() => void pullRemoteSnapshot(), 200);
+    const onMessageChange = (payload) => {
+      if (applyRealtimeMessagePatch(payload)) {
+        setTimeout(() => void pullRemoteSnapshot(), 1200);
+        return;
+      }
+      pull();
+    };
     realtimeChannel = sb.channel('madrasa_rel_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, pull)
+      .on('broadcast', { event: 'read_receipt' }, payload => {
+        const p = payload && payload.payload;
+        if (p) applyReadReceiptPatch(p.threadId, p.readerRole);
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, onMessageChange)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'students' }, pull)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, pull)
       .on('postgres_changes', { event: '*', schema: 'public', table: 'task_assignments' }, pull)
