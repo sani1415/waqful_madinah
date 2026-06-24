@@ -575,6 +575,14 @@ function showUploadPrepError(e){
   else if(m==='image_load_error') showToast('❌ ছবি পড়া যায়নি।');
   else showToast('❌ ফাইল প্রস্তুত করা যায়নি!');
 }
+function showUploadSaveError(e){
+  const m=String((e && e.message) || '');
+  if(m==='file_too_large') showToast('❌ ফাইল ১০ MB এর বেশি!');
+  else if(m==='storage_full') showToast('❌ স্টোরেজ পূর্ণ! পুরনো ফাইল মুছুন।');
+  else if(m==='invalid_pin'||m.includes('invalid_pin')) showToast('❌ সেশন মেয়াদ শেষ — আবার লগইন করে চেষ্টা করুন।');
+  else if(m.includes('invalid_credentials')) showToast('❌ লগইন তথ্য ভুল — আবার লগইন করুন।');
+  else { console.error('upload failed:', e); showToast('❌ আপলোড ব্যর্থ! ইন্টারনেট চেক করে আবার চেষ্টা করুন।'); }
+}
 
 // ══ Init ═══════════════════════════════════════════════════
 function init(){
@@ -963,9 +971,7 @@ async function sendChatFile(){
     renderChat(); renderSentDocs(); updateBadges();
     showToast('✅ ফাইল পাঠানো হয়েছে!');
   } catch(e){
-    if(e.message==='file_too_large') showToast('❌ ফাইল ১০ MB এর বেশি!');
-    else if(e.message==='storage_full') showToast('❌ স্টোরেজ পূর্ণ!');
-    else showToast('❌ পাঠানো ব্যর্থ হয়েছে!');
+    showUploadSaveError(e);
   }
 }
 
@@ -1336,9 +1342,7 @@ async function confirmUpload(){
     showToast('✅ ডকুমেন্ট পাঠানো হয়েছে!');
   } catch(e){
     progWrap.style.display='none';
-    if(e.message==='file_too_large') showToast('❌ ফাইল ১০ MB এর বেশি!');
-    else if(e.message==='storage_full') showToast('❌ স্টোরেজ পূর্ণ! পুরনো ফাইল মুছুন।');
-    else showToast('❌ আপলোড ব্যর্থ!');
+    showUploadSaveError(e);
   }
 }
 function renderSentDocs(){

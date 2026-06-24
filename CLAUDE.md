@@ -21,7 +21,7 @@
 
 ## Service Worker Cache Rule
 - **`sw.js` এর `CACHE` version (`waqful-full-vN`) প্রতিবার যেকোনো file edit করলে N বাড়াতে হবে।**
-- Current version: **v71** (last bumped: merge — teacher push refresh + message race fix)
+- Current version: **v76** (last bumped: fix waqf insert_document migration + student upload error toasts)
 - যেকোনো `.html`, `.css`, `.js` file বদলালে → `sw.js` খুলে `waqful-full-vN` → `vN+1` করো।
 - নতুন file তৈরি হলে `LOCAL_SHELL` array-তেও যোগ করো।
 
@@ -63,6 +63,7 @@
   18. `022_diary.sql` — `diary` টেবিল + RPCs: `upsert_diary`, `delete_diary`, `get_diary`; teacher bootstrap-এ diary যোগ
   19. `024_daily_schedule.sql` — `daily_schedule_rows`, `daily_schedule_proposals` + RPCs (`submit_daily_schedule_proposal`, `set_daily_schedule`, `resolve_daily_schedule_proposal`); teacher/student bootstrap + `clear_student_data` আপডেট। **Supabase → Realtime:** `daily_schedule_rows`, `daily_schedule_proposals` টেবিল `supabase_realtime` publication-এ যোগ করুন।
   20. `migrations/20260614113905_add_student_pin_update_rpc.sql` — student self-service PIN update RPC for `waqf_students`; verifies `(waqf_id, old PIN)` and requires a four-digit new PIN
+  21. `migrations/20260624120000_fix_waqf_insert_document.sql` — `madrasa_rel_insert_document` + `mark_doc_reviewed` → `waqf_students` / `waqf_documents` (student upload fix on shared production DB)
 - **ছাত্র ওয়াকফ আইডি:** ডাটাবেস ও সিঙ্কে `waqf_001` রাখা হয়; UI-তে `API.Students.displayWaqfId` / `getShortId` দিয়ে `001` দেখানো।
 - **`students.pin`:** আর গ্লোবালি ইউনিক নয় — একই পিন একাধিক ছাত্রে থাকতে পারে; রিমোট লগইন `madrasa_rel_student_bootstrap(p_waqf, p_pin)` জোড়ায়।
 - **Relational tables:** `madrasa_config`, `students`, `messages`, `tasks`, `task_assignments`, `task_completions`, `goals`, `quizzes`, `quiz_questions`, `quiz_assignees`, `quiz_submissions`, `documents`, `academic_history`, `teacher_notes`, `pwa_subscriptions`, `student_groups`, `diary`, `daily_schedule_rows`, `daily_schedule_proposals`. All have RLS enabled; zero direct REST access — everything goes through `madrasa_rel_*` RPCs.
