@@ -119,12 +119,36 @@
 #screen-goals .goal-chip-amal.active{background:#2E7D32;border-color:#2E7D32;color:#fff}
 #screen-goals .goal-chip-akhlaq.active{background:#C2185B;border-color:#C2185B;color:#fff}
 #screen-goals .goal-chip-afkar.active{background:#F9A825;border-color:#F9A825;color:#fff}
+.daily-recorder.busy .daily-record-title{color:#1565C0}
+.daily-recorder.busy .daily-record-timer{color:#1565C0}
+#dailyNoteModal .modal-title{margin-bottom:10px;font-size:16px}
+.attach-btn{width:38px;height:38px;background:#eef2f6;color:#64748b;margin-bottom:4px}
+.attach-btn svg,.chat-mic-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.attach-btn:active{background:#dbe3ec}
+.chat-mic-btn{flex-shrink:0;width:34px;height:34px;margin:0;border:none;border-radius:50%;background:transparent;color:#94a3b8;opacity:.4;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:opacity .15s,color .15s,background .15s}
+.chat-mic-btn:hover{opacity:.72;color:#64748b}
+.chat-mic-btn.recording{opacity:1;color:#fff;background:#EF5350}
+.chat-mic-btn.busy{opacity:.9;color:#1565C0;background:#E3F2FD;cursor:wait}
+.chat-mic-btn:disabled{cursor:wait}
 .send-btn{background:#4CAF50}.goal-add-btn{background:#4CAF50}.goal-check{border-color:#4CAF50}
 .goal-check.done{background:#4CAF50;border-color:#4CAF50}.btn-primary{background:#4CAF50}
 .form-input:focus{border-color:#4CAF50}.sec-link{color:#4CAF50}
 .goal-progress-wrap{background:#E8F5E9}.goal-progress-label{color:#4CAF50}.goal-progress-fill{background:#4CAF50}
 .at-done-btn{background:#4CAF50}.at-done-btn.done{background:#66BB6A}.at-done-btn.late{background:#F44336}
 .msg-bubble.out{background:#C8E6C9;border-bottom-right-radius:4px}.msg-tick{color:#4CAF50}.msg-sender{color:#4CAF50}
+/* Chat doc attachment bubble */
+.msg-doc-bubble{background:#fff;border:1px solid var(--gray-200);border-radius:12px;padding:0;display:flex;flex-direction:column;min-width:176px;max-width:260px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.msg-wrap.out .msg-doc-bubble{background:#E8F5E9;border-color:#C8E6C9}
+.msg-doc-card{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.msg-doc-tile{width:40px;height:40px;border-radius:10px;background:#E8F5E9;color:#2E7D32;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.msg-wrap.out .msg-doc-tile{background:rgba(76,175,80,.18)}
+.msg-doc-tile .ic-svg svg,.msg-doc-tile svg{width:20px;height:20px;display:block;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.msg-doc-info{flex:1;min-width:0}
+.msg-doc-name{font-size:13px;font-weight:700;color:var(--gray-700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.25}
+.msg-doc-size{font-size:11px;color:var(--gray-500);margin-top:2px;font-weight:500}
+.chat-doc-view-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin:0;border:none;border-top:1px solid var(--gray-100);background:transparent;padding:8px 10px;font-size:12px;font-weight:700;color:#2E7D32;cursor:pointer;font-family:var(--font)}
+.msg-wrap.out .chat-doc-view-btn{border-top-color:rgba(76,175,80,.2)}.chat-doc-view-btn:active{background:rgba(76,175,80,.08)}
+.chat-doc-view-btn .ic-svg svg{width:15px;height:15px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .task-bubble-hd{background:#43A047}
 .reply-preview-bar{background:#F1F8F1;border-top-color:#66BB6A}
 .reply-preview-content{border-left-color:#4CAF50}.reply-preview-sender{color:#4CAF50}
@@ -403,7 +427,7 @@ function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay(
     </button>
     <div class="header-info"><div class="header-title" id="hTitle">আসছে...</div><div class="header-sub" id="hSub">ওয়াকিফ</div></div>
     <div class="stu-h-actions">
-      <button class="header-btn" id="stuInChatSearchBtn" style="display:none" onclick="toggleStuInChatSearch()" title="রিসালা খুঁজুন">🔍</button>
+      <button type="button" class="header-btn" id="stuInChatSearchBtn" style="display:none" onclick="toggleStuInChatSearch()" title="রিসালা খুঁজুন" aria-label="রিসালা খুঁজুন"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
       <button type="button" class="header-btn" onclick="logout()" title="লগআউট" aria-label="লগআউট"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
     </div>
   </div>
@@ -422,7 +446,7 @@ function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay(
   <div class="chat-messages" id="chatMsgs"></div>
   <!-- File preview before sending -->
   <div class="chat-file-preview" id="chatFilePreview" style="display:none">
-    <span id="chatFileIcon" style="font-size:22px">📎</span>
+    <span id="chatFileIcon" class="msg-doc-tile" style="font-size:inherit" aria-hidden="true"></span>
     <div style="flex:1;min-width:0">
       <div class="chat-file-preview-name" id="chatFileName">-</div>
       <input class="chat-file-title-in" id="chatFileTitleIn" placeholder="শিরোনাম দিন (আবশ্যিক)…" maxlength="80">
@@ -441,8 +465,15 @@ function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay(
   </div>
   <input type="file" id="chatFileInput" style="display:none" multiple accept="image/*,.pdf,.doc,.docx,.txt,.xls,.xlsx,.ppt,.pptx" onchange="onChatFileChosen(this)">
   <div class="chat-input-bar">
-    <button class="attach-btn" onclick="document.getElementById('chatFileInput').click()" title="ফাইল পাঠান">📎</button>
-    <div class="chat-input-wrap"><textarea id="msgIn" placeholder="রিসালা লিখুন..." rows="1" oninput="autoResize(this)"></textarea></div>
+    <button type="button" class="attach-btn" onclick="document.getElementById('chatFileInput').click()" title="ফাইল পাঠান" aria-label="ফাইল পাঠান">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+    </button>
+    <div class="chat-input-wrap">
+      <textarea id="msgIn" placeholder="রিসালা লিখুন" rows="1" oninput="autoResize(this)"></textarea>
+      <button type="button" class="chat-mic-btn" id="chatMicBtn" onclick="toggleChatVoice()" title="ভয়েস লিখন" aria-label="ভয়েস লিখন">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+      </button>
+    </div>
     <button class="send-btn" onclick="sendMsg()">➤</button>
   </div>
 </div>
@@ -545,6 +576,7 @@ function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay(
           <div class="daily-note-intro-text">আজ কী করেছ, কী শিখেছ, কোথায় ভুল হয়েছে বা ভালো হয়েছে - সংক্ষেপে লিখে রাখো।</div>
         </div>
       </div>
+      <div class="daily-note-filter" id="dailyNoteFilter"></div>
       <div id="dailyNoteList"></div>
       <div style="height:20px"></div>
     </div>
@@ -595,24 +627,29 @@ function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay(
   <button class="btn-secondary" onclick="closeModal('addGoalModal')">বাতিল</button>
 </div></div>
 
-<div class="modal-overlay" id="dailyNoteModal"><div class="modal-sheet">
+<div class="modal-overlay" id="dailyNoteModal"><div class="modal-sheet daily-note-sheet">
   <div class="modal-handle"></div><div class="modal-title">নতুন বিবরণ</div>
   <div class="daily-recorder">
     <button type="button" id="dailyRecordBtn" class="daily-record-btn" onclick="toggleDailyRecording()" aria-label="রেকর্ড শুরু করুন">
       <span class="daily-record-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 1v11"/><path d="M19 10a7 7 0 01-14 0"/><path d="M12 19v4M8 23h8"/></svg></span>
     </button>
     <div class="daily-record-status">
-      <div id="dailyRecordTitle" class="daily-record-title">ভয়েস টাইপিং শুরু করুন</div>
-      <div id="dailyRecordHint" class="daily-record-hint">সর্বোচ্চ ২ মিনিট রেকর্ড হবে। পরে ট্রান্সক্রিপশন এডিট করে সেভ করুন।</div>
-      <div id="dailyRecordTimer" class="daily-record-timer">02:00</div>
+      <div class="daily-record-row">
+        <div id="dailyRecordTitle" class="daily-record-title">ভয়েস রেকর্ড</div>
+        <div id="dailyRecordTimer" class="daily-record-timer">02:00</div>
+      </div>
+      <div id="dailyRecordHint" class="daily-record-hint">মাইকে বলুন · সর্বোচ্চ ২ মিনিট</div>
     </div>
   </div>
-  <div class="form-group">
-    <label class="form-label">ট্রান্সক্রিপশন</label>
-    <textarea class="form-input" id="dailyNoteText" rows="7" placeholder="রেকর্ডিং শেষে লেখা এখানে আসবে। চাইলে হাতে লিখেও সেভ করতে পারো।" oninput="updateDailyNoteSaveState()"></textarea>
+  <div class="daily-note-cat-field">
+    <label class="form-label" for="dailyNoteCatSelect">ক্যাটাগরি</label>
+    <select class="form-input daily-note-cat-select" id="dailyNoteCatSelect" aria-label="ক্যাটাগরি" onchange="dailyNoteCatId=this.value||'general'"></select>
   </div>
-  <button id="dailyNoteSaveBtn" class="btn-primary" onclick="saveDailyNote()" disabled>নোট সেভ করুন</button>
-  <button class="btn-secondary" onclick="closeDailyNoteModal()">বাতিল</button>
+  <textarea class="form-input daily-note-text" id="dailyNoteText" rows="12" placeholder="এখানে লিখুন, অথবা মাইকে বলে ট্রান্সক্রিপশন নিন…" oninput="updateDailyNoteSaveState()"></textarea>
+  <div class="daily-note-modal-actions">
+    <button type="button" class="btn-secondary" onclick="closeDailyNoteModal()">বাতিল</button>
+    <button type="button" id="dailyNoteSaveBtn" class="btn-primary" onclick="saveDailyNote()" disabled>সেভ করুন</button>
+  </div>
 </div></div>
 
 <!-- Student self-profile modal -->
@@ -685,6 +722,8 @@ function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay(
 <script src="api-amal.js"></script>
 <script src="api.js"></script>
 <script src="api-daily-schedule.js"></script>
+<script src="api-student-notes.js"></script>
+<script src="chat-voice.js"></script>
 <script src="pwa-notify.js"></script>
 <script>
 // ══ State ══════════════════════════════════════════════════
@@ -692,7 +731,10 @@ let me=null, tFilter='all', gFilter='all', goalInnerTab='biboron', replyingTo=nu
 let activeQuizId=null, quizAnswers={}, quizTimerInterval=null, quizSecondsLeft=0;
 let pendingFile=null, chatPendingFile=null;
 let studentChatPreviewDocId=null;
-let dailyNoteTimer=null, dailyNoteSecondsLeft=120, dailySpeechRec=null, dailyRecording=false, dailyFinalTranscript='';
+let dailyNoteSecondsLeft=120;
+let _dailyVoiceBound=false;
+let dailyNoteCatId='general';
+let dailyNoteListFilter='all';
 
 function showUploadPrepError(e){
   const m=e && e.message;
@@ -895,6 +937,8 @@ function updateHeaderStats(){
 }
 function logout(){
   me=null;
+  try{ stopChatVoice(false); }catch(e){}
+  try{ stopDailyRecording(false); }catch(e){}
   closeStuInChatSearch();
   const sb=document.getElementById('stuInChatSearchBtn'); if(sb) sb.style.display='none';
   var _nav=document.getElementById('stuBottomNav'); if(_nav) _nav.style.display='none';
@@ -973,7 +1017,16 @@ function tickHtml(msg){
   if(msg.read) return '<span class="tick-double msg-tick">✓✓</span>';
   return '<span class="tick-single">✓</span>';
 }
-function fileIcon(type){ const t=type||''; return (t==='image'||t.startsWith('image/'))?'🖼️':(t==='pdf'||t==='application/pdf')?'📕':t.includes('word')||t.includes('doc')?'📝':t.includes('sheet')||t.includes('excel')?'📊':'📎'; }
+function fileIcon(type){
+  const t=type||'';
+  const svg=(t==='image'||t.startsWith('image/'))
+    ?'<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>'
+    :(t==='pdf'||t==='application/pdf')
+    ?'<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 13h6M9 17h4"/></svg>'
+    :'<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+  return `<span class="ic-svg">${svg}</span>`;
+}
+const _svgEye='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
 
 async function previewStudentChatDoc(docId){
   studentChatPreviewDocId=docId;
@@ -991,7 +1044,7 @@ async function previewStudentChatDoc(docId){
     box.innerHTML=`<iframe src=${JSON.stringify(data)} style="width:100%;height:50vh;border:none;border-radius:8px;background:var(--gray-100)" title="${esc(meta.fileName)}"></iframe>`;
   } else {
     const ic=fileIcon(meta.fileType);
-    box.innerHTML=`<div style="padding:16px;text-align:center;background:var(--gray-50);border-radius:8px"><span style="font-size:40px">${ic}</span><p style="margin:8px 0 0;font-size:13px;color:var(--gray-600)">${esc(meta.fileName)}</p><p style="font-size:12px;color:var(--gray-400)">${formatBytes(meta.fileSize||0)}</p></div>`;
+    box.innerHTML=`<div style="padding:16px;text-align:center;background:var(--gray-50);border-radius:8px"><span class="msg-doc-tile" style="width:56px;height:56px;margin:0 auto">${ic}</span><p style="margin:8px 0 0;font-size:13px;color:var(--gray-600)">${esc(meta.fileName)}</p><p style="font-size:12px;color:var(--gray-400)">${formatBytes(meta.fileSize||0)}</p></div>`;
   }
   document.getElementById('chatDocPreviewDl').style.display=data?'block':'none';
   openModal('chatDocPreviewModal');
@@ -1020,11 +1073,12 @@ function renderChat(){
       h+=`<div class="msg-wrap in" data-mid="${m.id}">${swiIcon}<div class="task-bubble"><div class="task-bubble-hd">📋 উস্তাদ আমল দিয়েছেন · ${tLabel}</div><div class="task-bubble-bd">${replyRef}<div class="task-bubble-title">${esc(m.task.title)}</div><div class="task-bubble-desc">${esc(m.task.desc)}</div>${m.task.deadline?`<div class="task-bubble-dl">📅 শেষ তারিখ: ${m.task.deadline}</div>`:''}</div></div><div style="font-size:11px;color:var(--gray-400);text-align:left;margin-top:2px;padding-left:4px">${m.time}</div></div>`;
     } else if(m.type==='doc'){
       const ic=fileIcon(m.fileType);
-      const viewBtn=m.docId?`<button type="button" class="chat-doc-view-btn" onclick="previewStudentChatDoc('${m.docId}')">👁 দেখুন</button>`:'';
+      const viewBtn=m.docId?`<button type="button" class="chat-doc-view-btn" onclick="previewStudentChatDoc('${m.docId}')"><span class="ic-svg">${_svgEye}</span> দেখুন</button>`:'';
+      const card=`${replyRef}<div class="msg-doc-card"><div class="msg-doc-tile">${ic}</div><div class="msg-doc-info"><div class="msg-doc-name">${esc(m.fileName)}</div><div class="msg-doc-size">${m.fileSize?formatBytes(m.fileSize):''}</div></div></div>${viewBtn}`;
       if(m.role==='in'){
-        h+=`<div class="msg-wrap out" data-mid="${m.id}">${swiIcon}<div class="msg-doc-bubble">${replyRef}<div class="msg-doc-icon">${ic}</div><div class="msg-doc-info"><div class="msg-doc-name">${esc(m.fileName)}</div><div class="msg-doc-size">${m.fileSize?formatBytes(m.fileSize):''}</div>${viewBtn}</div></div><div class="msg-meta"><span class="msg-time">${m.time}</span>${tickHtml(m)}</div></div>`;
+        h+=`<div class="msg-wrap out" data-mid="${m.id}">${swiIcon}<div class="msg-doc-bubble">${card}</div><div class="msg-meta"><span class="msg-time">${m.time}</span>${tickHtml(m)}</div></div>`;
       } else {
-        h+=`<div class="msg-wrap in" data-mid="${m.id}">${swiIcon}<div class="msg-doc-bubble">${replyRef}<div class="msg-doc-icon">${ic}</div><div class="msg-doc-info"><div class="msg-doc-name">${esc(m.fileName)}</div><div class="msg-doc-size">${m.fileSize?formatBytes(m.fileSize):''}</div>${viewBtn}</div></div><div style="font-size:11px;color:var(--gray-400);margin-top:2px;padding-left:4px">${m.time}</div></div>`;
+        h+=`<div class="msg-wrap in" data-mid="${m.id}">${swiIcon}<div class="msg-doc-bubble">${card}</div><div style="font-size:11px;color:var(--gray-400);margin-top:2px;padding-left:4px">${m.time}</div></div>`;
       }
     } else {
       const _bodyHtml=_stuIcsHighlight(m.text,_stuIcsQuery);
@@ -1086,7 +1140,7 @@ async function onChatFileChosen(input){
     if(input.files.length>1) showToast('📄 ছবি একত্রিত করা হচ্ছে…',5000);
     const f=await API.prepareFilesForUpload(input.files);
     chatPendingFile=f;
-    document.getElementById('chatFileIcon').textContent=fileIcon(f.type);
+    document.getElementById('chatFileIcon').innerHTML=fileIcon(f.type);
     document.getElementById('chatFileName').textContent=f.name;
     document.getElementById('chatFileSize').textContent=formatBytes(f.size);
     document.getElementById('chatFilePreview').style.display='flex';
@@ -1583,7 +1637,6 @@ function renderReceivedDocs(){
 }
 
 // ══ GOALS + DAILY NOTES ════════════════════════════════════
-const DAILY_NOTES_KEY='madrasa_student_daily_notes';
 const _goalCatLbl={ilm:'ইলম',amal:'আমল',akhlaq:'আখলাক',afkar:'আফকার',quran:'কুরআন',study:'ইলম',ibadah:'আমল',other:'অন্যান্য'};
 const _svgGoalBook='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>';
 const _svgGoalClip='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6M9 16h6"/></svg>';
@@ -1607,40 +1660,54 @@ function switchGoalInnerTab(tab){
   document.getElementById('goalListPane').classList.toggle('active',!isBib);
   if(isBib) renderDailyNotes(); else renderGoals();
 }
-function dailyNotesAll(){
-  try{ return JSON.parse(localStorage.getItem(DAILY_NOTES_KEY)||'{}')||{}; }catch(e){ return {}; }
-}
-function saveDailyNotesAll(all){
-  localStorage.setItem(DAILY_NOTES_KEY,JSON.stringify(all||{}));
-}
 function getDailyNotes(){
-  if(!me) return [];
-  const all=dailyNotesAll();
-  return Array.isArray(all[me.id])?all[me.id]:[];
-}
-function putDailyNotes(notes){
-  if(!me) return;
-  const all=dailyNotesAll();
-  all[me.id]=notes;
-  saveDailyNotesAll(all);
+  if(!me||!API.StudentNotes) return [];
+  return API.StudentNotes.getAll(me.id);
 }
 function dailyNoteDateLabel(date){
   if(!date) return '';
   try{ return new Date(date+'T12:00:00').toLocaleDateString('bn-BD',{weekday:'long',day:'numeric',month:'long',year:'numeric'}); }catch(e){ return date; }
 }
+function renderDailyNoteFilter(){
+  const el=document.getElementById('dailyNoteFilter');
+  if(!el||!API.StudentNotes) return;
+  const cats=API.StudentNotes.getCategories();
+  el.innerHTML=`<button type="button" class="filter-chip${dailyNoteListFilter==='all'?' active':''}" onclick="setDailyNoteFilter('all',this)">সব</button>`
+    +cats.map(c=>`<button type="button" class="filter-chip${dailyNoteListFilter===c.id?' active':''}" onclick="setDailyNoteFilter('${esc(c.id)}',this)">${esc(c.label)}</button>`).join('');
+}
+function setDailyNoteFilter(id,btn){
+  dailyNoteListFilter=id||'all';
+  document.querySelectorAll('#dailyNoteFilter .filter-chip').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderDailyNotes();
+}
+function renderDailyNoteCats(){
+  const el=document.getElementById('dailyNoteCatSelect');
+  if(!el||!API.StudentNotes) return;
+  const cats=API.StudentNotes.getCategories();
+  if(!cats.some(c=>c.id===dailyNoteCatId)) dailyNoteCatId='general';
+  el.innerHTML=cats.map(c=>`<option value="${esc(c.id)}"${c.id===dailyNoteCatId?' selected':''}>${esc(c.label)}</option>`).join('');
+  el.value=dailyNoteCatId;
+}
 function renderDailyNotes(){
   const el=document.getElementById('dailyNoteList');
   if(!el||!me) return;
+  renderDailyNoteFilter();
   const notes=getDailyNotes();
-  if(!notes.length){
+  const filtered=dailyNoteListFilter==='all'?notes:notes.filter(n=>(n.categoryId||'general')===dailyNoteListFilter);
+  if(!filtered.length){
     el.innerHTML=`<div class="empty-state"><div class="icon goal-empty-ic" aria-hidden="true">${_svgGoalClip}</div><p>এখনো কোনো বিবরণ নেই।<br>উপরে নতুন নোট থেকে শুরু করুন।</p></div>`;
     return;
   }
-  el.innerHTML=notes.map(n=>`<div class="daily-note-item">
+  el.innerHTML=filtered.map(n=>{
+    const catLbl=API.StudentNotes?API.StudentNotes.catLabel(n.categoryId||'general'):'সাধারণ';
+    return `<div class="daily-note-item">
     <div class="daily-note-head"><div class="daily-note-date">${esc(dailyNoteDateLabel(n.date))}</div><div class="daily-note-time">${esc(n.time||'')}</div></div>
+    <div class="daily-note-cat-badge">${esc(catLbl)}</div>
     <div class="daily-note-body">${esc(n.text)}</div>
-    <div class="daily-note-actions"><button type="button" class="daily-note-del" onclick="deleteDailyNote('${n.id}')">মুছুন</button></div>
-  </div>`).join('');
+    <div class="daily-note-actions"><button type="button" class="daily-note-del" onclick="deleteDailyNote('${esc(n.id)}')">মুছুন</button></div>
+  </div>`;
+  }).join('');
 }
 function formatDailyTimer(sec){
   const m=String(Math.floor(sec/60)).padStart(2,'0');
@@ -1653,26 +1720,87 @@ function setDailyRecorderState(state,msg){
   const title=document.getElementById('dailyRecordTitle');
   const hint=document.getElementById('dailyRecordHint');
   const timer=document.getElementById('dailyRecordTimer');
-  if(wrap) wrap.classList.toggle('recording',state==='recording');
+  const ui=state==='busy'?'transcribing':state;
+  if(wrap){ wrap.classList.toggle('recording',ui==='recording'); wrap.classList.toggle('busy',ui==='transcribing'); }
   if(btn){
-    btn.classList.toggle('recording',state==='recording');
-    btn.setAttribute('aria-label',state==='recording'?'রেকর্ড বন্ধ করুন':'রেকর্ড শুরু করুন');
+    btn.classList.toggle('recording',ui==='recording');
+    btn.disabled=ui==='transcribing';
+    btn.setAttribute('aria-label',ui==='recording'?'রেকর্ড বন্ধ করুন':'রেকর্ড শুরু করুন');
   }
-  if(title) title.textContent=state==='recording'?'রেকর্ড হচ্ছে':state==='ready'?'ট্রান্সক্রিপশন প্রস্তুত':'ভয়েস টাইপিং শুরু করুন';
-  if(hint) hint.textContent=msg||(state==='recording'?'ধীরে স্পষ্ট করে বলুন। ২ মিনিট হলে নিজে বন্ধ হবে।':'সর্বোচ্চ ২ মিনিট রেকর্ড হবে। পরে ট্রান্সক্রিপশন এডিট করে সেভ করুন।');
+  if(title){
+    title.textContent=ui==='recording'?'রেকর্ড হচ্ছে'
+      :ui==='transcribing'?'ট্রান্সক্রিপশন…'
+      :ui==='ready'?'প্রস্তুত'
+      :'ভয়েস রেকর্ড';
+  }
+  if(hint){
+    hint.textContent=msg||(ui==='recording'?'ধীরে স্পষ্ট করে বলুন'
+      :ui==='transcribing'?'অপেক্ষা করুন…'
+      :ui==='ready'?'লেখা দেখে সেভ করুন'
+      :'মাইকে বলুন · সর্বোচ্চ ২ মিনিট');
+  }
   if(timer) timer.textContent=formatDailyTimer(dailyNoteSecondsLeft);
 }
 function updateDailyNoteSaveState(){
   const btn=document.getElementById('dailyNoteSaveBtn');
   const txt=document.getElementById('dailyNoteText');
-  if(btn&&txt) btn.disabled=!txt.value.trim();
+  const busy=typeof VoiceType!=='undefined'&&VoiceType.isBusy();
+  if(btn&&txt) btn.disabled=!txt.value.trim()||busy;
+}
+function ensureDailyVoice(){
+  if(_dailyVoiceBound||typeof VoiceType==='undefined') return;
+  VoiceType.bind({
+    id:'daily',
+    micBtn:'#dailyRecordBtn',
+    target:'#dailyNoteText',
+    join:'newline',
+    maxSeconds:120,
+    idleTitle:'রেকর্ড শুরু করুন',
+    onTick:function(left){
+      dailyNoteSecondsLeft=left;
+      const timer=document.getElementById('dailyRecordTimer');
+      if(timer) timer.textContent=formatDailyTimer(left);
+    },
+    onState:function(state,extra){
+      if(state==='recording'){
+        dailyNoteSecondsLeft=120;
+        setDailyRecorderState('recording');
+      } else if(state==='busy'){
+        setDailyRecorderState('busy');
+      } else if(state==='ready'){
+        dailyNoteSecondsLeft=120;
+        setDailyRecorderState('ready');
+      } else {
+        const msg=extra&&extra.error
+          ?(extra.error==='permission'?'মাইক অনুমতি দিন'
+            :extra.error==='unsupported'?'মাইক নেই — হাতে লিখুন'
+            :extra.error==='recorder'||extra.error==='start'?'রেকর্ড শুরু হয়নি'
+            :'ট্রান্সক্রিপশন ব্যর্থ — আবার চেষ্টা করুন')
+          :(extra&&extra.warning)||null;
+        dailyNoteSecondsLeft=120;
+        setDailyRecorderState('idle',msg||undefined);
+      }
+      updateDailyNoteSaveState();
+    },
+    onAppend:function(){ updateDailyNoteSaveState(); }
+  });
+  _dailyVoiceBound=true;
+}
+function toggleDailyRecording(){
+  ensureDailyVoice();
+  if(typeof VoiceType!=='undefined') VoiceType.toggle('daily');
+}
+function stopDailyRecording(run){
+  if(typeof VoiceType!=='undefined') VoiceType.stop('daily', !!run);
 }
 function openDailyNoteModal(){
+  ensureDailyVoice();
+  stopDailyRecording(false);
   dailyNoteSecondsLeft=120;
-  dailyFinalTranscript='';
-  dailyRecording=false;
+  dailyNoteCatId='general';
   const txt=document.getElementById('dailyNoteText');
   if(txt) txt.value='';
+  renderDailyNoteCats();
   setDailyRecorderState('idle');
   updateDailyNoteSaveState();
   openModal('dailyNoteModal');
@@ -1681,84 +1809,36 @@ function closeDailyNoteModal(){
   stopDailyRecording(false);
   closeModal('dailyNoteModal');
 }
-function makeSpeechRecognition(){
-  const Ctor=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!Ctor) return null;
-  const rec=new Ctor();
-  rec.lang='bn-BD';
-  rec.interimResults=true;
-  rec.continuous=true;
-  rec.onresult=(event)=>{
-    let interim='';
-    for(let i=event.resultIndex;i<event.results.length;i++){
-      const chunk=event.results[i][0].transcript;
-      if(event.results[i].isFinal) dailyFinalTranscript+=chunk+' ';
-      else interim+=chunk;
-    }
-    const txt=document.getElementById('dailyNoteText');
-    if(txt) txt.value=(dailyFinalTranscript+interim).trim();
-    updateDailyNoteSaveState();
-  };
-  rec.onerror=()=>{};
-  rec.onend=()=>{ if(dailyRecording){ try{ rec.start(); }catch(e){} } };
-  return rec;
-}
-function toggleDailyRecording(){
-  if(dailyRecording) stopDailyRecording(true);
-  else startDailyRecording();
-}
-function startDailyRecording(){
-  if(dailyRecording) return;
-  dailyRecording=true;
-  dailyNoteSecondsLeft=120;
-  dailyFinalTranscript=(document.getElementById('dailyNoteText')?.value||'').trim();
-  if(dailyFinalTranscript) dailyFinalTranscript+=' ';
-  dailySpeechRec=makeSpeechRecognition();
-  if(dailySpeechRec){ try{ dailySpeechRec.start(); }catch(e){} }
-  else setDailyRecorderState('recording','এই ব্রাউজারে সরাসরি ভয়েস টাইপিং নেই। আপাতত হাতে লিখে সেভ করতে পারবেন।');
-  setDailyRecorderState('recording',dailySpeechRec?'ধীরে স্পষ্ট করে বলুন। ২ মিনিট হলে নিজে বন্ধ হবে।':'এই ব্রাউজারে সরাসরি ভয়েস টাইপিং নেই। আপাতত হাতে লিখে সেভ করতে পারবেন।');
-  clearInterval(dailyNoteTimer);
-  dailyNoteTimer=setInterval(()=>{
-    dailyNoteSecondsLeft=Math.max(0,dailyNoteSecondsLeft-1);
-    const timer=document.getElementById('dailyRecordTimer');
-    if(timer) timer.textContent=formatDailyTimer(dailyNoteSecondsLeft);
-    if(dailyNoteSecondsLeft<=0) stopDailyRecording(true);
-  },1000);
-}
-function stopDailyRecording(showDone){
-  const wasRecording=dailyRecording;
-  dailyRecording=false;
-  clearInterval(dailyNoteTimer);
-  dailyNoteTimer=null;
-  if(dailySpeechRec){
-    try{ dailySpeechRec.stop(); }catch(e){}
-    dailySpeechRec=null;
-  }
-  dailyNoteSecondsLeft=120;
-  if(showDone&&wasRecording){
-    const hasText=!!(document.getElementById('dailyNoteText')?.value||'').trim();
-    setDailyRecorderState(hasText?'ready':'idle',hasText?'লেখা দেখে প্রয়োজন হলে ঠিক করে সেভ করুন।':'ট্রান্সক্রিপশন আসেনি। API যুক্ত হলে এখানে লেখা আসবে, আপাতত হাতে লিখুন।');
-  } else setDailyRecorderState('idle');
-  updateDailyNoteSaveState();
-}
 async function saveDailyNote(){
   const txt=document.getElementById('dailyNoteText');
   const text=(txt?.value||'').trim();
   if(!text){ showToast('নোট লিখুন বা রেকর্ড করুন'); return; }
+  if(!me||!API.StudentNotes){ showToast('সেভ ব্যর্থ'); return; }
   stopDailyRecording(false);
-  const notes=getDailyNotes();
-  notes.unshift({id:API.uid('dn'),date:API.today(),time:API.nowTime(),text});
-  putDailyNotes(notes);
-  closeModal('dailyNoteModal');
-  renderDailyNotes();
-  showToast('বিবরণ সেভ হয়েছে');
+  const btn=document.getElementById('dailyNoteSaveBtn');
+  if(btn) btn.disabled=true;
+  try{
+    await API.StudentNotes.add(me.id,{text,categoryId:dailyNoteCatId||'general'});
+    closeModal('dailyNoteModal');
+    renderDailyNotes();
+    showToast('বিবরণ সেভ হয়েছে');
+  }catch(e){
+    console.error(e);
+    showToast('সেভ হয়নি — আবার চেষ্টা করুন');
+    updateDailyNoteSaveState();
+  }
 }
 async function deleteDailyNote(id){
   const ok=await showConfirm('এই বিবরণটি মুছে ফেলবেন?',{title:'বিবরণ মুছুন',okText:'মুছে ফেলুন',danger:true});
-  if(!ok) return;
-  putDailyNotes(getDailyNotes().filter(n=>n.id!==id));
-  renderDailyNotes();
-  showToast('বিবরণ মুছে ফেলা হয়েছে');
+  if(!ok||!me||!API.StudentNotes) return;
+  try{
+    await API.StudentNotes.delete(me.id,id);
+    renderDailyNotes();
+    showToast('বিবরণ মুছে ফেলা হয়েছে');
+  }catch(e){
+    console.error(e);
+    showToast('মুছা যায়নি');
+  }
 }
 function renderGoals(){
   const goals=API.Goals.getAll(me.id); const el=document.getElementById('goalList'); const wp=document.getElementById('goalProgress');

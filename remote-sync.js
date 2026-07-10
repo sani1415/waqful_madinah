@@ -20,6 +20,8 @@
     completions: [], groups: [], diary: [],
     dailyScheduleByStudent: {},
     dailySchedule: { rows: [], pending: null },
+    noteCategories: [],
+    studentNotesByStudent: {},
   };
 
   function role() { const r = w.__MADRASA_ROLE__; return r === 'teacher' || r === 'student' ? r : ''; }
@@ -235,6 +237,20 @@
       }))
       : [];
     mem.dailyScheduleByStudent = buildDailyScheduleByStudent(bundle);
+    mem.noteCategories = (bundle.note_categories || []).map((c, i) => ({
+      id: c.id, label: c.label || '', sort: typeof c.sort_order === 'number' ? c.sort_order : i,
+    }));
+    const notesBy = {};
+    (bundle.student_notes || []).forEach(n => {
+      const sid = n.student_id;
+      if (!sid) return;
+      (notesBy[sid] = notesBy[sid] || []).push({
+        id: n.id, studentId: sid,
+        categoryId: n.category_id || 'general',
+        date: n.note_date || '', time: n.note_time || '', text: n.text || '',
+      });
+    });
+    mem.studentNotesByStudent = notesBy;
   }
 
   // ── Assemble relational student bundle → mem ─────────────────
@@ -306,6 +322,20 @@
       }))
       : [];
     mem.dailySchedule = stu ? buildStudentDailySchedule(bundle, stu.id) : { rows: [], pending: null };
+    mem.noteCategories = (bundle.note_categories || []).map((c, i) => ({
+      id: c.id, label: c.label || '', sort: typeof c.sort_order === 'number' ? c.sort_order : i,
+    }));
+    const notesBy = {};
+    (bundle.student_notes || []).forEach(n => {
+      const sid = n.student_id || (stu && stu.id);
+      if (!sid) return;
+      (notesBy[sid] = notesBy[sid] || []).push({
+        id: n.id, studentId: sid,
+        categoryId: n.category_id || 'general',
+        date: n.note_date || '', time: n.note_time || '', text: n.text || '',
+      });
+    });
+    mem.studentNotesByStudent = notesBy;
   }
 
   // ── Schedule / flush ─────────────────────────────────────────
@@ -372,6 +402,7 @@
     mem.docs = []; mem.academic = {}; mem.tnotes = {};
     mem.teacherPin = null; mem.lockHints = []; _teacherPin = ''; mem.loaded = true;
     mem.dailyScheduleByStudent = {};
+    mem.noteCategories = []; mem.studentNotesByStudent = {};
   }
 
   async function bootstrapStudentIdle() {
@@ -385,6 +416,7 @@
     mem.lockHints = hErr ? [] : (Array.isArray(hints) ? hints : []);
     mem.loaded = true;
     mem.dailySchedule = { rows: [], pending: null };
+    mem.noteCategories = []; mem.studentNotesByStudent = {};
   }
 
   async function bootstrapLegacy() {
@@ -880,6 +912,85 @@
     });
   }
 
+  function _patchNoteInMem(note, sid) {
+    const by = mem.studentNotesByStudent || (mem.studentNotesByStudent = {});
+    const list = by[sid] || (by[sid] = []);
+    const ix = list.findIndex(n => n.id === note.id);
+    const row = {
+      id: note.id, studentId: sid,
+      categoryId: note.categoryId || 'general',
+      date: note.date || '', time: note.time || '', text: note.text || '',
+    };
+    if (ix >= 0) list[ix] = row; else list.unshift(row);
+  }
+
+  async function upsertStudentNoteRemote(note, sid) {
+    if (!usesSecureKv() || role() !== 'student' || !_studentPin) return;
+    const sb = getClient(); if (!sb) return;
+    await rpcOrThrow(sb, 'madrasa_rel_upsert_student_note', {
+      p_pin: _studentPin,
+      p_student_id: sid,
+      p_note: {
+        id: note.id,
+        category_id: note.categoryId || 'general',
+        date: note.date || '',
+        time: note.time || '',
+        text: note.text || '',
+      },
+    });
+    _patchNoteInMem(note, sid);
+  }
+
+  async function deleteStudentNoteRemote(sid, noteId) {
+    if (!usesSecureKv()) return;
+    const sb = getClient(); if (!sb) return;
+    if (role() === 'student' && _studentPin) {
+      await rpcOrThrow(sb, 'madrasa_rel_delete_student_note', {
+        p_pin: _studentPin,
+        p_student_id: sid,
+        p_note_id: noteId,
+      });
+    } else if (role() === 'teacher' && _teacherPin) {
+      await rpcOrThrow(sb, 'madrasa_rel_teacher_delete_student_note', {
+        p_teacher_pin: _teacherPin,
+        p_note_id: noteId,
+      });
+    } else return;
+    const by = mem.studentNotesByStudent || {};
+    if (by[sid]) by[sid] = by[sid].filter(n => n.id !== noteId);
+  }
+
+  async function upsertNoteCategoryRemote(cat) {
+    if (!usesSecureKv() || role() !== 'teacher' || !_teacherPin) return;
+    const sb = getClient(); if (!sb) return;
+    await rpcOrThrow(sb, 'madrasa_rel_upsert_note_category', {
+      p_teacher_pin: _teacherPin,
+      p_id: cat.id,
+      p_label: cat.label,
+      p_sort_order: typeof cat.sort === 'number' ? cat.sort : null,
+    });
+    const list = mem.noteCategories || (mem.noteCategories = []);
+    const ix = list.findIndex(c => c.id === cat.id);
+    const row = { id: cat.id, label: cat.label, sort: typeof cat.sort === 'number' ? cat.sort : list.length };
+    if (ix >= 0) list[ix] = row; else list.push(row);
+  }
+
+  async function deleteNoteCategoryRemote(id) {
+    if (!usesSecureKv() || role() !== 'teacher' || !_teacherPin) return;
+    const sb = getClient(); if (!sb) return;
+    await rpcOrThrow(sb, 'madrasa_rel_delete_note_category', {
+      p_teacher_pin: _teacherPin,
+      p_id: id,
+    });
+    mem.noteCategories = (mem.noteCategories || []).filter(c => c.id !== id);
+    const by = mem.studentNotesByStudent || {};
+    Object.keys(by).forEach(sid => {
+      by[sid] = (by[sid] || []).map(n =>
+        n.categoryId === id ? { ...n, categoryId: 'general' } : n
+      );
+    });
+  }
+
   async function deleteDocumentRemote(id) {
     if (!usesSecureKv() || !id) return;
     const sb = getClient(); if (!sb) return;
@@ -992,6 +1103,8 @@
     upsertTeacherNoteRemote, deleteTeacherNoteRemote,
     updateConfigRemote, upsertAcademicHistoryRemote, deleteAcademicHistoryRemote,
     upsertGoalRemote, deleteGoalRemote, saveDocumentRemote, deleteDocumentRemote,
+    upsertStudentNoteRemote, deleteStudentNoteRemote,
+    upsertNoteCategoryRemote, deleteNoteCategoryRemote,
     submitQuizRemote, updateQuizScoreRemote, updateTaskStatusRemote, completeOnetimeTaskRemote,
     saveTaskRemote, saveQuizRemote, saveStudentRemote, updateStudentPinRemote,
     submitDailyScheduleProposalRemote, setDailyScheduleTeacherRemote, resolveDailyScheduleProposalRemote,

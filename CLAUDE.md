@@ -1,7 +1,7 @@
 # Waqful Madinah — CLAUDE.md
 
 ## Architecture Rules
-- ALL data logic in `api.js` only — HTML files just call `API.*` (**Exception:** `api-daily-schedule.js` extends `window.API.DailySchedule`, same pattern as `ApiAmal` / `api-amal.js`)
+- ALL data logic in `api.js` only — HTML files just call `API.*` (**Exception:** `api-daily-schedule.js` → `API.DailySchedule`; `api-student-notes.js` → `API.StudentNotes`; same pattern as `api-amal.js`)
 - ALL shared CSS in `style.css` — theme overrides in HTML `<style>` are OK
 - `tablet-desktop.css` — optional breakpoint layer (tablet / large); load in HTML **after** `style.css`, **before** the per-page theme `<style>` block
 - Never access localStorage directly in HTML — always use `API.DB.get()`
@@ -15,13 +15,13 @@
 
 ## File Size Limits
 - `api.js` → max 800 lines, split into modules if exceeded
-- `style.css` → max 500 lines
+- `style.css` → soft target ~500 lines (OK to exceed when shared UI needs it; prefer CSS over page `<style>` bloat)
 - `teacher.html` / `student.html` → max 600 lines, move excess JS to `api.js`
 - Any new `.js` file → max 400 lines
 
 ## Service Worker Cache Rule
 - **`sw.js` এর `CACHE` version (`waqful-full-vN`) প্রতিবার যেকোনো file edit করলে N বাড়াতে হবে।**
-- Current version: **v107** (last bumped: বিবরণ — গতকালের আমল)
+- Current version: **v125** (last bumped: daily note category dropdown)
 - যেকোনো `.html`, `.css`, `.js` file বদলালে → `sw.js` খুলে `waqful-full-vN` → `vN+1` করো।
 - নতুন file তৈরি হলে `LOCAL_SHELL` array-তেও যোগ করো।
 
@@ -64,9 +64,10 @@
   19. `024_daily_schedule.sql` — `daily_schedule_rows`, `daily_schedule_proposals` + RPCs (`submit_daily_schedule_proposal`, `set_daily_schedule`, `resolve_daily_schedule_proposal`); teacher/student bootstrap + `clear_student_data` আপডেট। **Supabase → Realtime:** `daily_schedule_rows`, `daily_schedule_proposals` টেবিল `supabase_realtime` publication-এ যোগ করুন।
   20. `migrations/20260614113905_add_student_pin_update_rpc.sql` — student self-service PIN update RPC for `waqf_students`; verifies `(waqf_id, old PIN)` and requires a four-digit new PIN
   21. `migrations/20260624120000_fix_waqf_insert_document.sql` — `madrasa_rel_insert_document` + `mark_doc_reviewed` → `waqf_students` / `waqf_documents` (student upload fix on shared production DB)
+  22. `migrations/20260710080000_waqf_student_notes.sql` — `waqf_student_notes` + `waqf_student_note_categories`; RPCs upsert/delete note & category; teacher/student bootstrap + `clear_student_data` আপডেট। Client: `api-student-notes.js` (`API.StudentNotes`).
 - **ছাত্র ওয়াকফ আইডি:** ডাটাবেস ও সিঙ্কে `waqf_001` রাখা হয়; UI-তে `API.Students.displayWaqfId` / `getShortId` দিয়ে `001` দেখানো।
 - **`students.pin`:** আর গ্লোবালি ইউনিক নয় — একই পিন একাধিক ছাত্রে থাকতে পারে; রিমোট লগইন `madrasa_rel_student_bootstrap(p_waqf, p_pin)` জোড়ায়।
-- **Relational tables:** `madrasa_config`, `students`, `messages`, `tasks`, `task_assignments`, `task_completions`, `goals`, `quizzes`, `quiz_questions`, `quiz_assignees`, `quiz_submissions`, `documents`, `academic_history`, `teacher_notes`, `pwa_subscriptions`, `student_groups`, `diary`, `daily_schedule_rows`, `daily_schedule_proposals`. All have RLS enabled; zero direct REST access — everything goes through `madrasa_rel_*` RPCs.
+- **Relational tables:** `madrasa_config`, `students`, `messages`, `tasks`, `task_assignments`, `task_completions`, `goals`, `quizzes`, `quiz_questions`, `quiz_assignees`, `quiz_submissions`, `documents`, `academic_history`, `teacher_notes`, `pwa_subscriptions`, `student_groups`, `diary`, `daily_schedule_rows`, `daily_schedule_proposals`, `student_notes`, `student_note_categories` (`waqf_*` in prod). All have RLS enabled; zero direct REST access — everything goes through `madrasa_rel_*` RPCs.
 - **RPC functions (`madrasa_rel_*`, all `GRANT EXECUTE TO anon`):**
   - `madrasa_rel_public_branding()` — no PIN
   - `madrasa_rel_student_lock_hints()` — no PIN

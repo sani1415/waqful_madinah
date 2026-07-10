@@ -111,6 +111,53 @@
 #amal-panel-list .stu-filter-pill.active,
 #amal-panel-students .stu-filter-pill.active{background:#075E54!important;color:#fff!important;border-color:#075E54!important;box-shadow:0 8px 20px rgba(7,94,84,.2)}
 .progress-fill{background:#25D366}.send-btn{background:#128C7E}.fab{background:#25D366;color:#075E54}
+.attach-btn{width:38px;height:38px;background:#eef2f6;color:#64748b;margin-bottom:4px}
+.attach-btn svg,.chat-mic-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.attach-btn:active{background:#dbe3ec}
+.chat-mic-btn{flex-shrink:0;width:34px;height:34px;margin:0;border:none;border-radius:50%;background:transparent;color:#94a3b8;opacity:.4;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:opacity .15s,color .15s,background .15s}
+.chat-mic-btn:hover{opacity:.72;color:#64748b}
+.chat-mic-btn.recording{opacity:1;color:#fff;background:#EF5350}
+.chat-mic-btn.busy{opacity:.9;color:#1565C0;background:#E3F2FD;cursor:wait}
+.chat-mic-btn:disabled{cursor:wait}
+.cs-tab{display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:8px 11px 7px;font-size:11px}
+.cs-tab-ic{line-height:0;display:flex}
+.cs-tab-ic svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.65;stroke-linecap:round;stroke-linejoin:round;opacity:.88}
+.cs-tab.active .cs-tab-ic svg{stroke-width:2;opacity:1}
+.cs-tab-lbl{line-height:1.15;white-space:nowrap}
+/* Chat doc attachment bubble */
+.msg-doc-bubble{background:#fff;border:1px solid var(--gray-200);border-radius:12px;padding:0;display:flex;flex-direction:column;min-width:176px;max-width:260px;overflow:hidden;box-shadow:var(--shadow-sm)}
+.msg-wrap.out .msg-doc-bubble{background:#E8F5F3;border-color:#B2DFDB}
+.msg-doc-card{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.msg-doc-tile{width:40px;height:40px;border-radius:10px;background:#E0F2F1;color:#075E54;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.msg-wrap.out .msg-doc-tile{background:rgba(7,94,84,.12)}
+.msg-doc-tile .ic-svg svg,.msg-doc-tile svg{width:20px;height:20px;display:block;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.msg-doc-info{flex:1;min-width:0}
+.msg-doc-name{font-size:13px;font-weight:700;color:var(--gray-700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.25}
+.msg-doc-size{font-size:11px;color:var(--gray-500);margin-top:2px;font-weight:500}
+.chat-doc-view-btn{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin:0;border:none;border-top:1px solid var(--gray-100);background:transparent;padding:8px 10px;font-size:12px;font-weight:700;color:#075E54;cursor:pointer;font-family:var(--font)}
+.msg-wrap.out .chat-doc-view-btn{border-top-color:rgba(7,94,84,.12)}.chat-doc-view-btn:active{background:rgba(7,94,84,.07)}
+.chat-doc-view-btn .ic-svg svg{width:15px;height:15px;display:block;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+/* In-chat panels — compact one-line rows */
+.cs-panel{padding:8px 12px;gap:6px;background:#f3f4f6}
+.csp-empty{padding:28px 16px;font-size:13px}
+.csp-add-btn{width:100%;background:#fff;border:1.5px dashed var(--gray-300);color:#075E54;border-radius:10px;padding:8px;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;margin-bottom:2px}
+.csp-add-btn:active{background:var(--gray-50)}
+.csp-row{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:8px 10px;min-height:40px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.csp-row:active{background:#f8fafc}.csp-row.clickable{cursor:pointer}
+.csp-row-main{flex:1;min-width:0;font-size:13px;font-weight:600;color:var(--gray-700);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+.csp-row-main.done{text-decoration:line-through;color:var(--gray-400);font-weight:500}
+.csp-row-meta{flex-shrink:0;font-size:11px;font-weight:600;color:var(--gray-500);white-space:nowrap;max-width:46%;overflow:hidden;text-overflow:ellipsis}
+.csp-row-meta.ok{color:#2E7D32}.csp-row-meta.warn{color:#E65100}.csp-row-meta.bad{color:#C62828}
+.csp-row-dot{width:7px;height:7px;border-radius:50%;background:#25D366;flex-shrink:0}
+.csp-row-mark{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--gray-300);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent}
+.csp-row-mark.done{background:#128C7E;border-color:#128C7E;color:#fff}
+.csp-exam-grade{display:flex;align-items:center;gap:6px;padding:0 2px 2px 28px}
+.csp-note-item{background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:8px 10px}
+.csp-note-body{font-size:13px;color:var(--gray-700);line-height:1.45;white-space:pre-wrap}
+.csp-note-time{font-size:11px;color:var(--gray-400);margin-top:3px}
+.csp-note-add{background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:8px 10px;display:flex;gap:8px;align-items:flex-end;flex-shrink:0;margin-top:4px}
+.csp-note-add textarea{flex:1;border:1px solid var(--gray-200);border-radius:8px;padding:7px 9px;font-family:var(--font);font-size:13px;resize:none;min-height:34px;outline:none;color:var(--gray-700)}
+.csp-note-add button{background:#128C7E;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0}
 .backup-btn{background:#075E54}.pin-copy-btn{background:#075E54}.s-pin{color:#128C7E}
 .msg-bubble.out{background:#DCF8C6;border-bottom-right-radius:4px}.msg-tick{color:#128C7E}
 .btn-primary{background:#075E54}.task-bubble-hd{background:#075E54}.sec-link{color:#128C7E}
@@ -480,6 +527,15 @@
       </div>
       <button class="btn-primary" style="margin-top:12px" onclick="saveProgressSettings()">✅ সংরক্ষণ</button>
     </div>
+    <div class="sec-hd">বিবরণ ক্যাটাগরি</div>
+    <div class="backup-card">
+      <p style="margin-bottom:8px">ছাত্র নোটের ক্যাটাগরি। নতুন যোগ করতে পারেন; «সাধারণ» মুছা যাবে না।</p>
+      <div id="noteCatList"></div>
+      <div class="note-cat-add">
+        <input class="form-input" id="noteCatNewIn" placeholder="নতুন ক্যাটাগরির নাম" maxlength="40" onkeydown="if(event.key==='Enter'){event.preventDefault();addNoteCategory();}">
+        <button type="button" class="btn-primary" style="width:auto;padding:10px 14px;flex-shrink:0" onclick="addNoteCategory()">যোগ</button>
+      </div>
+    </div>
     <div class="sec-hd">ব্যাকআপ</div>
     <div class="backup-card">
       <h3>📤 ডেটা ব্যাকআপ</h3><p>সমস্ত ডেটা JSON ফাইলে সেভ করুন।</p>
@@ -501,12 +557,12 @@
   <div class="bc-notice" id="bcNotice">📢 গ্রুপ বার্তা — সবাইকে পাঠানো হবে</div>
   <!-- In-chat student tabs (hidden for broadcast) -->
   <div class="chat-student-tabs" id="chatStudentTabs" style="display:none">
-    <button class="cs-tab active" id="cst-msg"  onclick="switchChatTab('msg',this)">💬 বার্তা</button>
-    <button class="cs-tab"        id="cst-task" onclick="switchChatTab('task',this)">📋 আমল</button>
-    <button class="cs-tab"        id="cst-doc"  onclick="switchChatTab('doc',this)">📁 ডকুমেন্ট</button>
-    <button class="cs-tab"        id="cst-exam" onclick="switchChatTab('exam',this)">📝 পরীক্ষা</button>
-    <button class="cs-tab"        id="cst-goal" onclick="switchChatTab('goal',this)">🎯 লক্ষ্য</button>
-    <button class="cs-tab"        id="cst-note" onclick="switchChatTab('note',this)">🗒️ নোট</button>
+    <button type="button" class="cs-tab active" id="cst-msg"  onclick="switchChatTab('msg',this)"><span class="cs-tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5a8.5 8.5 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.5 8.5 0 01-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.5 8.5 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg></span><span class="cs-tab-lbl">রিসালা</span></button>
+    <button type="button" class="cs-tab"        id="cst-task" onclick="switchChatTab('task',this)"><span class="cs-tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6M9 16h6"/></svg></span><span class="cs-tab-lbl">আমল</span></button>
+    <button type="button" class="cs-tab"        id="cst-doc"  onclick="switchChatTab('doc',this)"><span class="cs-tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></span><span class="cs-tab-lbl">ডকুমেন্ট</span></button>
+    <button type="button" class="cs-tab"        id="cst-exam" onclick="switchChatTab('exam',this)"><span class="cs-tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="15" y2="11"/></svg></span><span class="cs-tab-lbl">পরীক্ষা</span></button>
+    <button type="button" class="cs-tab"        id="cst-goal" onclick="switchChatTab('goal',this)"><span class="cs-tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span><span class="cs-tab-lbl">লক্ষ্য</span></button>
+    <button type="button" class="cs-tab"        id="cst-note" onclick="switchChatTab('note',this)"><span class="cs-tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg></span><span class="cs-tab-lbl">নোট</span></button>
   </div>
   <!-- In-chat search bar -->
   <div class="in-chat-search-bar" id="inChatSearchBar">
@@ -528,7 +584,7 @@
   <div class="cs-panel" id="csp-note"  style="display:none"></div>
   <!-- Teacher file preview bar -->
   <div class="chat-file-preview" id="chatFilePreview" style="display:none">
-    <span id="chatFileIcon" style="font-size:22px">📎</span>
+    <span id="chatFileIcon" class="msg-doc-tile" style="font-size:inherit" aria-hidden="true"></span>
     <div style="flex:1;min-width:0">
       <div class="chat-file-preview-name" id="chatFileName">-</div>
       <input class="chat-file-title-in" id="chatFileTitleIn" placeholder="শিরোনাম দিন (আবশ্যিক)…" maxlength="80">
@@ -547,8 +603,15 @@
   </div>
   <input type="file" id="chatFileInput" style="display:none" multiple accept="image/*,.pdf,.doc,.docx,.txt,.xls,.xlsx,.ppt,.pptx" onchange="onTeacherChatFileChosen(this)">
   <div class="chat-input-bar">
-    <button class="attach-btn" id="chatAttachBtn" onclick="document.getElementById('chatFileInput').click()" title="ফাইল পাঠান">📎</button>
-    <div class="chat-input-wrap"><textarea id="msgIn" placeholder="বার্তা লিখুন..." rows="1" oninput="autoResize(this)"></textarea></div>
+    <button type="button" class="attach-btn" id="chatAttachBtn" onclick="document.getElementById('chatFileInput').click()" title="ফাইল পাঠান" aria-label="ফাইল পাঠান">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+    </button>
+    <div class="chat-input-wrap">
+      <textarea id="msgIn" placeholder="রিসালা লিখুন" rows="1" oninput="autoResize(this)"></textarea>
+      <button type="button" class="chat-mic-btn" id="chatMicBtn" onclick="toggleChatVoice()" title="ভয়েস লিখন" aria-label="ভয়েস লিখন">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+      </button>
+    </div>
     <button class="send-btn" onclick="sendMsg()">➤</button>
   </div>
 </div>
@@ -558,7 +621,7 @@
 <!-- ══ ফ্লোটিং নিচের ট্যাব বার ═══════════════════════════════ -->
 <nav id="teaBottomNav" class="tea-float-nav-wrap" aria-label="প্রধান মেনু">
   <div class="tea-float-nav-inner">
-    <button type="button" class="tab-btn active" onclick="goTab('chats')"    id="tab-chats"><span class="tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5a8.5 8.5 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.5 8.5 0 01-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.5 8.5 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg></span><span class="tab-lbl">চ্যাট</span><span class="tab-badge tab-badge--sched" id="schedBadge" title="সময়সূচি অনুমোদন"></span></button>
+    <button type="button" class="tab-btn active" onclick="goTab('chats')"    id="tab-chats"><span class="tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5a8.5 8.5 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.5 8.5 0 01-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.5 8.5 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg></span><span class="tab-lbl">রিসালা</span><span class="tab-badge tab-badge--sched" id="schedBadge" title="সময়সূচি অনুমোদন"></span></button>
     <button type="button" class="tab-btn"        onclick="goTab('students')" id="tab-students"><span class="tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></span><span class="tab-lbl">বিবরণ</span></button>
     <button type="button" class="tab-btn"        onclick="goTab('tasks')"    id="tab-tasks"><span class="tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6M9 16h6"/></svg></span><span class="tab-lbl">আমল</span><span class="tab-badge" id="tBadge"></span></button>
     <button type="button" class="tab-btn"        onclick="goTab('exams')"    id="tab-exams"><span class="tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="15" y2="11"/></svg></span><span class="tab-lbl">পরীক্ষা</span></button>
@@ -761,6 +824,8 @@
 <script src="api-amal.js"></script>
 <script src="api.js"></script>
 <script src="api-daily-schedule.js"></script>
+<script src="api-student-notes.js"></script>
+<script src="chat-voice.js"></script>
 <script src="pwa-notify.js"></script>
 <script>
 // ══ State ══════════════════════════════════════════════════
@@ -1183,6 +1248,7 @@ function openChat(id){
   });
 }
 function closeChat(){
+  try{ if(typeof stopChatVoice==='function') stopChatVoice(false); }catch(e){}
   closeInChatSearch();
   uiViewTransition(()=>{
   curChat=null; curChatTab='msg'; document.getElementById('chatView').classList.remove('open');
@@ -1299,7 +1365,7 @@ function switchChatTab(tab,btn){
   document.getElementById('chatMsgs').style.display=tab==='msg'?'flex':'none';
   panels.forEach(p=>{ document.getElementById('csp-'+p).style.display=p===tab?'flex':'none'; });
   document.getElementById('chatAttachBtn').style.display=tab==='msg'?'flex':'none';
-  document.getElementById('msgIn').placeholder=tab==='msg'?'বার্তা লিখুন...':'বার্তা লিখুন...';
+  document.getElementById('msgIn').placeholder='রিসালা লিখুন';
   if(!curChat) return;
   if(tab==='msg') setTimeout(()=>document.getElementById('chatMsgs').scrollTop=9e9,30);
   else if(tab==='task') renderChatTasks();
@@ -1312,65 +1378,62 @@ function switchChatTab(tab,btn){
 function renderChatTasks(){
   const el=document.getElementById('csp-task'); if(!el||!curChat) return;
   const tasks=API.Tasks.getAll().filter(t=>t.assignees&&curChat in t.assignees);
-  const bm={done:'badge-done',pending:'badge-pending',late:'badge-late'};
-  const lm={done:'✅ সম্পন্ন',pending:'⏳ বকেয়া',late:'❌ দেরি'};
-  const addBtn=`<button onclick="openAddTask('${curChat}')" style="width:100%;background:#E8F5E9;border:1.5px dashed #25D366;color:#2E7D32;border-radius:10px;padding:10px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;margin-bottom:4px">＋ নতুন আমল দিন</button>`;
-  if(!tasks.length){ el.innerHTML=addBtn+'<div class="csp-empty">📋 কোনো আমল নেই।</div>'; return; }
+  const stLbl={done:'সম্পন্ন',pending:'বকেয়া',late:'দেরি'};
+  const stCls={done:'ok',pending:'warn',late:'bad'};
+  const addBtn=`<button type="button" class="csp-add-btn" onclick="openAddTask('${curChat}')">＋ নতুন আমল</button>`;
+  if(!tasks.length){ el.innerHTML=addBtn+'<div class="csp-empty">কোনো আমল নেই।</div>'; return; }
   el.innerHTML=addBtn+tasks.map(t=>{
     const isDaily=t.type==='daily';
     const st=isDaily?(API.Tasks.isDailyDoneToday(t,curChat)?'done':'pending'):(t.assignees[curChat]||'pending');
-    return `<div class="csp-task-card">
-      <div class="csp-task-title">${esc(t.title)}<span class="type-badge ${t.type}">${isDaily?'🔁 দৈনিক':'📌 এককালীন'}</span></div>
-      ${t.desc?`<div style="font-size:12px;color:var(--gray-500);line-height:1.4">${esc(t.desc)}</div>`:''}
-      <div class="csp-task-foot">
-        <span class="csp-task-meta">${isDaily?'🔄 প্রতিদিন':'📅 '+(t.deadline||'')}</span>
-        <span class="status-badge ${bm[st]||'badge-pending'}">${lm[st]||st}</span>
-      </div>
+    const typeLbl=isDaily?'দৈনিক':'এককালীন';
+    const when=isDaily?'প্রতিদিন':(t.deadline||'—');
+    return `<div class="csp-row" title="${esc(t.desc||'')}">
+      <div class="csp-row-main">${esc(t.title)} · ${typeLbl} · ${esc(when)}</div>
+      <span class="csp-row-meta ${stCls[st]||'warn'}">${stLbl[st]||st}</span>
     </div>`;
   }).join('');
 }
 function renderChatDocs(){
   const el=document.getElementById('csp-doc'); if(!el||!curChat) return;
   const docs=API.Docs.getForStudent(curChat);
-  if(!docs.length){ el.innerHTML='<div class="csp-empty">📁 কোনো ডকুমেন্ট নেই।</div>'; return; }
-  el.innerHTML=docs.map(d=>`
-    <div class="csp-doc-item" onclick="teacherPreviewChatDoc('${d.id}',true);switchChatTab('doc',document.getElementById('cst-doc'))">
-      <span class="csp-doc-icon">${fileIcon(d.fileType)}</span>
-      <div class="csp-doc-info">
-        <div class="csp-doc-name">${esc(d.fileName)}</div>
-        <div class="csp-doc-meta">${d.uploadedAt?d.uploadedAt.slice(0,10):''}${d.note?' · '+esc(d.note):''}</div>
-      </div>
-      ${!d.read?'<div class="csp-doc-unread"></div>':''}
-    </div>`).join('');
+  if(!docs.length){ el.innerHTML='<div class="csp-empty">কোনো ডকুমেন্ট নেই।</div>'; return; }
+  el.innerHTML=docs.map(d=>{
+    const when=d.uploadedAt?d.uploadedAt.slice(0,10):'';
+    const note=d.note?` · ${esc(d.note)}`:'';
+    return `<div class="csp-row clickable" onclick="teacherPreviewChatDoc('${d.id}',true);switchChatTab('doc',document.getElementById('cst-doc'))">
+      <div class="csp-row-main">${esc(d.fileName)}</div>
+      <span class="csp-row-meta">${when}${note}</span>
+      ${!d.read?'<span class="csp-row-dot" title="অপঠিত"></span>':''}
+    </div>`;
+  }).join('');
 }
 function renderChatExams(){
   const el=document.getElementById('csp-exam'); if(!el||!curChat) return;
   const quizzes=API.Exams.getQuizzes().filter(q=>q.assigneeIds?.includes(curChat));
-  const addBtn=`<button onclick="openAddExamForChat('${curChat}')" style="width:100%;background:#E8EAF6;border:1.5px dashed #3949AB;color:#3949AB;border-radius:10px;padding:10px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;margin-bottom:4px">＋ নতুন পরীক্ষা দিন</button>`;
-  if(!quizzes.length){ el.innerHTML=addBtn+'<div class="csp-empty">📝 কোনো পরীক্ষা নেই।</div>'; return; }
+  const addBtn=`<button type="button" class="csp-add-btn" onclick="openAddExamForChat('${curChat}')">＋ নতুন পরীক্ষা</button>`;
+  if(!quizzes.length){ el.innerHTML=addBtn+'<div class="csp-empty">কোনো পরীক্ষা নেই।</div>'; return; }
   el.innerHTML=addBtn+quizzes.map(q=>{
     const subs=API.Exams.getSubmissionsForQuiz(q.id);
     const sub=subs.find(s=>s.studentId===curChat);
-    let statusHtml;
-    if(!sub) statusHtml=`<span class="status-badge badge-pending">⏳ জমা দেয়নি</span>`;
-    else if(sub.needsManualGrade) statusHtml=`<span class="status-badge badge-pending">✅ জমা · ফলাফল অপেক্ষায়</span>`;
-    else statusHtml=`<span class="status-badge ${sub.passed?'badge-done':'badge-late'}">${sub.passed?'✅':'❌'} ${sub.score}/${sub.total} · ${sub.passed?'পাস':'ফেল'}</span>`;
-    return `<div class="csp-exam-card">
-      <div class="csp-exam-title">${esc(q.title)}</div>
-      <div class="csp-exam-meta">${esc(q.subject||'')} · ${q.questions?.length||0}টি প্রশ্ন · ${q.timeLimit} মিনিট${q.deadline?' · 📅 '+q.deadline:''}</div>
-      ${statusHtml}
-      ${sub&&sub.needsManualGrade?`<div style="display:flex;align-items:center;gap:8px;margin-top:6px"><input class="marks-input" type="number" placeholder="নম্বর দিন" value="${sub.score||0}" min="0" max="${sub.total}" style="width:90px" onchange="updateChatExamScore('${sub.id}',this.value)"><span style="font-size:12px;color:var(--gray-400)">/ ${sub.total}</span></div>`:''}
-    </div>`;
+    let meta='জমা দেয়নি', mCls='warn';
+    if(sub&&sub.needsManualGrade){ meta='জমা · নম্বর বাকি'; mCls='warn'; }
+    else if(sub){ meta=`${sub.score}/${sub.total} · ${sub.passed?'পাস':'ফেল'}`; mCls=sub.passed?'ok':'bad'; }
+    const bits=[q.subject, (q.questions?.length||0)+' প্রশ্ন', q.timeLimit?q.timeLimit+' মি':''].filter(Boolean);
+    const grade=sub&&sub.needsManualGrade
+      ?`<div class="csp-exam-grade"><input class="marks-input" type="number" placeholder="নম্বর" value="${sub.score||0}" min="0" max="${sub.total}" style="width:72px" onchange="updateChatExamScore('${sub.id}',this.value)"><span style="font-size:11px;color:var(--gray-400)">/ ${sub.total}</span></div>`
+      :'';
+    return `<div class="csp-row"><div class="csp-row-main">${esc(q.title)}${bits.length?' · '+esc(bits.join(' · ')):''}</div><span class="csp-row-meta ${mCls}">${meta}</span></div>${grade}`;
   }).join('');
 }
 function renderChatGoals(){
   const el=document.getElementById('csp-goal'); if(!el||!curChat) return;
   const goals=API.Goals.getAll(curChat);
-  if(!goals.length){ el.innerHTML='<div class="csp-empty">🎯 কোনো লক্ষ্য নেই।</div>'; return; }
+  if(!goals.length){ el.innerHTML='<div class="csp-empty">কোনো লক্ষ্য নেই।</div>'; return; }
   el.innerHTML=goals.map(g=>`
-    <div class="csp-goal-item">
-      <div class="csp-goal-check ${g.done?'done':''}" style="cursor:default;pointer-events:none">${g.done?'✓':''}</div>
-      <div class="csp-goal-text ${g.done?'done':''}">${esc(g.title)}${g.deadline?`<span style="font-size:11px;color:var(--gray-400);display:block">📅 ${g.deadline}</span>`:''}</div>
+    <div class="csp-row">
+      <span class="csp-row-mark ${g.done?'done':''}" aria-hidden="true">${g.done?'✓':''}</span>
+      <div class="csp-row-main ${g.done?'done':''}">${esc(g.title)}</div>
+      ${g.deadline?`<span class="csp-row-meta">${esc(g.deadline)}</span>`:''}
     </div>`).join('');
 }
 function renderChatNotes(){
@@ -1380,7 +1443,7 @@ function renderChatNotes(){
     <div class="csp-note-item">
       <div class="csp-note-body">${esc(n.text)}</div>
       <div class="csp-note-time">${n.date||''} ${n.time||''}</div>
-    </div>`).join(''):'<div class="csp-empty" style="padding:20px 0">🗒️ কোনো নোট নেই।</div>')
+    </div>`).join(''):'<div class="csp-empty" style="padding:16px 0">কোনো নোট নেই।</div>')
   +`<div class="csp-note-add">
       <textarea id="chatNoteInput" placeholder="নতুন নোট লিখুন..." rows="2"></textarea>
       <button onclick="saveChatNote()">যোগ</button>
@@ -1444,11 +1507,12 @@ function renderMsgs(id){
     } else if(m.type==='doc'){
       const ic=fileIcon(m.fileType);
       const markRead=m.role==='in';
-      const previewBtn=m.docId?`<button type="button" class="chat-doc-view-btn" onclick="teacherPreviewChatDoc('${m.docId}',${markRead})">👁 দেখুন</button>`:'';
+      const previewBtn=m.docId?`<button type="button" class="chat-doc-view-btn" onclick="teacherPreviewChatDoc('${m.docId}',${markRead})"><span class="ic-svg">${_svgEye}</span> দেখুন</button>`:'';
+      const card=`${replyRef}<div class="msg-doc-card"><div class="msg-doc-tile">${ic}</div><div class="msg-doc-info"><div class="msg-doc-name">${esc(m.fileName)}</div><div class="msg-doc-size">${m.fileSize?formatBytes(m.fileSize):''}</div></div></div>${previewBtn}`;
       if(m.role==='in'){
-        h+=`<div class="msg-wrap in" data-mid="${m.id}">${swiIcon}<div class="msg-doc-bubble">${replyRef}<div class="msg-doc-icon">${ic}</div><div class="msg-doc-info"><div class="msg-doc-name">${esc(m.fileName)}</div><div class="msg-doc-size">${m.fileSize?formatBytes(m.fileSize):''}</div>${previewBtn}</div></div><div style="font-size:11px;color:var(--gray-400);margin-top:2px;padding-left:4px">${m.time}</div></div>`;
+        h+=`<div class="msg-wrap in" data-mid="${m.id}">${swiIcon}<div class="msg-doc-bubble">${card}</div><div style="font-size:11px;color:var(--gray-400);margin-top:2px;padding-left:4px">${m.time}</div></div>`;
       } else {
-        h+=`<div class="msg-wrap out" data-mid="${m.id}">${swiIcon}<div class="msg-doc-bubble">${replyRef}<div class="msg-doc-icon">${ic}</div><div class="msg-doc-info"><div class="msg-doc-name">${esc(m.fileName)}</div><div class="msg-doc-size">${m.fileSize?formatBytes(m.fileSize):''}</div>${previewBtn}</div></div><div style="font-size:11px;color:var(--gray-400);text-align:right;margin-top:2px">${m.time}</div></div>`;
+        h+=`<div class="msg-wrap out" data-mid="${m.id}">${swiIcon}<div class="msg-doc-bubble">${card}</div><div style="font-size:11px;color:var(--gray-400);text-align:right;margin-top:2px">${m.time}</div></div>`;
       }
     } else {
       const tickHtml=m.role==='out'?(m.read?'<span class="msg-tick" style="color:#25D366">✓✓</span>':'<span class="msg-tick" style="color:rgba(0,0,0,.3)">✓</span>'):'';
@@ -1485,7 +1549,7 @@ async function openDocPreview(docId, markAsRead){
     content.innerHTML=`<iframe src=${JSON.stringify(data)} style="width:100%;height:65vh;border:none;border-radius:8px;background:var(--gray-100)" title="${esc(meta.fileName)}"></iframe>`;
   } else {
     const icon=fileIcon(meta.fileType);
-    content.innerHTML=`<div style="padding:24px 16px;background:var(--gray-100);border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:8px"><span style="font-size:40px">${icon}</span><span style="font-size:14px;font-weight:600;color:var(--gray-700);word-break:break-all">${esc(meta.fileName)}</span><span style="font-size:12px;color:var(--gray-500)">${formatBytes(meta.fileSize)}</span><span style="font-size:12px;color:var(--gray-400)">পূর্বরূপ সম্ভব নয় — ডাউনলোড করুন</span></div>`;
+    content.innerHTML=`<div style="padding:24px 16px;background:var(--gray-100);border-radius:8px;display:flex;flex-direction:column;align-items:center;gap:8px"><span class="msg-doc-tile" style="width:56px;height:56px">${icon}</span><span style="font-size:14px;font-weight:600;color:var(--gray-700);word-break:break-all">${esc(meta.fileName)}</span><span style="font-size:12px;color:var(--gray-500)">${formatBytes(meta.fileSize)}</span><span style="font-size:12px;color:var(--gray-400)">পূর্বরূপ সম্ভব নয় — ডাউনলোড করুন</span></div>`;
   }
   const btn=document.getElementById('docDownloadBtn');
   btn.style.display=data?'block':'none';
@@ -1504,7 +1568,7 @@ async function onTeacherChatFileChosen(input){
     if(input.files.length>1) showToast('📄 ছবি একত্রিত করা হচ্ছে…',5000);
     const f=await API.prepareFilesForUpload(input.files);
     chatTeacherPendingFile=f;
-    document.getElementById('chatFileIcon').textContent=fileIcon(f.type);
+    document.getElementById('chatFileIcon').innerHTML=fileIcon(f.type);
     document.getElementById('chatFileName').textContent=f.name;
     document.getElementById('chatFileSize').textContent=formatBytes(f.size);
     document.getElementById('chatFilePreview').style.display='flex';
@@ -1750,6 +1814,47 @@ function saveProgressSettings(){
   renderBiboronSummary();
   renderStudentList();
 }
+function renderNoteCatSettings(){
+  const el=document.getElementById('noteCatList');
+  if(!el||!API.StudentNotes) return;
+  const cats=API.StudentNotes.getCategories();
+  if(!cats.length){ el.innerHTML='<p style="font-size:13px;color:var(--gray-500)">কোনো ক্যাটাগরি নেই</p>'; return; }
+  el.innerHTML=cats.map(c=>{
+    const locked=c.id==='general';
+    return `<div class="note-cat-row">
+      <span class="note-cat-name">${esc(c.label)}${locked?' <span style="font-size:11px;color:var(--gray-400)">(ডিফল্ট)</span>':''}</span>
+      <button type="button" class="note-cat-del" ${locked?'disabled':''} onclick="deleteNoteCategory('${esc(c.id)}')">মুছুন</button>
+    </div>`;
+  }).join('');
+}
+async function addNoteCategory(){
+  const inp=document.getElementById('noteCatNewIn');
+  const label=(inp&&inp.value||'').trim();
+  if(!label){ showToast('ক্যাটাগরির নাম লিখুন'); return; }
+  if(!API.StudentNotes) return;
+  try{
+    await API.StudentNotes.upsertCategory({ id:API.uid('nc'), label });
+    if(inp) inp.value='';
+    renderNoteCatSettings();
+    showToast('ক্যাটাগরি যোগ হয়েছে');
+  }catch(e){
+    console.error(e);
+    showToast('যোগ করা যায়নি');
+  }
+}
+async function deleteNoteCategory(id){
+  if(!id||id==='general'||!API.StudentNotes) return;
+  const ok=await showConfirm('এই ক্যাটাগরি মুছবেন? সংশ্লিষ্ট নোট «সাধারণ»-এ চলে যাবে।',{title:'ক্যাটাগরি মুছুন',okText:'মুছে ফেলুন',danger:true});
+  if(!ok) return;
+  try{
+    await API.StudentNotes.deleteCategory(id);
+    renderNoteCatSettings();
+    showToast('ক্যাটাগরি মুছে ফেলা হয়েছে');
+  }catch(e){
+    console.error(e);
+    showToast(e.message==='cannot_delete_default'?'ডিফল্ট মুছা যায় না':'মুছা যায়নি');
+  }
+}
 function renderStudentList(){
   let list=API.Students.getAll();
   if(studentYearFilter!=null){
@@ -1802,7 +1907,7 @@ function renderStudentList(){
     const flagsHtml=row.flags&&row.flags.length?`<div class="stu-flags">${row.flags.map(f=>`<span class="stu-flag">${esc(_stuFlagLbl[f]||f)}</span>`).join('')}</div>`:'';
     const menuOpen=stuRowMenuId===s.id;
     const menuHtml=menuOpen?`<div class="stu-more-menu">
-      <button type="button" class="stu-more-item" onclick="stuRowAction('chat','${s.id}',event)">চ্যাট</button>
+      <button type="button" class="stu-more-item" onclick="stuRowAction('chat','${s.id}',event)">রিসালা</button>
       <button type="button" class="stu-more-item" onclick="stuRowAction('task','${s.id}',event)">আমল</button>
       <button type="button" class="stu-more-item" onclick="stuRowAction('pin','${s.id}',event)">পিন</button>
     </div>`:'';
@@ -2459,7 +2564,7 @@ function goTab(tab){
     hAvTab.style.display='none';
   }
   document.getElementById('fab').style.display=tab==='settings'?'none':'flex';
-  if(tab==='settings') loadProgressSettingsUI();
+  if(tab==='settings'){ loadProgressSettingsUI(); renderNoteCatSettings(); }
   if(tab==='students'){ renderBiboronSummary(); renderStudentList(); }
   if(tab==='exams')  { renderQuizList(); goExamTab('list'); }
   if(tab==='docs')   { renderDocsGrouped(); }
