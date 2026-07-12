@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest-teacher.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <title>জিম্মাদার প্যানেল · Waqful Madinah</title>
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="tablet-desktop.css">
 <link rel="stylesheet" href="amal.css">
@@ -31,6 +31,7 @@
 .lock-soft-brand{text-align:center;max-width:300px}
 .lock-soft-app-name{font-family:'Noto Naskh Arabic',serif;font-weight:600;font-size:20px;line-height:1.35;color:#0f172a}
 .lock-soft-app-name.lock-soft-app-name--err{font-family:var(--font);font-size:14px;font-weight:600;color:#b91c1c}
+.header-title.header-title--ar{font-family:'Noto Naskh Arabic',serif;font-weight:600;font-size:18px;line-height:1.35}
 .lock-soft-notif-btn{
   flex-shrink:0;width:42px;height:42px;padding:0;
   display:inline-flex;align-items:center;justify-content:center;
@@ -91,19 +92,35 @@
 /* ── Broadcast read receipt ── */
 .bc-receipt{font-size:10px;color:#7B1FA2;text-align:right;margin-top:2px;padding-right:2px;font-weight:600}
 
-/* ── Diary panel ── */
-.diary-panel{position:fixed;inset:0;background:#fff;z-index:112;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
-.diary-panel.open{transform:translateX(0)}
-.diary-hd{display:flex;align-items:center;gap:10px;padding:max(14px,env(safe-area-inset-top)) 12px 10px;background:#075E54;color:#fff}
-.diary-new-btn{margin-left:auto;background:rgba(255,255,255,.18);border:none;color:#fff;font-family:var(--font);font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px;cursor:pointer;white-space:nowrap}
-.diary-entry-card{margin:10px 14px 0;border-radius:14px;background:#f8fafc;border:1px solid #e8edf2;overflow:hidden}
-.diary-entry-hd{display:flex;align-items:center;gap:8px;padding:10px 12px 8px;border-bottom:1px solid #f1f5f9}
-.diary-entry-date{font-size:12px;font-weight:700;color:#075E54;background:#E8F5F3;border-radius:8px;padding:2px 8px}
-.diary-entry-time{font-size:11px;color:#94a3b8}
-.diary-entry-body{padding:10px 12px;font-size:14px;color:#1e293b;white-space:pre-wrap;line-height:1.6}
-.diary-entry-actions{display:flex;gap:6px;padding:0 12px 10px}
-.diary-act-btn{font-size:12px;font-weight:600;border:none;border-radius:8px;padding:4px 12px;cursor:pointer}
+/* ── Diary screen (settings-style, under header) ── */
+.diary-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;background:#f8fafc;border-bottom:1px solid #f1f5f9;flex-shrink:0}
+.diary-toolbar-left{display:flex;align-items:baseline;gap:8px;min-width:0;flex:1}
+.diary-toolbar-title{font-size:14px;font-weight:700;color:#475569;letter-spacing:.2px;white-space:nowrap}
+.diary-toolbar-count{font-size:12px;font-weight:600;color:#94a3b8;white-space:nowrap}
+.diary-new-btn{font-size:12px;font-weight:700;background:#075E54;color:#fff;border:none;border-radius:12px;padding:4px 12px;cursor:pointer;flex-shrink:0;white-space:nowrap;font-family:var(--font)}
+.diary-new-btn:active{opacity:.88}
+.diary-entry-card{display:flex;align-items:center;gap:8px;margin:6px 12px 0;padding:8px 10px;border-radius:10px;background:#fff;border:1px solid #e8edf2}
+.diary-entry-main{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px}
+.diary-entry-date{font-size:10px;font-weight:700;color:#075E54;background:#E8F5F3;border-radius:6px;padding:1px 6px;flex-shrink:0;white-space:nowrap}
+.diary-entry-preview{font-size:13px;font-weight:600;color:#1e293b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.diary-entry-actions{display:flex;gap:4px;flex-shrink:0}
+.diary-act-btn{width:30px;height:30px;border:none;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;line-height:0}
+.diary-act-btn .ic-svg svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .diary-act-btn.edit{background:#E8F5F3;color:#075E54}.diary-act-btn.del{background:#FEE2E2;color:#991B1B}
+.diary-modal-sheet{display:flex;flex-direction:column;min-height:min(88vh,560px);max-height:min(92vh,640px);overflow:hidden}
+#diaryEntryModal .modal-title{margin-bottom:10px;font-size:16px;flex-shrink:0}
+.diary-modal-row{display:flex;gap:8px;margin-bottom:10px;align-items:stretch;flex-shrink:0}
+.diary-modal-date{flex:0 0 42%;min-width:0;margin:0!important}
+.diary-modal-title-in{flex:1;min-width:0;margin:0!important}
+.diary-modal-text{flex:1 1 auto;min-height:min(52vh,360px);height:auto;resize:none;margin-bottom:0!important}
+.diary-modal-actions{display:flex;align-items:center;gap:10px;margin-top:12px;flex-shrink:0}
+.diary-modal-actions .diary-modal-action-btn{flex:1;width:auto;margin:0;padding:10px 8px;font-size:14px}
+.diary-modal-voice-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;flex-shrink:0;width:52px}
+.diary-modal-voice-wrap .chat-mic-btn{opacity:1;width:44px;height:44px;color:#075E54;background:#E8F5F3}
+.diary-modal-voice-wrap .chat-mic-btn.recording{color:#fff;background:#EF5350}
+.diary-modal-voice-wrap .chat-mic-btn.busy{color:#1565C0;background:#E3F2FD}
+.diary-modal-voice-wrap .daily-record-timer{font-size:11px;font-weight:800;color:#075E54;font-variant-numeric:tabular-nums;flex-shrink:0;line-height:1;min-height:14px;display:none}
+.diary-modal-voice-wrap .daily-record-timer.is-live{display:block;color:#F44336}
 /* প্রোফাইল খোলা থাকলেও নিচের ট্যাব দেখা যাবে — স্ক্রল কন্টেন্ট নেভের পিছনে যাবে না */
 #profileView.open .profile-body{padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
 #teaMainShell #screen-tasks .amal-panel>.list-scroll{padding-bottom:16px}
@@ -179,13 +196,19 @@
 .biboron-hint strong{color:var(--gray-700);font-weight:700}
 .stu-today--zero{color:#C62828!important;font-weight:700}
 .stu-today--done{color:var(--gray-500)!important;font-weight:600}
-.s-name-side{white-space:nowrap;font-weight:500}
-.s-name-meta{display:inline-block;font-size:12px;font-weight:500;color:var(--gray-500);line-height:1.35;padding:1px 3px;vertical-align:baseline;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.s-name-row{display:flex;align-items:baseline;gap:6px;min-width:0;width:100%}
+.s-name-text{font-size:14px;font-weight:600;color:var(--gray-700);line-height:1.3;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:0 1 auto}
+.s-name-side{flex:0 0 auto;white-space:nowrap;font-weight:500;font-size:12px;color:var(--gray-500);line-height:1.3}
+.s-name-meta{display:inline;font-size:12px;font-weight:500;color:var(--gray-500);line-height:1.3;padding:0 1px}
 .s-name-meta.stu-today--zero{color:#C62828!important;font-weight:700}
 .s-name-meta.stu-today--done{color:var(--gray-500)!important;font-weight:600}
-#screen-students .s-name{line-height:1.45;overflow:visible}
+#screen-students .s-name{font-size:14px;font-weight:600;line-height:1.3;overflow:visible}
 #screen-students .s-info{overflow:visible;min-width:0}
 #screen-students .list-scroll{overflow-x:visible}
+#screen-students .stu-flag-ic{flex:0 0 auto;margin-left:0}
+#screen-chats .chat-name-wrap{display:flex;align-items:baseline;gap:6px;min-width:0;flex:1;overflow:hidden}
+#screen-chats .chat-name{font-size:14px;font-weight:600;line-height:1.3;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#screen-chats .chat-waqf{font-size:12px;font-weight:600;color:#128C7E;flex-shrink:0;line-height:1.3}
 .stu-flag-ic{display:inline-flex;align-items:center;margin-left:6px;vertical-align:middle;color:#E65100;line-height:0}
 .stu-flag-ic svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .stu-more-wrap{position:relative;flex-shrink:0}
@@ -383,12 +406,12 @@
 <div class="header" id="hdr">
   <button class="header-back" id="backBtn" onclick="closeChat()">‹</button>
   <div class="header-avatar" id="hAvatar" style="display:none;background:#128C7E" onclick="if(curChat&&curChat!=='_broadcast')openStudentProfile(curChat)"></div>
-  <div class="header-info" style="cursor:default" id="hInfo" onclick="if(curChat&&curChat!=='_broadcast')openStudentProfile(curChat)"><div class="header-title" id="hTitle">Waqful Madinah</div><div class="header-sub" id="hSub">জিম্মাদার</div></div>
+  <div class="header-info" style="cursor:default" id="hInfo" onclick="if(curChat&&curChat!=='_broadcast')openStudentProfile(curChat)"><div class="header-title header-title--ar" id="hTitle" lang="ar">وقف المدينة</div><div class="header-sub" id="hSub" style="display:none"></div></div>
   <div class="header-actions">
     <button type="button" class="header-btn" id="inChatSearchBtn" style="display:none" onclick="toggleInChatSearch()" title="এই চ্যাটে খুঁজুন" aria-label="এই চ্যাটে খুঁজুন"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
-    <button type="button" class="header-btn" id="diaryToggleBtn" onclick="openDiary()" title="ডায়েরি" aria-label="ডায়েরি"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><path d="M8 7h8M8 11h6"/></svg></button>
+    <button type="button" class="header-btn" id="diaryToggleBtn" onclick="toggleDiary()" title="ডায়েরি" aria-label="ডায়েরি"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/><path d="M8 7h8M8 11h6"/></svg></button>
     <button type="button" class="header-btn" id="searchToggleBtn" onclick="toggleSearch()" title="খুঁজুন" aria-label="খুঁজুন"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
-    <button type="button" class="header-btn" id="settingsToggleBtn" onclick="goTab('settings')" title="সেটিংস" aria-label="সেটিংস"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></button>
+    <button type="button" class="header-btn" id="settingsToggleBtn" onclick="toggleSettings()" title="সেটিংস" aria-label="সেটিংস"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></button>
   </div>
 </div>
 
@@ -580,6 +603,18 @@
   </div>
 </div>
 
+<!-- ══ DIARY / নোট ════════════════════════════════════════ -->
+<div class="screen" id="screen-diary">
+  <div class="diary-toolbar">
+    <div class="diary-toolbar-left">
+      <span class="diary-toolbar-title">জিম্মাদারির ডায়েরি</span>
+      <span class="diary-toolbar-count" id="diaryHdSub"></span>
+    </div>
+    <button type="button" class="diary-new-btn" onclick="openDiaryEntryModal()">＋ নতুন</button>
+  </div>
+  <div class="list-scroll" id="diaryList"></div>
+</div>
+
 <!-- ══ CHAT VIEW ══════════════════════════════════════════ -->
 <div class="chat-view" id="chatView">
   <div class="bc-notice" id="bcNotice">📢 গ্রুপ বার্তা — সবাইকে পাঠানো হবে</div>
@@ -636,8 +671,10 @@
     </button>
     <div class="chat-input-wrap">
       <textarea id="msgIn" placeholder="রিসালা লিখুন" rows="1" oninput="autoResize(this)"></textarea>
+      <span class="chat-mic-timer" id="chatMicTimer" aria-hidden="true">0:00</span>
       <button type="button" class="chat-mic-btn" id="chatMicBtn" onclick="toggleChatVoice()" title="ভয়েস লিখন" aria-label="ভয়েস লিখন">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+        <svg class="chat-mic-ic" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+        <span class="chat-mic-waves" aria-hidden="true"><span></span><span></span><span></span></span>
       </button>
     </div>
     <button class="send-btn" onclick="sendMsg()">➤</button>
@@ -677,28 +714,27 @@
   <div class="profile-body" id="profileBody"></div>
 </div>
 
-<!-- ══ DIARY PANEL ══════════════════════════════════════════ -->
-<div class="diary-panel" id="diaryPanel">
-  <div class="diary-hd">
-    <button class="profile-hd-back" onclick="closeDiary()">‹</button>
-    <div class="profile-hd-info">
-      <div class="profile-hd-name">আমার ডায়েরি</div>
-      <div class="profile-hd-sub" id="diaryHdSub">ব্যক্তিগত অভিজ্ঞতা ও ঘটনা</div>
-    </div>
-    <button class="diary-new-btn" onclick="openDiaryEntryModal()">＋ নতুন</button>
-  </div>
-  <div class="list-scroll" id="diaryList"></div>
-</div>
-
 <!-- Diary entry modal -->
-<div class="modal-overlay" id="diaryEntryModal"><div class="modal-sheet">
+<div class="modal-overlay" id="diaryEntryModal"><div class="modal-sheet diary-modal-sheet">
   <div class="modal-handle"></div>
-  <div class="modal-title" id="diaryModalTitle">নতুন ডায়েরি এন্ট্রি</div>
-  <input type="date" id="diaryEntryDate" class="form-input" style="margin-bottom:10px">
-  <textarea id="diaryEntryText" class="form-input" rows="6" placeholder="আজকের অভিজ্ঞতা, ঘটনা বা চিন্তা লিখুন…" style="resize:none;min-height:130px" oninput="autoResize(this)"></textarea>
+  <div class="modal-title" id="diaryModalTitle">নতুন ডায়েরি</div>
+  <div class="diary-modal-row">
+    <input type="date" id="diaryEntryDate" class="form-input diary-modal-date" aria-label="তারিখ">
+    <input type="text" id="diaryEntryTitle" class="form-input diary-modal-title-in" placeholder="শিরোনাম" maxlength="80" oninput="updateDiarySaveState()">
+  </div>
+  <textarea id="diaryEntryText" class="form-input diary-modal-text" rows="12" placeholder="এখানে লিখুন, অথবা মাইকে বলে ট্রান্সক্রিপশন নিন…" oninput="updateDiarySaveState()"></textarea>
   <input type="hidden" id="diaryEditingId">
-  <button class="btn-primary" style="margin-top:10px" onclick="saveDiaryEntry()">💾 সেভ করুন</button>
-  <button class="btn-secondary" style="margin-top:6px" onclick="closeModal('diaryEntryModal')">বাতিল</button>
+  <div class="diary-modal-actions">
+    <button type="button" class="btn-secondary diary-modal-action-btn" onclick="closeDiaryEntryModal()">বাতিল</button>
+    <div class="diary-modal-voice-wrap">
+      <span id="diaryRecordTimer" class="daily-record-timer" aria-hidden="true">02:00</span>
+      <button type="button" id="diaryRecordBtn" class="chat-mic-btn" onclick="toggleDiaryRecording()" title="ভয়েস রেকর্ড" aria-label="রেকর্ড শুরু করুন">
+        <svg class="chat-mic-ic" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+        <span class="chat-mic-waves" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+    </div>
+    <button type="button" id="diarySaveBtn" class="btn-primary diary-modal-action-btn" onclick="saveDiaryEntry()">সেভ করুন</button>
+  </div>
 </div></div>
 
 <!-- ══ GROUP COMPOSE PANEL ══════════════════════════════════ -->
@@ -841,6 +877,15 @@
 </div></div>
 
 <div class="toast" id="toast"></div>
+
+<!-- Confirm modal -->
+<div class="modal-overlay" id="confirmModal"><div class="modal-sheet" style="max-width:340px">
+  <div class="modal-handle"></div>
+  <div class="modal-title" id="confirmModalTitle">নিশ্চিত করুন</div>
+  <p id="confirmModalMsg" style="font-size:14px;color:var(--gray-600);line-height:1.6;margin:-6px 0 18px"></p>
+  <button type="button" class="btn-primary" id="confirmModalOkBtn" onclick="_confirmModalResolve(true)">নিশ্চিত</button>
+  <button type="button" class="btn-secondary" onclick="_confirmModalResolve(false)">বাতিল</button>
+</div></div>
 <script>window.__MADRASA_ROLE__='teacher';</script>
 <script src="https://unpkg.com/@supabase/supabase-js@2.49.8/dist/umd/supabase.js"></script>
 <script src="supabase-config.js"></script>
@@ -868,6 +913,62 @@ let chatTeacherPendingFile=null;
 let curProfileSid=null;
 let replyingTo=null;
 const C=['#128C7E','#1565C0','#6A1B9A','#BF360C','#1B5E20'];
+const BRAND_AR='وقف المدينة';
+function brandName(m){
+  const s=String(m==null?'':m).trim();
+  if(!s || /^waqful\s*madinah$/i.test(s)) return BRAND_AR;
+  return s;
+}
+function setAppHeaderTitle(name){
+  const el=document.getElementById('hTitle');
+  if(!el) return;
+  const t=brandName(name);
+  el.textContent=t;
+  // আরবি ব্র্যান্ড — বামেই থাকবে (dir=rtl দিলে ডানে চলে যায়)
+  el.removeAttribute('dir');
+  if(t===BRAND_AR){
+    el.setAttribute('lang','ar');
+    el.classList.add('header-title--ar');
+  }else{
+    el.removeAttribute('lang');
+    el.classList.remove('header-title--ar');
+  }
+  const sub=document.getElementById('hSub');
+  if(sub){ sub.textContent=''; sub.style.display='none'; }
+}
+function setChatHeaderTitle(name){
+  const el=document.getElementById('hTitle');
+  if(!el) return;
+  el.textContent=name==null?'':String(name);
+  el.removeAttribute('dir');
+  el.removeAttribute('lang');
+  el.classList.remove('header-title--ar');
+}
+function setHeaderSub(text){
+  const sub=document.getElementById('hSub');
+  if(!sub) return;
+  const t=String(text==null?'':text).trim();
+  sub.textContent=t;
+  sub.style.display=t?'block':'none';
+}
+
+// ── Custom confirm (native confirm() often blocked in PWA) ──
+let _confirmModalCb=null;
+function showConfirm(msg,{title='নিশ্চিত করুন',okText='নিশ্চিত',danger=false}={}){
+  return new Promise(resolve=>{
+    _confirmModalCb=resolve;
+    document.getElementById('confirmModalTitle').textContent=title;
+    document.getElementById('confirmModalMsg').textContent=msg;
+    const ok=document.getElementById('confirmModalOkBtn');
+    ok.textContent=okText;
+    ok.style.background=danger?'#dc2626':'';
+    openModal('confirmModal');
+  });
+}
+function _confirmModalResolve(v){
+  closeModal('confirmModal');
+  if(_confirmModalCb){ const cb=_confirmModalCb; _confirmModalCb=null; cb(v); }
+}
 
 // ── Stroke SVG icons (bottom-nav / student amal style) ─────
 const _svgIcDone='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>';
@@ -931,8 +1032,8 @@ function init(){
     API.Tasks.resetDailyForToday();
     const t=API.DB.getTeacher();
     document.getElementById('tName').value=t.name||'';
-    document.getElementById('tMadrasa').value=t.madrasa||'';
-    document.getElementById('hTitle').textContent=t.madrasa||'Waqful Madinah';
+    document.getElementById('tMadrasa').value=brandName(t.madrasa);
+    setAppHeaderTitle(t.madrasa);
     document.getElementById('t_dl').value=API.nextDate(3);
     loadProgressSettingsUI();
     document.querySelectorAll('.modal-overlay').forEach(el=>el.addEventListener('click',e=>{ if(e.target===el) closeModal(el.id); }));
@@ -1202,13 +1303,14 @@ function renderChatList(f=''){
     if(last?.role==='out'){
       tickPrefix=last.read?'<span style="color:#25D366;font-size:13px">✓✓</span> ':'<span style="color:var(--gray-400);font-size:13px">✓</span> ';
     }
-    const preview=last?(tickPrefix+(last.type==='doc'?`<span class="ic-svg" style="vertical-align:-2px">${_svgClip}</span> ${esc(last.fileName||last.text)}`:esc(last.text.slice(0,40)))):esc(s.cls||'নতুন');
+    const previewText=last&&last.type!=='doc'?String(last.text||'').replace(/\s+/g,' ').trim().slice(0,40):'';
+    const preview=last?(tickPrefix+(last.type==='doc'?`<span class="ic-svg" style="vertical-align:-2px">${_svgClip}</span> ${esc(String(last.fileName||last.text||'').replace(/\s+/g,' ').trim())}`:esc(previewText))):esc(s.cls||'নতুন');
     // Badge: green = student sent a message teacher hasn't read yet
     let badgeHtml='';
     if(ur) badgeHtml+=`<span class="chat-badge">${ur}</span>`;
     if(API.DailySchedule&&API.DailySchedule.hasPendingApproval(s.id))
       badgeHtml+=`<span class="chat-badge chat-badge--sched" title="সময়সূচি অনুমোদনের অপেক্ষায়"><span class="ic-svg">${_svgCal}</span></span>`;
-    h+=`<div class="chat-item" onclick="openChat('${s.id}')">${pctAvatarHtml(s.id,'chat-avatar')}<div class="chat-body"><div class="chat-row1"><span class="chat-name">${esc(s.name)}${s.responsibility?` <span style="font-size:10px;font-weight:700;color:#E65100;background:#FFF3E0;border-radius:5px;padding:1px 5px">${esc(s.responsibility)}</span>`:''}</span><span class="chat-time">${last?.time||''}</span></div><div class="chat-row2">${s.waqfId?`<span class="chat-waqf">${esc(API.Students.displayWaqfId(s.waqfId))}</span> · `:''}<span class="chat-preview">${preview}</span>${badgeHtml}</div></div></div>`;
+    h+=`<div class="chat-item" onclick="openChat('${s.id}')">${pctAvatarHtml(s.id,'chat-avatar')}<div class="chat-body"><div class="chat-row1"><span class="chat-name-wrap"><span class="chat-name">${esc(s.name)}</span>${s.waqfId?`<span class="chat-waqf">· ${esc(API.Students.displayWaqfId(s.waqfId))}</span>`:''}${s.responsibility?`<span style="font-size:10px;font-weight:700;color:#E65100;background:#FFF3E0;border-radius:5px;padding:1px 5px;flex-shrink:0">${esc(s.responsibility)}</span>`:''}</span><span class="chat-time">${last?.time||''}</span></div><div class="chat-row2"><span class="chat-preview">${preview}</span>${badgeHtml}</div></div></div>`;
   });
   // সবাইকে বার্তা — সবসময় তালিকার নিচে
   if(!f){
@@ -1219,7 +1321,7 @@ function renderChatList(f=''){
           ? `<span style="font-size:11px;font-weight:700;background:#FFF3E0;color:#E65100;border-radius:8px;padding:1px 7px;margin-left:4px">${rcpt.read_count}/${rcpt.total_count} দেখেছেন</span>`
           : `<span style="font-size:11px;font-weight:700;background:#E8F5E9;color:#2E7D32;border-radius:8px;padding:1px 7px;margin-left:4px">সবাই দেখেছেন</span>`)
       : '';
-    h+=`<div class="chat-item" onclick="openChat('_broadcast')"><div class="chat-avatar chat-avatar--bc"><span class="ic-svg">${_svgMegaphone}</span></div><div class="chat-body"><div class="chat-row1"><span class="chat-name">সবাইকে বার্তা</span><span class="chat-time">${last?.time||''}</span></div><div class="chat-row2"><span class="chat-preview">${esc(last?.text||'গ্রুপ বার্তা')}</span>${rcptHtml}</div></div></div>`;
+    h+=`<div class="chat-item" onclick="openChat('_broadcast')"><div class="chat-avatar chat-avatar--bc"><span class="ic-svg">${_svgMegaphone}</span></div><div class="chat-body"><div class="chat-row1"><span class="chat-name">সবাইকে বার্তা</span><span class="chat-time">${last?.time||''}</span></div><div class="chat-row2"><span class="chat-preview">${esc(String(last?.text||'গ্রুপ বার্তা').replace(/\s+/g,' ').trim())}</span>${rcptHtml}</div></div></div>`;
   }
   document.getElementById('chatList').innerHTML=h||`<div class="empty-state"><div class="icon"><span class="ic-svg">${_svgChat}</span></div><p>ছাত্র যোগ করুন।</p></div>`;
 }
@@ -1244,8 +1346,8 @@ function openChat(id){
     hAv.classList.add('s-avatar-pct');
     hAv.style.setProperty('--pct',String(pct));
   }
-  document.getElementById('hTitle').textContent=isBC?'সবাইকে বার্তা':s?.name;
-  document.getElementById('hSub').textContent=isBC?`${API.Students.getAll().length} জন`:(s?[s.waqfId?API.Students.displayWaqfId(s.waqfId):null,s.responsibility||null,s.cls||null].filter(Boolean).join(' · '):'');
+  setChatHeaderTitle(isBC?'সবাইকে বার্তা':(s?.name||''));
+  setHeaderSub(isBC?`${API.Students.getAll().length} জন`:(s?[s.waqfId?API.Students.displayWaqfId(s.waqfId):null,s.responsibility||null,s.cls||null].filter(Boolean).join(' · '):''));
   document.getElementById('fab').style.display='none';
   document.getElementById('searchToggleBtn').style.display='none';
   const _setBtn=document.getElementById('settingsToggleBtn'); if(_setBtn) _setBtn.style.display='none';
@@ -1289,8 +1391,7 @@ function closeChat(){
   const _setBtn2=document.getElementById('settingsToggleBtn'); if(_setBtn2) _setBtn2.style.display='flex';
   document.getElementById('inChatSearchBtn').style.display='none';
   const t=API.DB.getTeacher();
-  document.getElementById('hTitle').textContent=t.madrasa||'Waqful Madinah';
-  document.getElementById('hSub').textContent='জিম্মাদার';
+  setAppHeaderTitle(t.madrasa);
   const hAvClose=document.getElementById('hAvatar');
   if(hAvClose){
     hAvClose.classList.remove('s-avatar-pct','chat-avatar--bc');
@@ -1931,7 +2032,7 @@ function renderStudentList(){
     const sideBits=[];
     if(batch) sideBits.push(`<span class="s-name-meta">${esc(batch)}</span>`);
     if(dayTotal>0) sideBits.push(`<span class="${dayCls}">গতকাল ${dayDone}/${dayTotal}</span>`);
-    const sideHtml=sideBits.length?`<span class="s-name-side"> · ${sideBits.join(' · ')}</span>`:'';
+    const sideHtml=sideBits.length?`<span class="s-name-side">· ${sideBits.join(' · ')}</span>`:'';
     const docIc=row.flags&&row.flags.includes('doc')?_docFlagIc:'';
     const menuOpen=stuRowMenuId===s.id;
     const menuHtml=menuOpen?`<div class="stu-more-menu">
@@ -1942,7 +2043,7 @@ function renderStudentList(){
     return `<div class="student-item" onclick="if(stuRowMenuId){closeStuRowMenu();renderStudentList();return;}openStudentProfile('${s.id}')">
       ${pctAvatarHtml(s.id,'s-avatar')}
       <div class="s-info">
-        <div class="s-name">${esc(s.name)}${s.responsibility?` <span style="font-size:11px;font-weight:600;color:#E65100;background:#FFF3E0;border-radius:6px;padding:1px 6px">${esc(s.responsibility)}</span>`:''}${sideHtml}${docIc}</div>
+        <div class="s-name s-name-row"><span class="s-name-text">${esc(s.name)}</span>${s.responsibility?`<span style="font-size:11px;font-weight:600;color:#E65100;background:#FFF3E0;border-radius:6px;padding:1px 6px;flex-shrink:0">${esc(s.responsibility)}</span>`:''}${sideHtml}${docIc}</div>
       </div>
       <div class="stu-more-wrap">
         <button type="button" class="stu-more-btn${menuOpen?' open':''}" onclick="toggleStuRowMenu('${s.id}',event)" title="আরও" aria-label="আরও"><span class="ic-svg"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.5" fill="currentColor" stroke="none"/></svg></span></button>
@@ -2548,40 +2649,89 @@ function renderStorageTree(){
 
 // ══ SETTINGS ═══════════════════════════════════════════════
 async function sendBC(){ const text=document.getElementById('bcText').value.trim(); if(!text){ showToast('বার্তা লিখুন!'); return; } try{ await API.Messages.broadcast(text); closeModal('bcModal'); document.getElementById('bcText').value=''; renderChatList(); showToast('📢 সবাইকে পাঠানো হয়েছে'); }catch(e){ console.error(e); showToast('❌ বার্তা পাঠানো হয়নি'); } }
-async function saveInfo(){ try{ await API.DB.saveTeacher({name:document.getElementById('tName').value.trim()||'জিম্মাদার',madrasa:document.getElementById('tMadrasa').value.trim()||'Waqful Madinah'}); document.getElementById('hTitle').textContent=API.DB.getTeacher().madrasa; showToast('✅ সংরক্ষিত'); }catch(e){ console.error(e); showToast('❌ সংরক্ষণ হয়নি'); } }
+async function saveInfo(){ try{ await API.DB.saveTeacher({name:document.getElementById('tName').value.trim()||'জিম্মাদার',madrasa:document.getElementById('tMadrasa').value.trim()||BRAND_AR}); setAppHeaderTitle(API.DB.getTeacher().madrasa); showToast('✅ সংরক্ষিত'); }catch(e){ console.error(e); showToast('❌ সংরক্ষণ হয়নি'); } }
 async function changeTPin(){ const p=String(document.getElementById('newTPin').value).trim(); if(!/^\d{4}$/.test(p)){ showToast('৪ সংখ্যার পিন দিন!'); return; } try{ await API.Auth.setTeacherPin(p); document.getElementById('newTPin').value=''; showToast('✅ পিন পরিবর্তন হয়েছে'); }catch(e){ console.error(e); showToast('❌ পিন পরিবর্তন হয়নি'); } }
 function doExport(){ const b=new Blob([API.DB.exportJSON()],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download=`madrasa_${API.today()}.json`; a.click(); showToast('✅ ব্যাকআপ হচ্ছে'); }
 function doImport(input){ const r=new FileReader(); r.onload=e=>{ try{ API.DB.importJSON(e.target.result).then(()=>{ renderAll(); showToast('✅ পুনরুদ্ধার সম্পন্ন!'); }).catch(()=>showToast('❌ পুনরুদ্ধার ব্যর্থ!')); }catch{ showToast('❌ ফাইল সঠিক নয়!'); } }; r.readAsText(input.files[0]); input.value=''; }
 
 // ══ NAV ════════════════════════════════════════════════════
-function goTab(tab){
+let _tabBeforeHeader='chats';
+function _headerBackTab(){
+  const b=_tabBeforeHeader;
+  return (b&&b!=='settings'&&b!=='diary')?b:'chats';
+}
+function isDiaryOpen(){ return curTab==='diary'; }
+function isSearchOpen(){ const b=document.getElementById('searchBar'); return !!(b&&b.style.display!=='none'); }
+function syncHeaderBtns(){
+  const d=document.getElementById('diaryToggleBtn');
+  const s=document.getElementById('searchToggleBtn');
+  const t=document.getElementById('settingsToggleBtn');
+  if(d) d.classList.toggle('header-btn--active', curTab==='diary');
+  if(s) s.classList.toggle('header-btn--active', isSearchOpen());
+  if(t) t.classList.toggle('header-btn--active', curTab==='settings');
+}
+function closeSearchBar(){
+  const b=document.getElementById('searchBar');
+  if(!b||b.style.display==='none') return;
+  const inp=b.querySelector('input');
+  b.style.display='none';
+  if(inp) inp.value='';
+  hideGlobalMsgSearchResults();
+  if(curTab==='docs') renderDocsGrouped();
+  else if(curTab==='chats') renderChatList('');
+}
+function toggleSettings(){
+  if(curTab==='settings'){
+    closeSearchBar();
+    goTab(_headerBackTab());
+    return;
+  }
+  closeSearchBar();
+  goTab('settings');
+}
+function toggleDiary(){
+  if(curTab==='diary'){
+    closeSearchBar();
+    goTab(_headerBackTab());
+    return;
+  }
+  closeSearchBar();
+  goTab('diary');
+}
+function goTab(tab, opts){
   uiViewTransition(()=>{
+  if((tab==='settings'||tab==='diary')&&curTab!=='settings'&&curTab!=='diary')
+    _tabBeforeHeader=curTab||'chats';
   curTab=tab;
   // Close profile panel if open
   if(document.getElementById('profileView').classList.contains('open')) closeStudentProfile();
   // Restore header actions (may have been hidden inside a chat)
   document.getElementById('searchToggleBtn').style.display='flex';
   const setBtn=document.getElementById('settingsToggleBtn');
-  if(setBtn){ setBtn.style.display='flex'; setBtn.classList.toggle('header-btn--active', tab==='settings'); }
-  const sb=document.getElementById('searchBar');
-  if(sb&&sb.style.display!=='none'){
-    const inp=sb.querySelector('input'); if(inp) inp.value='';
-    sb.style.display='none';
-    hideGlobalMsgSearchResults(); renderChatList('');
+  if(setBtn) setBtn.style.display='flex';
+  const diaryBtn=document.getElementById('diaryToggleBtn');
+  if(diaryBtn) diaryBtn.style.display='flex';
+  if(!(opts&&opts.keepSearch)){
+    const sb=document.getElementById('searchBar');
+    if(sb&&sb.style.display!=='none'){
+      const inp=sb.querySelector('input'); if(inp) inp.value='';
+      sb.style.display='none';
+      hideGlobalMsgSearchResults(); renderChatList('');
+    }
   }
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   const tabBtn=document.getElementById('tab-'+tab);
   if(tabBtn) tabBtn.classList.add('active');
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById('screen-'+tab).classList.add('active');
+  const screenEl=document.getElementById('screen-'+tab);
+  if(screenEl) screenEl.classList.add('active');
   document.getElementById('chatView').classList.remove('open'); curChat=null;
   document.getElementById('app').classList.remove('in-chat');
   document.getElementById('backBtn').style.display='none';
   document.getElementById('inChatSearchBtn').style.display='none';
   // Reset chat header to default
   const _t=API.DB.getTeacher();
-  document.getElementById('hTitle').textContent=_t.madrasa||'Waqful Madinah';
-  document.getElementById('hSub').textContent='জিম্মাদার';
+  setAppHeaderTitle(_t.madrasa);
   const hAvTab=document.getElementById('hAvatar');
   if(hAvTab){
     hAvTab.classList.remove('s-avatar-pct','chat-avatar--bc');
@@ -2589,12 +2739,14 @@ function goTab(tab){
     hAvTab.innerHTML='';
     hAvTab.style.display='none';
   }
-  document.getElementById('fab').style.display=tab==='settings'?'none':'flex';
+  document.getElementById('fab').style.display=(tab==='settings'||tab==='diary')?'none':'flex';
   if(tab==='settings'){ loadProgressSettingsUI(); renderNoteCatSettings(); }
+  if(tab==='diary'){ renderDiaryList(); }
   if(tab==='students'){ renderBiboronSummary(); renderStudentList(); }
   if(tab==='exams')  { renderQuizList(); goExamTab('list'); }
   if(tab==='docs')   { renderDocsGrouped(); }
   if(tab==='tasks')  { if(_amalTab==='overview') renderAmalOverview(); else if(_amalTab==='students') renderAmalLeaderboard(); else renderTaskList(); }
+  syncHeaderBtns();
   });
 }
 function fabClick(){
@@ -2606,20 +2758,27 @@ function fabClick(){
 function toggleSearch(forceClose){
   const b=document.getElementById('searchBar');
   const inp=b.querySelector('input');
-  const open = forceClose===false ? false : (b.style.display==='none');
-  b.style.display=open?'block':'none';
-  if(open){
-    if(curTab==='docs'){
-      inp.placeholder='ডকুমেন্ট বা ছাত্রের নাম খুঁজুন…';
-    } else {
-      inp.placeholder='নাম, আইডি বা মেসেজ খুঁজুন…';
+  const isOpen=b.style.display!=='none';
+  const shouldOpen=forceClose===false?false:!isOpen;
+  if(!shouldOpen){
+    if(isOpen){
+      b.style.display='none';
+      if(inp) inp.value='';
+      if(curTab==='docs'){ renderDocsGrouped(); }
+      else { hideGlobalMsgSearchResults(); if(curTab==='chats') renderChatList(''); }
     }
-    inp.focus();
-  } else {
-    if(inp) inp.value='';
-    if(curTab==='docs'){ renderDocsGrouped(); }
-    else { hideGlobalMsgSearchResults(); if(curTab==='chats') renderChatList(''); }
+    syncHeaderBtns();
+    return;
   }
+  if(curTab==='settings'||curTab==='diary') goTab(_headerBackTab(),{keepSearch:true});
+  b.style.display='block';
+  if(curTab==='docs'){
+    inp.placeholder='ডকুমেন্ট বা ছাত্রের নাম খুঁজুন…';
+  } else {
+    inp.placeholder='নাম, আইডি বা মেসেজ খুঁজুন…';
+  }
+  inp.focus();
+  syncHeaderBtns();
 }
 function onSearchInput(q){
   if(curTab==='docs') onDocSearchInput(q);
@@ -2662,65 +2821,160 @@ function closeStudentProfile(){
 }
 
 // ── Diary ──────────────────────────────────────────────────
-function openDiary(){
-  renderDiaryList();
-  document.getElementById('diaryPanel').classList.add('open');
-  var _tn=document.getElementById('teaBottomNav'); if(_tn) _tn.style.display='none';
-  document.getElementById('fab').style.display='none';
+function openDiary(){ goTab('diary'); }
+function closeDiary(){ if(curTab==='diary') goTab(_headerBackTab()); }
+function diaryDateLabel(iso){
+  if(!iso) return '';
+  const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso).trim());
+  if(m){
+    const d=Number(m[3]), mo=Number(m[2]), yy=String(m[1]).slice(-2);
+    return d+'/'+mo+'/'+yy;
+  }
+  try{
+    const dt=new Date(iso+'T12:00:00');
+    if(!isNaN(dt.getTime())) return dt.getDate()+'/'+(dt.getMonth()+1)+'/'+String(dt.getFullYear()).slice(-2);
+  }catch(_){}
+  return String(iso);
 }
-function closeDiary(){
-  document.getElementById('diaryPanel').classList.remove('open');
-  var _tn=document.getElementById('teaBottomNav'); if(_tn) _tn.style.display='block';
-  document.getElementById('fab').style.display=curChat?'none':'flex';
+function diaryPreview(e){
+  const t=String((e&&e.title)||'').trim();
+  if(t) return t;
+  const body=String((e&&e.text)||'').replace(/\s+/g,' ').trim();
+  return body||'—';
 }
 function renderDiaryList(){
   const entries=API.Diary.getAll();
   const sub=document.getElementById('diaryHdSub');
-  if(sub) sub.textContent=entries.length?entries.length+'টি এন্ট্রি':'ব্যক্তিগত অভিজ্ঞতা ও ঘটনা';
+  if(sub) sub.textContent=entries.length?entries.length+'টি':'';
   const el=document.getElementById('diaryList');
+  if(!el) return;
   if(!entries.length){ el.innerHTML='<div style="text-align:center;padding:60px 20px;color:#94a3b8;font-size:14px">কোনো এন্ট্রি নেই।<br>＋ নতুন বাটনে লিখুন।</div>'; return; }
   el.innerHTML=entries.map(e=>`
     <div class="diary-entry-card">
-      <div class="diary-entry-hd">
-        <span class="diary-entry-date">${esc(e.date)}</span>
-        <span class="diary-entry-time">${esc(e.time||'')}${e.edited?' · সম্পাদিত':''}</span>
+      <div class="diary-entry-main">
+        <span class="diary-entry-date">${esc(diaryDateLabel(e.date))}</span>
+        <span class="diary-entry-preview">${esc(diaryPreview(e))}</span>
       </div>
-      <div class="diary-entry-body">${esc(e.text)}</div>
       <div class="diary-entry-actions">
-        <button class="diary-act-btn edit" onclick="editDiaryEntry('${esc(e.id)}')">✏️ সম্পাদনা</button>
-        <button class="diary-act-btn del" onclick="deleteDiaryEntry('${esc(e.id)}')">🗑 মুছুন</button>
+        <button type="button" class="diary-act-btn edit" onclick="editDiaryEntry('${esc(e.id)}')" title="সম্পাদনা" aria-label="সম্পাদনা"><span class="ic-svg">${_svgPencil}</span></button>
+        <button type="button" class="diary-act-btn del" onclick="deleteDiaryEntry('${esc(e.id)}')" title="মুছুন" aria-label="মুছুন"><span class="ic-svg">${_svgTrash}</span></button>
       </div>
     </div>`).join('');
 }
+function formatDiaryTimer(sec){
+  const m=String(Math.floor(sec/60)).padStart(2,'0');
+  const s=String(sec%60).padStart(2,'0');
+  return m+':'+s;
+}
+let _diaryVoiceBound=false;
+let diaryVoiceSecondsLeft=120;
+function setDiaryRecorderState(state){
+  const timer=document.getElementById('diaryRecordTimer');
+  if(timer){
+    timer.textContent=formatDiaryTimer(diaryVoiceSecondsLeft);
+    timer.classList.toggle('is-live',state==='recording');
+    timer.style.display=state==='recording'?'block':'none';
+  }
+}
+function updateDiarySaveState(){
+  const btn=document.getElementById('diarySaveBtn');
+  const txt=document.getElementById('diaryEntryText');
+  const titleEl=document.getElementById('diaryEntryTitle');
+  const busy=typeof VoiceType!=='undefined'&&VoiceType.isBusy();
+  const has=(txt&&txt.value.trim())||(titleEl&&titleEl.value.trim());
+  if(btn) btn.disabled=!has||busy;
+}
+function ensureDiaryVoice(){
+  if(_diaryVoiceBound||typeof VoiceType==='undefined') return;
+  VoiceType.bind({
+    id:'diary',
+    micBtn:'#diaryRecordBtn',
+    target:'#diaryEntryText',
+    timerEl:'#diaryRecordTimer',
+    timerMode:'countdown',
+    join:'newline',
+    maxSeconds:120,
+    idleTitle:'রেকর্ড শুরু করুন',
+    onTick:function(left){ diaryVoiceSecondsLeft=left; },
+    onState:function(state,extra){
+      if(state==='recording'){
+        diaryVoiceSecondsLeft=120;
+        setDiaryRecorderState('recording');
+      } else if(state==='busy'){
+        setDiaryRecorderState('idle');
+      } else if(state==='ready'){
+        diaryVoiceSecondsLeft=120;
+        setDiaryRecorderState('idle');
+      } else {
+        if(extra&&extra.error){
+          const msg=extra.error==='permission'?'মাইক অনুমতি দিন'
+            :extra.error==='unsupported'?'মাইক নেই — হাতে লিখুন'
+            :extra.error==='recorder'||extra.error==='start'?'রেকর্ড শুরু হয়নি'
+            :'ট্রান্সক্রিপশন ব্যর্থ — আবার চেষ্টা করুন';
+          showToast(msg);
+        }
+        diaryVoiceSecondsLeft=120;
+        setDiaryRecorderState('idle');
+      }
+      updateDiarySaveState();
+    },
+    onAppend:function(){ updateDiarySaveState(); }
+  });
+  _diaryVoiceBound=true;
+}
+function toggleDiaryRecording(){
+  ensureDiaryVoice();
+  if(typeof VoiceType!=='undefined') VoiceType.toggle('diary');
+}
+function stopDiaryRecording(run){
+  if(typeof VoiceType!=='undefined') VoiceType.stop('diary', !!run);
+}
+function closeDiaryEntryModal(){
+  stopDiaryRecording(false);
+  closeModal('diaryEntryModal');
+}
 function openDiaryEntryModal(id){
+  ensureDiaryVoice();
+  stopDiaryRecording(false);
+  diaryVoiceSecondsLeft=120;
   document.getElementById('diaryEditingId').value=id||'';
-  document.getElementById('diaryModalTitle').textContent=id?'এন্ট্রি সম্পাদনা':'নতুন ডায়েরি এন্ট্রি';
+  document.getElementById('diaryModalTitle').textContent=id?'ডায়েরি সম্পাদনা':'নতুন ডায়েরি';
+  const titleEl=document.getElementById('diaryEntryTitle');
   if(id){
     const e=API.Diary.getAll().find(x=>x.id===id);
     document.getElementById('diaryEntryDate').value=e?.date||API.today();
+    if(titleEl) titleEl.value=e?.title||'';
     document.getElementById('diaryEntryText').value=e?.text||'';
   } else {
     document.getElementById('diaryEntryDate').value=API.today();
+    if(titleEl) titleEl.value='';
     document.getElementById('diaryEntryText').value='';
   }
+  setDiaryRecorderState('idle');
+  updateDiarySaveState();
   openModal('diaryEntryModal');
 }
 function editDiaryEntry(id){ openDiaryEntryModal(id); }
 async function saveDiaryEntry(){
+  stopDiaryRecording(false);
   const id=document.getElementById('diaryEditingId').value;
   const text=document.getElementById('diaryEntryText').value.trim();
+  const title=(document.getElementById('diaryEntryTitle')?.value||'').trim();
   const date=document.getElementById('diaryEntryDate').value;
-  if(!text){ showToast('⚠️ কিছু লিখুন'); return; }
+  if(!text&&!title){ showToast('⚠️ কিছু লিখুন'); return; }
+  const btn=document.getElementById('diarySaveBtn');
+  if(btn) btn.disabled=true;
   try{
-    if(id) await API.Diary.update(id,text);
-    else await API.Diary.add(text,date);
-  }catch(e){ console.error(e); showToast('❌ ডায়েরি সেভ হয়নি'); return; }
+    if(id) await API.Diary.update(id,text||title,date,title);
+    else await API.Diary.add(text||title,date,title);
+  }catch(e){ console.error(e); showToast('❌ ডায়েরি সেভ হয়নি'); updateDiarySaveState(); return; }
   closeModal('diaryEntryModal');
   renderDiaryList();
   showToast('✅ ডায়েরি সেভ হয়েছে');
 }
 async function deleteDiaryEntry(id){
-  if(!confirm('এই এন্ট্রিটি মুছবেন?')) return;
+  const ok=await showConfirm('এই ডায়েরি মুছে ফেলবেন?',{title:'ডায়েরি মুছুন',okText:'মুছে ফেলুন',danger:true});
+  if(!ok) return;
   try{ await API.Diary.delete(id); }
   catch(e){ console.error(e); showToast('❌ এন্ট্রি মোছা যায়নি'); return; }
   renderDiaryList();

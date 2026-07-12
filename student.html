@@ -13,7 +13,7 @@
 <link rel="manifest" href="manifest-student.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <title>وقف المدينة</title>
-<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="tablet-desktop.css">
 <link rel="stylesheet" href="amal.css">
@@ -83,9 +83,6 @@
 .lock-screen-soft .pending-waqf{color:#64748b!important}
 .lock-screen-soft .login-lbl-c{color:#64748b}
 .lock-screen-soft .login-lbl-name{color:#0f172a}
-.lock-screen-soft .login-keypad-display{
-  background:#f8fafc;border:1px solid #e2e8f0;color:#0f172a;
-}
 .lock-screen-soft .stu-pin-dots .pin-dot{border-color:#cbd5e1;background:transparent}
 .lock-screen-soft .stu-pin-dots .pin-dot.filled{background:#4CAF50;border-color:#4CAF50}
 .lock-screen-soft #lockScreen .pin-key,.lock-screen-soft .pin-key{
@@ -119,9 +116,7 @@
 #screen-goals .goal-chip-amal.active{background:#2E7D32;border-color:#2E7D32;color:#fff}
 #screen-goals .goal-chip-akhlaq.active{background:#C2185B;border-color:#C2185B;color:#fff}
 #screen-goals .goal-chip-afkar.active{background:#F9A825;border-color:#F9A825;color:#fff}
-.daily-recorder.busy .daily-record-title{color:#1565C0}
-.daily-recorder.busy .daily-record-timer{color:#1565C0}
-#dailyNoteModal .modal-title{margin-bottom:10px;font-size:16px}
+#dailyNoteModal .modal-title{margin-bottom:10px;font-size:16px;flex-shrink:0}
 .attach-btn{width:38px;height:38px;background:#eef2f6;color:#64748b;margin-bottom:4px}
 .attach-btn svg,.chat-mic-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
 .attach-btn:active{background:#dbe3ec}
@@ -183,6 +178,7 @@
 #screen-tasks{background:#f3f4f6}
 .stu-filter-pill.active{background:#4CAF50!important;color:#fff!important;border-color:#4CAF50!important;box-shadow:0 8px 20px rgba(76,175,80,.2)}
 #stuMainShell #screen-tasks .amal-panel>.list-scroll{padding-bottom:16px}
+#screen-tasks .stu-sched-card{margin:0 6px 14px}
 
 /* ── দৈনিক সময়সূচি (আমল ট্যাব) ── */
 .stu-sched-card{background:#fff;margin:0 12px 14px;border-radius:14px;border:1px solid var(--gray-200);box-shadow:var(--shadow-sm);overflow:hidden}
@@ -304,12 +300,11 @@
 .pending-sec-label{color:rgba(255,255,255,.6);font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px;text-align:center}
 .pending-item{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:10px;padding:6px 10px;cursor:pointer;width:100%;text-align:left;margin-bottom:5px;transition:background .2s;font-family:var(--font)}
 .pending-item:active{background:rgba(255,255,255,.25)}
-.pending-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
 .pending-name{flex:1;font-size:13px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pending-waqf{display:inline;font-size:11px;font-weight:400;color:rgba(255,255,255,.65);margin-left:5px}
-.pending-badge{font-size:11px;font-weight:700;padding:1px 7px;border-radius:8px;flex-shrink:0}
-.pending-badge.msg{background:#66BB6A;color:#43A047}
-.pending-badge.task{background:#FFE082;color:#E65100}
+.pending-badge{font-size:13px;font-weight:700;padding:0;background:none;border-radius:0;flex-shrink:0}
+.pending-badge.msg{color:#C62828}
+.pending-badge.task{color:#E65100}
 
 /* ── Lock screen layout ── */
 #lockScreen{flex-direction:column;justify-content:flex-start!important;padding:0}
@@ -319,9 +314,7 @@
 .login-box{width:254px}
 .login-steps{width:100%}
 #loginStepId,#loginStepPin{width:100%;display:flex;flex-direction:column;align-items:center}
-/* shared display box — same width as pin-pad */
-.login-keypad-display{width:234px;box-sizing:border-box;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.3);border-radius:14px;color:#fff;font-family:var(--font);font-size:26px;font-weight:700;padding:10px 14px;text-align:center;letter-spacing:6px;height:62px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
-/* pin dots — same width, centered */
+/* pin / waqf dots — same width, centered */
 .stu-pin-dots{display:flex;gap:14px;justify-content:center;margin-bottom:10px;height:62px;align-items:center}
 .login-lbl-c{font-size:11px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.6px;text-transform:uppercase;text-align:center;margin-bottom:4px}
 .login-lbl-name{font-size:13px;font-weight:600;color:rgba(255,255,255,.9);text-align:center;min-height:18px;margin-bottom:6px}
@@ -366,7 +359,11 @@
         <!-- ── Step 1: Waqf ID ── -->
         <div id="loginStepId" style="display:flex;flex-direction:column;align-items:center">
           <div class="login-lbl-c">ওয়াক্বফ নং লিখুন</div>
-          <div class="login-keypad-display" id="loginIdDisplay">—</div>
+          <div class="stu-pin-dots">
+            <div class="pin-dot" id="sid0"></div>
+            <div class="pin-dot" id="sid1"></div>
+            <div class="pin-dot" id="sid2"></div>
+          </div>
           <div class="pin-pad">
             <button class="pin-key" onclick="skp('id','1')">1</button>
             <button class="pin-key" onclick="skp('id','2')">2<span class="sub">ABC</span></button>
@@ -419,7 +416,7 @@
 </div>
 <script>
 var _skId='',_skPin='';
-function _skUpdateIdDisplay(){var d=document.getElementById('loginIdDisplay');if(d)d.textContent=_skId||'—';}
+function _skUpdateIdDisplay(){[0,1,2].forEach(function(i){var d=document.getElementById('sid'+i);if(d)d.classList.toggle('filled',i<_skId.length);});}
 function _skUpdatePinDots(){[0,1,2,3].forEach(function(i){var d=document.getElementById('spd'+i);if(d)d.classList.toggle('filled',i<_skPin.length);});}
 function skp(field,digit){if(field==='id'){if(_skId.length>=3)return;_skId+=digit;_skUpdateIdDisplay();}else{if(_skPin.length>=4)return;_skPin+=digit;_skUpdatePinDots();if(_skPin.length===4)setTimeout(function(){if(typeof doLogin==='function')doLogin();},120);}}
 function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay();}else{_skPin=_skPin.slice(0,-1);_skUpdatePinDots();}}
@@ -437,7 +434,7 @@ function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay(
       <svg class="stu-h-ring" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="16" fill="none" stroke="#e8e8e8" stroke-width="3.5"/><circle id="hAvatarRing" cx="20" cy="20" r="16" fill="none" stroke="#4CAF50" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="100.5" stroke-dashoffset="100.5" transform="rotate(-90 20 20)"/></svg>
       <span class="stu-h-pct" id="hAvatarPct">—</span>
     </button>
-    <div class="header-info"><div class="header-title" id="hTitle">আসছে...</div><div class="header-sub" id="hSub">ওয়াকিফ</div></div>
+    <div class="header-info"><div class="header-title" id="hTitle">আসছে...</div><div class="header-sub" id="hSub" style="display:none"></div></div>
     <div class="stu-h-actions">
       <button type="button" class="header-btn" id="stuInChatSearchBtn" style="display:none" onclick="toggleStuInChatSearch()" title="রিসালা খুঁজুন" aria-label="রিসালা খুঁজুন"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></button>
       <button type="button" class="header-btn" onclick="logout()" title="লগআউট" aria-label="লগআউট"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></button>
@@ -482,8 +479,10 @@ function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay(
     </button>
     <div class="chat-input-wrap">
       <textarea id="msgIn" placeholder="রিসালা লিখুন" rows="1" oninput="autoResize(this)"></textarea>
+      <span class="chat-mic-timer" id="chatMicTimer" aria-hidden="true">0:00</span>
       <button type="button" class="chat-mic-btn" id="chatMicBtn" onclick="toggleChatVoice()" title="ভয়েস লিখন" aria-label="ভয়েস লিখন">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+        <svg class="chat-mic-ic" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+        <span class="chat-mic-waves" aria-hidden="true"><span></span><span></span><span></span></span>
       </button>
     </div>
     <button class="send-btn" onclick="sendMsg()">➤</button>
@@ -513,7 +512,7 @@ function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay(
     </div>
     <div class="list-scroll">
       <div class="daily-note-intro">
-        <div class="daily-note-intro-text">আজকে কি শিখলে? কি ভালো হলো? কি ভুল হলো? সংক্ষেপে লেখো।</div>
+        <div class="daily-note-intro-text">আজকের অর্জন, ভালো কি হলো?, ভুল কি হলো? সংক্ষেপে লেখো।</div>
       </div>
       <div class="daily-note-filter" id="dailyNoteFilter"></div>
       <div id="dailyNoteList"></div>
@@ -638,26 +637,27 @@ function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay(
 
 <div class="modal-overlay" id="dailyNoteModal"><div class="modal-sheet daily-note-sheet">
   <div class="modal-handle"></div><div class="modal-title" id="dailyNoteModalTitle">নতুন বিবরণ</div>
-  <div class="daily-recorder">
-    <button type="button" id="dailyRecordBtn" class="daily-record-btn" onclick="toggleDailyRecording()" aria-label="রেকর্ড শুরু করুন">
-      <span class="daily-record-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 1v11"/><path d="M19 10a7 7 0 01-14 0"/><path d="M12 19v4M8 23h8"/></svg></span>
-    </button>
-    <div class="daily-record-status">
-      <div class="daily-record-row">
-        <div id="dailyRecordTitle" class="daily-record-title">ভয়েস রেকর্ড</div>
-        <div id="dailyRecordTimer" class="daily-record-timer">02:00</div>
-      </div>
-      <div id="dailyRecordHint" class="daily-record-hint">মাইকে বলুন · সর্বোচ্চ ২ মিনিট</div>
+  <div class="daily-note-modal-row">
+    <div class="daily-note-cat-field">
+      <label class="form-label" for="dailyNoteCatSelect">ক্যাটাগরি</label>
+      <select class="form-input daily-note-cat-select" id="dailyNoteCatSelect" aria-label="ক্যাটাগরি" onchange="dailyNoteCatId=this.value||'general'"></select>
     </div>
-  </div>
-  <div class="daily-note-cat-field">
-    <label class="form-label" for="dailyNoteCatSelect">ক্যাটাগরি</label>
-    <select class="form-input daily-note-cat-select" id="dailyNoteCatSelect" aria-label="ক্যাটাগরি" onchange="dailyNoteCatId=this.value||'general'"></select>
+    <div class="daily-note-title-field">
+      <label class="form-label" for="dailyNoteTitle">শিরোনাম</label>
+      <input type="text" class="form-input daily-note-title-in" id="dailyNoteTitle" placeholder="শিরোনাম" maxlength="80" oninput="updateDailyNoteSaveState()">
+    </div>
   </div>
   <textarea class="form-input daily-note-text" id="dailyNoteText" rows="12" placeholder="এখানে লিখুন, অথবা মাইকে বলে ট্রান্সক্রিপশন নিন…" oninput="updateDailyNoteSaveState()"></textarea>
   <div class="daily-note-modal-actions">
-    <button type="button" class="btn-secondary" onclick="closeDailyNoteModal()">বাতিল</button>
-    <button type="button" id="dailyNoteSaveBtn" class="btn-primary" onclick="saveDailyNote()" disabled>সেভ করুন</button>
+    <button type="button" class="btn-secondary daily-note-action-btn" onclick="closeDailyNoteModal()">বাতিল</button>
+    <div class="daily-note-voice-wrap">
+      <span id="dailyRecordTimer" class="daily-record-timer" aria-hidden="true">02:00</span>
+      <button type="button" id="dailyRecordBtn" class="chat-mic-btn" onclick="toggleDailyRecording()" title="ভয়েস রেকর্ড" aria-label="রেকর্ড শুরু করুন">
+        <svg class="chat-mic-ic" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="17" x2="12" y2="21"/><line x1="8" y1="21" x2="16" y2="21"/></svg>
+        <span class="chat-mic-waves" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+    </div>
+    <button type="button" id="dailyNoteSaveBtn" class="btn-primary daily-note-action-btn" onclick="saveDailyNote()" disabled>সেভ করুন</button>
   </div>
 </div></div>
 
@@ -686,7 +686,7 @@ function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay(
 <div class="modal-overlay" id="scheduleEditModal"><div class="modal-sheet">
   <div class="modal-handle"></div>
   <div class="modal-title"><span class="modal-title-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></span>সম্পাদনা</div>
-  <p class="stu-sched-hint">এক লাইনে: শুরু – শেষ · AM/PM · কাজ। সংখ্যা লিখলে ফরম্যাট হবে (৫৩০ → ৫:৩০)।</p>
+  <p class="stu-sched-hint">সময়ের ঘরে ঘণ্টা মিনিট ধারাবাহিক লিখে যান। ১১৩০</p>
   <div id="scheduleEditRows"></div>
   <button type="button" class="btn-secondary stu-sched-add" onclick="scheduleEditAddRow()"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>সারি যোগ</button>
   <div class="stu-sched-actions">
@@ -745,6 +745,7 @@ let dailyNoteEditId=null;
 let _dailyVoiceBound=false;
 let dailyNoteCatId='general';
 let dailyNoteListFilter='all';
+let amalWorkDate=null; /* null = আজ; YYYY-MM-DD = নির্বাচিত দিন */
 
 function showUploadPrepError(e){
   const m=e && e.message;
@@ -838,10 +839,9 @@ function renderPendingSection(){
     const msgCnt=s.unreadCount!=null?s.unreadCount:API.Messages.unreadCount(s.id,'out');
     const waqf=API.Students.getShortId(s)||'---';
     return `<button class="pending-item" onclick="prefillId('${esc(waqf)}')">
-      <div class="pending-avatar" style="background:${s.color||'#4CAF50'}">${(s.name||'?').charAt(0)}</div>
       <div class="pending-name">${esc(s.name||'')}<span class="pending-waqf">${esc(API.Students.getShortId(s)||'')}</span></div>
-      ${msgCnt>0?`<span class="pending-badge msg">💬${msgCnt}</span>`:''}
-      ${s.taskCount>0?`<span class="pending-badge task">📋${s.taskCount}</span>`:''}
+      ${msgCnt>0?`<span class="pending-badge msg">${msgCnt}</span>`:''}
+      ${s.taskCount>0?`<span class="pending-badge task">${s.taskCount}</span>`:''}
     </button>`;
   }).join('');
 }
@@ -910,11 +910,21 @@ function showLoginErr(msg){
   el.textContent=msg;
   setTimeout(()=>{ if(el.textContent===msg) el.textContent=''; },2500);
 }
+function updateStudentHeaderSub(){
+  const el=document.getElementById('hSub');
+  if(!el||!me) return;
+  const p=[];
+  if(me.responsibility) p.push(me.responsibility);
+  if(me.cls) p.push(me.cls);
+  const txt=p.join(' · ');
+  el.textContent=txt;
+  el.style.display=txt?'block':'none';
+}
 function onLogin(){
   localStorage.setItem('madrasa_lastPanel','student');
   if(me && me.waqfId) try{ localStorage.setItem('madrasa_last_student_waqf', String(me.waqfId)); }catch(e){}
   document.getElementById('hTitle').textContent=me.name;
-  { const p=[]; if(me.waqfId) p.push(API.Students.getShortId(me)); if(me.responsibility) p.push(me.responsibility); if(me.cls) p.push(me.cls); document.getElementById('hSub').textContent=p.length?p.join(' · '):'ওয়াকিফ'; }
+  updateStudentHeaderSub();
   const sb=document.getElementById('stuInChatSearchBtn'); if(sb) sb.style.display='flex';
   var _nav=document.getElementById('stuBottomNav'); if(_nav) _nav.style.display='block';
   renderAll();
@@ -1386,12 +1396,13 @@ const _svgIcLate='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><c
 const _svgChk='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 function atCardHtml(task){
   const isDaily=task.type==='daily';
-  const isDoneToday=isDaily&&API.Tasks.isDailyDoneToday(task,me.id);
-  const st=isDaily?(isDoneToday?'done':'pending'):task.assignees[me.id];
+  const workDate=getAmalWorkDate();
+  const isDoneDaily=isDaily&&API.Tasks.isCompleted(task.id,me.id,workDate);
+  const st=isDaily?(isDoneDaily?'done':'pending'):task.assignees[me.id];
   const ic={done:_svgIcDone,pending:_svgIcPend,late:_svgIcLate};
   const cl={done:'done',late:'late',pending:''};
   const badge=isDaily?'দৈনিক':'এককালীন';
-  const btnDaily=isDoneToday
+  const btnDaily=isDoneDaily
     ? `<button type="button" class="stu-task-check done" onclick="undoDailyDone('${task.id}')" title="পূর্বাবস্থায় ফিরুন" aria-label="পূর্বাবস্থায় ফিরুন">${_svgChk}</button>`
     : `<button type="button" class="stu-task-check empty" onclick="markDailyDone('${task.id}')" title="সম্পন্ন" aria-label="সম্পন্ন"></button>`;
   const btnOnce=st!=='done'
@@ -1417,7 +1428,8 @@ function renderTaskList(f){
   if((tFilter==='all'||tFilter==='daily')&&daily.length){
     daily.forEach(t=>{ h+=atCardHtml(t); });
   } else if(tFilter==='done'&&daily.length){
-    const doneDaily=daily.filter(t=>API.Tasks.isDailyDoneToday(t,me.id));
+    const wd=getAmalWorkDate();
+    const doneDaily=daily.filter(t=>API.Tasks.isCompleted(t.id,me.id,wd));
     doneDaily.forEach(t=>{ h+=atCardHtml(t); });
   }
   if((tFilter==='all'||tFilter==='onetime'||tFilter==='done')&&onetime.length){
@@ -1428,12 +1440,26 @@ function renderTaskList(f){
   el.innerHTML=h+'<div style="height:20px"></div>';
 }
 function fTask(f,btn){ document.querySelectorAll('#amal-panel-today .stu-filter-pill').forEach(c=>c.classList.remove('active')); btn.classList.add('active'); renderTaskList(f); }
-async function markDailyDone(tid){ try{ await API.Tasks.markDailyDone(tid,me.id); renderAll(); showToast('مَا شَاءَ اللّٰه! আজকের আমল সম্পন্ন ✅'); }catch(e){ console.error(e); showToast('❌ আমল সেভ হয়নি'); } }
+async function markDailyDone(tid){
+  const d=getAmalWorkDate();
+  try{
+    if(d===API.today()) await API.Tasks.markDailyDone(tid,me.id);
+    else await API.Tasks.markCompleted(tid,me.id,{date:d,status:'done'});
+    renderAll();
+    showToast(d===API.today()?'مَا شَاءَ اللّٰه! আজকের আমল সম্পন্ন ✅':'مَا شَاءَ اللّٰه! গতকালের আমল সম্পন্ন ✅');
+  }catch(e){ console.error(e); showToast('❌ আমল সেভ হয়নি'); }
+}
 async function markDone(tid){ try{ await API.Tasks.markDone(tid,me.id); renderAll(); showToast('مَا شَاءَ اللّٰه! আমল সম্পন্ন ✅'); }catch(e){ console.error(e); showToast('❌ আমল সেভ হয়নি'); } }
 async function undoDailyDone(tid){
-  const ok=await showConfirm('আজকের এই আমলটি "সম্পন্ন" থেকে পূর্বাবস্থায় ফিরিয়ে নেবেন?',{title:'আমল আনডু',okText:'পূর্বাবস্থায় ফিরুন'});
+  const d=getAmalWorkDate();
+  const dayLbl=d===API.today()?'আজকের':'গতকালের';
+  const ok=await showConfirm(dayLbl+' এই আমলটি "সম্পন্ন" থেকে পূর্বাবস্থায় ফিরিয়ে নেবেন?',{title:'আমল আনডু',okText:'পূর্বাবস্থায় ফিরুন'});
   if(!ok) return;
-  try{ await API.Tasks.unmarkDailyDone(tid,me.id); renderAll(); showToast('↩ পূর্বাবস্থায় ফেরানো হয়েছে'); }
+  try{
+    if(d===API.today()) await API.Tasks.unmarkDailyDone(tid,me.id);
+    else await API.Tasks.unmarkCompleted(tid,me.id,d);
+    renderAll(); showToast('↩ পূর্বাবস্থায় ফেরানো হয়েছে');
+  }
   catch(e){ console.error(e); showToast('❌ পূর্বাবস্থায় ফেরানো যায়নি'); }
 }
 async function undoTaskDone(tid){
@@ -1446,6 +1472,35 @@ async function undoTaskDone(tid){
 // ── আমল sub-tabs (ছাত্র) ─────────────────────────────────────
 let _amalTab='today';
 const _svgAmalCal='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
+function amalYesterdayDate(){
+  const d=new Date();
+  d.setDate(d.getDate()-1);
+  return d.toISOString().slice(0,10);
+}
+function getAmalWorkDate(){ return amalWorkDate||API.today(); }
+function isAmalYesterdayMode(){ return getAmalWorkDate()!==API.today(); }
+function toggleAmalYesterday(){
+  amalWorkDate=isAmalYesterdayMode()?null:amalYesterdayDate();
+  renderAmalDashboard();
+  renderTaskList();
+}
+function amalDashDateLabel(){
+  const d=getAmalWorkDate();
+  try{
+    return new Date(d+'T12:00:00').toLocaleDateString('bn-BD',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  }catch(e){ return d; }
+}
+function amalDashHeaderHtml(){
+  const yActive=isAmalYesterdayMode();
+  return `<div class="stu-amal-dash-hd">
+    <button type="button" class="stu-amal-yday-btn${yActive?' active':''}" onclick="toggleAmalYesterday()" title="গতকালের আমল" aria-label="গতকালের আমল" aria-pressed="${yActive?'true':'false'}"><span class="stu-amal-yday-txt"><span>গত</span><span>কাল</span></span></button>
+    <div class="stu-amal-dash-title-wrap">
+      <div class="stu-amal-dash-title">আমলের বিবরণ</div>
+      <div class="stu-amal-dash-date">${esc(amalDashDateLabel())}</div>
+    </div>
+    <button type="button" class="stu-amal-cal-btn" onclick="openAmalCalendar()" title="আমল ইতিহাস" aria-label="আমল ইতিহাস ক্যালেন্ডার">${_svgAmalCal}</button>
+  </div>`;
+}
 function goAmalTab(tab,btn){
   if(tab==='history') tab='biboron';
   _amalTab=tab;
@@ -1475,16 +1530,20 @@ function renderAmalDashboard(){
     const svg=`<svg class="stu-ring-svg" width="52" height="52" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="${R}" fill="none" stroke="#e8e8e8" stroke-width="5"/><circle cx="26" cy="26" r="${R}" fill="none" stroke="${stroke}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${off}" transform="rotate(-90 26 26)" style="transition:stroke-dashoffset .35s"/></svg>`;
     return `<div class="stu-ring-col"><div class="stu-svg-ring-wrap">${svg}<span class="stu-ring-pct">${p}%</span></div><span class="stu-ring-lbl">${lbl}</span></div>`;
   }
-  const hd=`<div class="stu-amal-dash-hd"><div class="stu-amal-dash-title">আমলের বিবরণ</div><button type="button" class="stu-amal-cal-btn" onclick="openAmalCalendar()" title="আমল ইতিহাস" aria-label="আমল ইতিহাস ক্যালেন্ডার">${_svgAmalCal}</button></div>`;
+  const hd=amalDashHeaderHtml();
   if(!dailyTasks.length){
     el.innerHTML=`<div class="stu-amal-dash-wrap"><div class="stu-amal-dash-card stu-amal-dash-card--empty">${hd}<p class="stu-amal-dash-hint">উস্তাদ দৈনিক আমল যোগ করলে এখানে অগ্রগতি দেখা যাবে।</p></div></div>`;
     return;
   }
   const all=prog.all||{percent:0};
+  const wd=getAmalWorkDate();
+  const yMode=isAmalYesterdayMode();
+  const dayProg=yMode?API.Tasks.getRangeProgress(me.id,wd,wd):prog.today;
+  const dayLbl=yMode?'গতকাল':'আজ';
   el.innerHTML=`<div class="stu-amal-dash-wrap">
     <div class="stu-amal-dash-card">
       ${hd}
-      <div class="stu-amal-rings">${ringCol(prog.today.percent,'#4CAF50','আজ')}${ringCol(prog.week.percent,'#43A047','সপ্তাহ')}${ringCol(prog.month.percent,'#42A5F5','মাস')}${ringCol(all.percent,'#8D6E63','শুরু থেকে')}</div>
+      <div class="stu-amal-rings">${ringCol(dayProg.percent||0,'#4CAF50',dayLbl)}${ringCol(prog.week.percent,'#43A047','সপ্তাহ')}${ringCol(prog.month.percent,'#42A5F5','মাস')}${ringCol(all.percent,'#8D6E63','শুরু থেকে')}</div>
     </div>
   </div>`;
 }
@@ -1779,6 +1838,8 @@ const _svgGoalBulb='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 const _svgGoalTarget='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>';
 const _svgGoalCal='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
 const _svgGoalTrash='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h14z"/><path d="M10 11v6M14 11v6"/></svg>';
+const _svgNoteTrash='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>';
+const _svgNotePencil='<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>';
 function catIc(c){
   const map={ilm:_svgGoalBook,study:_svgGoalBook,amal:_svgGoalClip,ibadah:_svgGoalClip,akhlaq:_svgGoalHeart,afkar:_svgGoalBulb,quran:_svgGoalBook,other:_svgGoalTarget};
   return `<span class="goal-meta-ic" aria-hidden="true">${map[c]||_svgGoalTarget}</span>`;
@@ -1812,6 +1873,12 @@ function renderDailyNoteCats(){
   el.innerHTML=cats.map(c=>`<option value="${esc(c.id)}"${c.id===dailyNoteCatId?' selected':''}>${esc(c.label)}</option>`).join('');
   el.value=dailyNoteCatId;
 }
+function dailyNotePreview(n){
+  const t=String((n&&n.title)||'').trim();
+  if(t) return t;
+  const body=String((n&&n.text)||'').replace(/\s+/g,' ').trim();
+  return body||'—';
+}
 function renderDailyNotes(){
   const el=document.getElementById('dailyNoteList');
   if(!el||!me) return;
@@ -1825,12 +1892,21 @@ function renderDailyNotes(){
   el.innerHTML=filtered.map(n=>{
     const catLbl=API.StudentNotes?API.StudentNotes.catLabel(n.categoryId||'general'):'সাধারণ';
     return `<div class="daily-note-item">
-    <div class="daily-note-head"><div class="daily-note-date">${esc(dailyNoteDateLabel(n.date))}</div><div class="daily-note-time">${esc(n.time||'')}</div></div>
-    <div class="daily-note-cat-badge">${esc(catLbl)}</div>
-    <div class="daily-note-body">${esc(n.text)}</div>
-    <div class="daily-note-actions">
-      <button type="button" class="daily-note-edit" onclick="openDailyNoteEdit('${esc(n.id)}')">সম্পাদনা</button>
-      <button type="button" class="daily-note-del" onclick="deleteDailyNote('${esc(n.id)}')">মুছুন</button>
+    <div class="daily-note-main">
+      <div class="daily-note-head-row">
+        <div class="daily-note-date">${esc(dailyNoteDateLabel(n.date))}</div>
+        <div class="daily-note-meta">
+          <span class="daily-note-cat-badge">${esc(catLbl)}</span>
+          <span class="daily-note-time">${esc(n.time||'')}</span>
+        </div>
+      </div>
+      <div class="daily-note-title-row">
+        <span class="daily-note-title-preview">${esc(dailyNotePreview(n))}</span>
+        <div class="daily-note-actions">
+          <button type="button" class="daily-note-act-btn edit" onclick="openDailyNoteEdit('${esc(n.id)}')" title="সম্পাদনা" aria-label="সম্পাদনা"><span class="ic-svg">${_svgNotePencil}</span></button>
+          <button type="button" class="daily-note-act-btn del" onclick="deleteDailyNote('${esc(n.id)}')" title="মুছুন" aria-label="মুছুন"><span class="ic-svg">${_svgNoteTrash}</span></button>
+        </div>
+      </div>
     </div>
   </div>`;
   }).join('');
@@ -1840,32 +1916,13 @@ function formatDailyTimer(sec){
   const s=String(sec%60).padStart(2,'0');
   return m+':'+s;
 }
-function setDailyRecorderState(state,msg){
-  const wrap=document.querySelector('#dailyNoteModal .daily-recorder');
-  const btn=document.getElementById('dailyRecordBtn');
-  const title=document.getElementById('dailyRecordTitle');
-  const hint=document.getElementById('dailyRecordHint');
+function setDailyRecorderState(state){
   const timer=document.getElementById('dailyRecordTimer');
-  const ui=state==='busy'?'transcribing':state;
-  if(wrap){ wrap.classList.toggle('recording',ui==='recording'); wrap.classList.toggle('busy',ui==='transcribing'); }
-  if(btn){
-    btn.classList.toggle('recording',ui==='recording');
-    btn.disabled=ui==='transcribing';
-    btn.setAttribute('aria-label',ui==='recording'?'রেকর্ড বন্ধ করুন':'রেকর্ড শুরু করুন');
+  if(timer){
+    timer.textContent=formatDailyTimer(dailyNoteSecondsLeft);
+    timer.classList.toggle('is-live',state==='recording');
+    timer.style.display=state==='recording'?'block':'none';
   }
-  if(title){
-    title.textContent=ui==='recording'?'রেকর্ড হচ্ছে'
-      :ui==='transcribing'?'ট্রান্সক্রিপশন…'
-      :ui==='ready'?'প্রস্তুত'
-      :'ভয়েস রেকর্ড';
-  }
-  if(hint){
-    hint.textContent=msg||(ui==='recording'?'ধীরে স্পষ্ট করে বলুন'
-      :ui==='transcribing'?'অপেক্ষা করুন…'
-      :ui==='ready'?'লেখা দেখে সেভ করুন'
-      :'মাইকে বলুন · সর্বোচ্চ ২ মিনিট');
-  }
-  if(timer) timer.textContent=formatDailyTimer(dailyNoteSecondsLeft);
 }
 function updateDailyNoteSaveState(){
   const btn=document.getElementById('dailyNoteSaveBtn');
@@ -1879,32 +1936,33 @@ function ensureDailyVoice(){
     id:'daily',
     micBtn:'#dailyRecordBtn',
     target:'#dailyNoteText',
+    timerEl:'#dailyRecordTimer',
+    timerMode:'countdown',
     join:'newline',
     maxSeconds:120,
     idleTitle:'রেকর্ড শুরু করুন',
     onTick:function(left){
       dailyNoteSecondsLeft=left;
-      const timer=document.getElementById('dailyRecordTimer');
-      if(timer) timer.textContent=formatDailyTimer(left);
     },
     onState:function(state,extra){
       if(state==='recording'){
         dailyNoteSecondsLeft=120;
         setDailyRecorderState('recording');
       } else if(state==='busy'){
-        setDailyRecorderState('busy');
+        setDailyRecorderState('idle');
       } else if(state==='ready'){
         dailyNoteSecondsLeft=120;
-        setDailyRecorderState('ready');
+        setDailyRecorderState('idle');
       } else {
-        const msg=extra&&extra.error
-          ?(extra.error==='permission'?'মাইক অনুমতি দিন'
+        if(extra&&extra.error){
+          const msg=extra.error==='permission'?'মাইক অনুমতি দিন'
             :extra.error==='unsupported'?'মাইক নেই — হাতে লিখুন'
             :extra.error==='recorder'||extra.error==='start'?'রেকর্ড শুরু হয়নি'
-            :'ট্রান্সক্রিপশন ব্যর্থ — আবার চেষ্টা করুন')
-          :(extra&&extra.warning)||null;
+            :'ট্রান্সক্রিপশন ব্যর্থ — আবার চেষ্টা করুন';
+          if(typeof showToast==='function') showToast(msg);
+        }
         dailyNoteSecondsLeft=120;
-        setDailyRecorderState('idle',msg||undefined);
+        setDailyRecorderState('idle');
       }
       updateDailyNoteSaveState();
     },
@@ -1927,6 +1985,8 @@ function openDailyNoteModal(){
   dailyNoteCatId='general';
   const title=document.getElementById('dailyNoteModalTitle');
   if(title) title.textContent='নতুন বিবরণ';
+  const titleIn=document.getElementById('dailyNoteTitle');
+  if(titleIn) titleIn.value='';
   const txt=document.getElementById('dailyNoteText');
   if(txt) txt.value='';
   renderDailyNoteCats();
@@ -1945,6 +2005,8 @@ function openDailyNoteEdit(noteId){
   dailyNoteCatId=note.categoryId||'general';
   const title=document.getElementById('dailyNoteModalTitle');
   if(title) title.textContent='বিবরণ সম্পাদনা';
+  const titleIn=document.getElementById('dailyNoteTitle');
+  if(titleIn) titleIn.value=note.title||'';
   const txt=document.getElementById('dailyNoteText');
   if(txt) txt.value=note.text||'';
   renderDailyNoteCats();
@@ -1960,6 +2022,7 @@ function closeDailyNoteModal(){
 async function saveDailyNote(){
   const txt=document.getElementById('dailyNoteText');
   const text=(txt?.value||'').trim();
+  const title=(document.getElementById('dailyNoteTitle')?.value||'').trim();
   if(!text){ showToast('নোট লিখুন বা রেকর্ড করুন'); return; }
   if(!me||!API.StudentNotes){ showToast('সেভ ব্যর্থ'); return; }
   stopDailyRecording(false);
@@ -1967,9 +2030,9 @@ async function saveDailyNote(){
   if(btn) btn.disabled=true;
   try{
     if(dailyNoteEditId){
-      await API.StudentNotes.update(me.id, dailyNoteEditId, {text, categoryId:dailyNoteCatId||'general'});
+      await API.StudentNotes.update(me.id, dailyNoteEditId, {text, title, categoryId:dailyNoteCatId||'general'});
     } else {
-      await API.StudentNotes.add(me.id,{text,categoryId:dailyNoteCatId||'general'});
+      await API.StudentNotes.add(me.id,{text, title, categoryId:dailyNoteCatId||'general'});
     }
     closeDailyNoteModal();
     renderDailyNotes();

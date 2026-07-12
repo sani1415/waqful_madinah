@@ -219,7 +219,7 @@
       (tnotes[tn.student_id] = tnotes[tn.student_id] || []).push(
         { id: tn.id, text: tn.text, date: tn.note_date || '', time: tn.note_time || '' });
     });
-    mem.core = { teacher: { name: cfg.teacher_name || '', madrasa: cfg.madrasa_name || 'Waqful Madinah' },
+    mem.core = { teacher: { name: cfg.teacher_name || '', madrasa: cfg.madrasa_name || 'وقف المدينة' },
       students, chats, tasks };
     mem.goals = goals; mem.exams = { quizzes, submissions };
     mem.docs = docs; mem.academic = academic; mem.tnotes = tnotes;
@@ -247,7 +247,8 @@
       (notesBy[sid] = notesBy[sid] || []).push({
         id: n.id, studentId: sid,
         categoryId: n.category_id || 'general',
-        date: n.note_date || '', time: n.note_time || '', text: n.text || '',
+        date: n.note_date || '', time: n.note_time || '',
+        title: n.title || '', text: n.text || '',
       });
     });
     mem.studentNotesByStudent = notesBy;
@@ -304,7 +305,7 @@
       (academic[ah.student_id] = academic[ah.student_id] || []).push(
         { id: ah.id, yearClass: ah.year_class, grade: ah.grade, addedAt: ah.added_at || '' });
     });
-    mem.core = { teacher: { name: cfg.teacher_name || '', madrasa: cfg.madrasa || 'Waqful Madinah' },
+    mem.core = { teacher: { name: cfg.teacher_name || '', madrasa: cfg.madrasa || 'وقف المدينة' },
       students: stu ? [stu] : [], chats, tasks };
     mem.goals = goals; mem.exams = { quizzes, submissions };
     mem.docs = docs; mem.academic = academic; mem.tnotes = {};
@@ -332,7 +333,8 @@
       (notesBy[sid] = notesBy[sid] || []).push({
         id: n.id, studentId: sid,
         categoryId: n.category_id || 'general',
-        date: n.note_date || '', time: n.note_time || '', text: n.text || '',
+        date: n.note_date || '', time: n.note_time || '',
+        title: n.title || '', text: n.text || '',
       });
     });
     mem.studentNotesByStudent = notesBy;
@@ -391,7 +393,7 @@
   async function _publicBranding(sb) {
     const { data, error } = await sb.rpc('madrasa_rel_public_branding');
     if (error) throw error;
-    return data?.madrasa ? String(data.madrasa) : 'Waqful Madinah';
+    return data?.madrasa ? String(data.madrasa) : 'وقف المدينة';
   }
 
   async function bootstrapTeacherIdle() {
@@ -919,7 +921,8 @@
     const row = {
       id: note.id, studentId: sid,
       categoryId: note.categoryId || 'general',
-      date: note.date || '', time: note.time || '', text: note.text || '',
+      date: note.date || '', time: note.time || '',
+      title: note.title || '', text: note.text || '',
     };
     if (ix >= 0) list[ix] = row; else list.unshift(row);
   }
@@ -938,6 +941,7 @@
         category_id: note.categoryId || 'general',
         date: note.date || '',
         time: note.time || '',
+        title: note.title || '',
         text: note.text || '',
       },
     });

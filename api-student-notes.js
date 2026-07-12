@@ -41,6 +41,7 @@
       categoryId: String(n.categoryId || n.category_id || 'general') || 'general',
       date: String(n.date || n.note_date || ''),
       time: String(n.time || n.note_time || ''),
+      title: String(n.title || ''),
       text: String(n.text || ''),
     };
   }
@@ -139,13 +140,14 @@
       return this.getAll(sid).find(n => n.id === noteId) || null;
     },
 
-    async add(sid, { text, categoryId }) {
+    async add(sid, { text, title, categoryId }) {
       const note = {
         id: _uid('sn'),
         studentId: sid,
         categoryId: categoryId || 'general',
         date: _today(),
         time: _nowTime(),
+        title: String(title || '').trim(),
         text: String(text || '').trim(),
       };
       if (!note.text) throw new Error('empty');
@@ -158,13 +160,14 @@
       return note;
     },
 
-    async update(sid, noteId, { text, categoryId }) {
+    async update(sid, noteId, { text, title, categoryId }) {
       const prev = this.get(sid, noteId);
       if (!prev) throw new Error('not_found');
       const note = {
         ...prev,
         categoryId: categoryId || prev.categoryId || 'general',
         time: _nowTime(),
+        title: title != null ? String(title).trim() : String(prev.title || '').trim(),
         text: String(text || '').trim(),
       };
       if (!note.text) throw new Error('empty');

@@ -46,6 +46,37 @@
     });
   }
 
+  function formatVoiceTime(totalSec) {
+    const sec = Math.max(0, Math.min(totalSec, 5999));
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return m + ':' + String(s).padStart(2, '0');
+  }
+
+  function formatCountdown(left) {
+    const sec = Math.max(0, left | 0);
+    const m = String(Math.floor(sec / 60)).padStart(2, '0');
+    const s = String(sec % 60).padStart(2, '0');
+    return m + ':' + s;
+  }
+
+  function syncTimer(s, left) {
+    const t = el(s.timerEl);
+    if (!t) return;
+    if (s.state !== 'recording') {
+      t.style.display = 'none';
+      t.textContent = s.timerMode === 'countdown' ? formatCountdown(s.maxSeconds || 120) : '0:00';
+      t.classList.remove('is-live');
+      return;
+    }
+    const max = s.maxSeconds || 120;
+    const rem = typeof left === 'number' ? left : max;
+    t.textContent =
+      s.timerMode === 'countdown' ? formatCountdown(rem) : formatVoiceTime(max - rem);
+    t.style.display = 'block';
+    t.classList.add('is-live');
+  }
+
   function emit(s, state, extra) {
     s.state = state;
     const btn = el(s.micBtn);
@@ -53,6 +84,7 @@
       btn.classList.toggle('recording', state === 'recording');
       btn.classList.toggle('busy', state === 'busy');
       btn.disabled = state === 'busy';
+      btn.setAttribute('aria-busy', state === 'busy' ? 'true' : 'false');
       const title =
         state === 'recording'
           ? 'রেকর্ড বন্ধ করুন'
@@ -62,6 +94,7 @@
       btn.title = title;
       btn.setAttribute('aria-label', title);
     }
+    syncTimer(s, s.left);
     if (typeof s.onState === 'function') {
       try {
         s.onState(state, extra || {});
@@ -90,7 +123,7 @@
     if (!cur) inp.value = piece;
     else if (s.join === 'newline') inp.value = cur + '\n' + piece;
     else inp.value = cur + (cur.endsWith('\n') ? '' : join) + piece;
-    if (typeof w.autoResize === 'function') w.autoResize(inp);
+    if (typeof w.autoResize === 'function' && inp.rows === 1) w.autoResize(inp);
     try {
       inp.focus();
     } catch (e) {}
@@ -117,6 +150,8 @@
       });
       if (!res.ok || !data.ok) throw new Error(data.error || 'HTTP ' + res.status);
       const piece = String(data.text || '').trim();
+      s.busy = false;
+      if (activeId === s.id) activeId = null;
       if (piece) {
         appendText(s, piece);
         emit(s, 'ready', { text: piece });
@@ -128,11 +163,11 @@
     } catch (e) {
       console.error(e);
       toast(e.message || 'ট্রান্সক্রিপশন ব্যর্থ');
+      s.busy = false;
+      if (activeId === s.id) activeId = null;
       emit(s, 'idle', { error: e.message || 'ট্রান্সক্রিপশন ব্যর্থ' });
     } finally {
       s.busy = false;
-      if (activeId === s.id) activeId = null;
-      if (s.state === 'busy') emit(s, 'idle');
     }
   }
 
@@ -228,10 +263,12 @@
       return;
     }
     emit(s, 'recording');
+    syncTimer(s, s.left);
     if (typeof s.onTick === 'function') s.onTick(s.left);
     clearInterval(s.timer);
     s.timer = setInterval(function () {
       s.left = Math.max(0, s.left - 1);
+      syncTimer(s, s.left);
       if (typeof s.onTick === 'function') s.onTick(s.left);
       if (s.left <= 0) stopSession(s, true);
     }, 1000);
@@ -245,6 +282,8 @@
       id: id,
       micBtn: opts.micBtn,
       target: opts.target,
+      timerEl: opts.timerEl,
+      timerMode: opts.timerMode === 'countdown' ? 'countdown' : 'elapsed',
       join: opts.join === 'newline' ? 'newline' : 'space',
       maxSeconds: opts.maxSeconds || 120,
       idleTitle: opts.idleTitle || 'ভয়েস লিখন',
@@ -309,7 +348,9 @@
       id: 'chat',
       micBtn: '#chatMicBtn',
       target: '#msgIn',
+      timerEl: '#chatMicTimer',
       join: 'space',
+      maxSeconds: 60,
       idleTitle: 'ভয়েস লিখন',
     });
   }

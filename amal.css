@@ -101,17 +101,45 @@
 .no-scrollbar::-webkit-scrollbar{display:none}
 .no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
 
-#screen-tasks .amal-sub-tabs{background:#fff;border-bottom:1px solid var(--gray-200)}
-#screen-tasks .amal-sub-tab{font-size:10px;padding:6px 3px 5px;gap:4px}
+#screen-tasks .amal-sub-tabs{
+  margin:5px 8px 0;
+  padding:3px;
+  background:#fff;
+  border:1px solid #e2e8f0;
+  border-radius:12px;
+  box-shadow:0 1px 2px rgba(15,23,42,.04);
+  border-bottom:1px solid #e2e8f0;
+  flex-shrink:0;
+}
+#screen-tasks .amal-sub-tab{
+  flex:1;
+  font-size:10px;
+  padding:7px 4px 6px;
+  gap:4px;
+  border-radius:9px;
+  border-bottom:none;
+  margin-bottom:0;
+}
+#screen-tasks .amal-sub-tab.active{
+  background:#E8F5E9;
+  color:#2E7D32;
+  border-bottom-color:transparent;
+}
 #screen-tasks .amal-sub-ic svg{width:16px;height:16px}
 #screen-tasks .amal-sub-lbl{max-width:100%;line-height:1.1}
-.stu-amal-dash-wrap{padding:0 20px;margin-top:0}
+.stu-amal-dash-wrap{padding:0 10px;margin-top:12px}
 .stu-amal-dash-card{background:#fff;border-radius:20px;padding:12px 14px 14px;box-shadow:0 8px 24px rgba(15,118,110,.05);border:1px solid rgba(255,255,255,.9);margin-bottom:4px}
 .stu-amal-dash-card--empty{padding-bottom:12px}
 .stu-amal-dash-hint{font-size:12px;color:var(--gray-500);margin:8px 0 0;line-height:1.45;text-align:center}
-.stu-amal-dash-hd{display:flex;justify-content:center;align-items:center;gap:8px;margin-bottom:10px;position:relative}
-.stu-amal-dash-title{font-size:15px;font-weight:700;color:#1e293b;text-align:center}
-.stu-amal-cal-btn{position:absolute;right:0;top:50%;transform:translateY(-50%);width:34px;height:34px;border:none;border-radius:10px;background:#F1F5F9;color:#475569;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.stu-amal-dash-hd{display:flex;justify-content:center;align-items:center;margin-bottom:10px;position:relative;min-height:44px}
+.stu-amal-dash-title-wrap{flex:1;text-align:center;padding:0 40px;min-width:0}
+.stu-amal-dash-title{font-size:15px;font-weight:700;color:#1e293b;text-align:center;line-height:1.2}
+.stu-amal-dash-date{font-size:10px;font-weight:600;color:#64748b;margin-top:3px;line-height:1.2;text-align:center}
+.stu-amal-yday-btn{position:absolute;left:0;top:50%;transform:translateY(-50%);width:34px;height:34px;border:none;border-radius:10px;background:#F1F5F9;color:#475569;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:2px;flex-shrink:0}
+.stu-amal-yday-btn.active{background:#E8F5E9;color:#2E7D32;box-shadow:inset 0 0 0 1px #C8E6C9}
+.stu-amal-yday-txt{display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05;font-size:8px;font-weight:800;letter-spacing:-.02em}
+.stu-amal-yday-txt span{display:block}
+.stu-amal-cal-btn{position:absolute;right:0;top:50%;transform:translateY(-50%);width:34px;height:34px;border:none;border-radius:10px;background:#F1F5F9;color:#475569;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex-shrink:0}
 .stu-amal-cal-btn:hover{background:#E2E8F0;color:#0f172a}
 .stu-amal-cal-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .amal-cal-popover{position:fixed;inset:0;z-index:220;display:none;align-items:flex-end;justify-content:center;padding:16px}
@@ -128,14 +156,18 @@
 .stu-ring-pct{position:absolute;font-size:11px;font-weight:800;color:#334155;left:50%;top:50%;transform:translate(-50%,-50%)}
 .stu-ring-lbl{margin-top:4px;font-size:10px;font-weight:700;color:#64748b;line-height:1.2}
 
-.stu-amal-filters{display:flex;gap:8px;padding:14px 16px 10px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-.stu-filter-pill{flex-shrink:0;border:1px solid #e2e8f0;background:#fff;color:#64748b;padding:10px 18px;border-radius:16px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:background .2s,box-shadow .2s,color .2s}
+.stu-amal-filters{display:flex;gap:6px;padding:8px 10px 6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.stu-filter-pill{flex-shrink:0;border:1px solid #e2e8f0;background:#fff;color:#64748b;padding:5px 10px;border-radius:12px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:background .2s,box-shadow .2s,color .2s}
 .stu-filter-pill:active{transform:scale(.98)}
 
-.stu-amal-list{padding:4px 20px 80px;background:transparent}
+.stu-amal-list{padding:4px 10px 80px;background:transparent}
 #amal-panel-today.amal-panel{background:#f3f4f6}
 #amal-panel-biboron.amal-panel{background:#f3f4f6}
-#amal-panel-today .stu-amal-filters{padding-left:20px;padding-right:20px}
+#amal-panel-today .stu-amal-filters{padding:8px 10px 6px}
+#screen-tasks .goal-add-bar{padding:5px 6px}
+#screen-tasks .daily-note-intro{margin:6px}
+#screen-tasks .daily-note-filter{margin:0 6px 8px}
+#screen-tasks .daily-note-item{margin:0 6px 8px}
 
 /* ছাত্র আমল তালিকা — এক সারি (কম জায়গা) */
 .stu-task-row{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:7px 9px;margin-bottom:5px;box-shadow:0 1px 2px rgba(0,0,0,.04);min-height:40px;transition:background .15s}

@@ -68,7 +68,7 @@ const API = (() => {
   function buildSeedDemo() {
     const colors=['#128C7E','#1565C0','#6A1B9A','#BF360C','#1B5E20'];
     return {
-      teacher: { name:'উস্তাজ', madrasa:'Waqful Madinah' },
+      teacher: { name:'উস্তাজ', madrasa:'وقف المدينة' },
       students: [
         { id:'s1', waqfId:'waqf_001', name:'মুহাম্মাদ রাফি',      cls:'হিফজ ১ম',   roll:'০১', note:'',  color:colors[0], pin:'1111', fatherName:'আব্দুর রহমান',   contact:'01711000001', enrollmentDate:'2024-01-10' },
         { id:'s2', waqfId:'waqf_002', name:'আব্দুল্লাহ মাহমুদ',   cls:'হিফজ ১ম',   roll:'০২', note:'',  color:colors[1], pin:'2222', fatherName:'মোহাম্মদ হানিফ', contact:'01711000002', enrollmentDate:'2024-01-10' },
@@ -1314,6 +1314,32 @@ const API = (() => {
 
   // ── TEACHER DIARY ─────────────────────────────────────────
   const _DIARY_KEY = 'madrasa_diary';
+  function _diaryPack(title, body) {
+    const t = String(title == null ? '' : title).trim();
+    const b = String(body == null ? '' : body).trim();
+    if (!t) return b;
+    return JSON.stringify({ v: 1, title: t, body: b });
+  }
+  function _diaryUnpack(raw) {
+    const s = String(raw == null ? '' : raw);
+    if (s.charAt(0) === '{') {
+      try {
+        const o = JSON.parse(s);
+        if (o && o.v === 1 && typeof o.body === 'string') {
+          return { title: String(o.title || ''), text: o.body };
+        }
+      } catch (_) {}
+    }
+    return { title: '', text: s };
+  }
+  function _diaryView(e) {
+    if (!e) return e;
+    if (e.title != null && !String(e.text || '').startsWith('{"v":1')) {
+      return { id: e.id, date: e.date, time: e.time, title: String(e.title || ''), text: String(e.text || ''), edited: e.edited || null };
+    }
+    const u = _diaryUnpack(e.text);
+    return { id: e.id, date: e.date, time: e.time, title: u.title, text: u.text, edited: e.edited || null };
+  }
   const Diary = {
     _read() {
       if (_useRemote) return RS.mem.diary || (RS.mem.diary = []);
@@ -1323,20 +1349,36 @@ const API = (() => {
       if (_useRemote) { RS.mem.diary = arr; return; }
       localStorage.setItem(_DIARY_KEY, JSON.stringify(arr));
     },
-    getAll() { return this._read(); },
-    async add(text, date) {
+    getAll() { return this._read().map(_diaryView); },
+    async add(text, date, title) {
       const arr = this._read();
-      const entry = { id: uid('di'), date: date || today(), time: nowTime(), text: String(text||'').trim() };
-      if (_useRemote && RS.upsertDiaryRemote) await RS.upsertDiaryRemote(entry);
+      const entry = {
+        id: uid('di'),
+        date: date || today(),
+        time: nowTime(),
+        title: String(title || '').trim(),
+        text: String(text || '').trim(),
+      };
+      if (_useRemote && RS.upsertDiaryRemote) {
+        await RS.upsertDiaryRemote({ ...entry, text: _diaryPack(entry.title, entry.text) });
+      }
       arr.unshift(entry); this._write(arr);
       return entry;
     },
-    async update(id, text) {
+    async update(id, text, date, title) {
       const arr = this._read(); const e = arr.find(x => x.id === id);
       if (e) {
-        const next={...e,text:String(text||'').trim(),edited:today()};
-        if (_useRemote && RS.upsertDiaryRemote) await RS.upsertDiaryRemote(next);
-        Object.assign(e,next); this._write(arr);
+        const next = {
+          ...e,
+          title: title != null ? String(title).trim() : String(e.title || ''),
+          text: String(text || '').trim(),
+          date: date || e.date,
+          edited: today(),
+        };
+        if (_useRemote && RS.upsertDiaryRemote) {
+          await RS.upsertDiaryRemote({ ...next, text: _diaryPack(next.title, next.text) });
+        }
+        Object.assign(e, next); this._write(arr);
       }
       return e;
     },
