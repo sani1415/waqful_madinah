@@ -94,6 +94,17 @@
     });
   }
 
+  // PIN the RPC needs to gate this slot: teacher slot → teacher PIN,
+  // personal-student slot (id=waqf_id) → that student's PIN,
+  // shared_device_* → none (registered pre-login; server leaves it open).
+  function authPinForSlot(role, id) {
+    var RS = w.RemoteSync;
+    if (!RS) return null;
+    if (id === 'teacher' || role === 'teacher') return (RS.mem && RS.mem.teacherPin) || null;
+    if (/^shared_device_/.test(String(id))) return null;
+    return (RS.getStudentPin && RS.getStudentPin()) || null;
+  }
+
   function saveSubscriptionToRemote(role, studentWaqf, subJson) {
     var id = role === 'teacher' ? 'teacher' : (studentWaqf ? String(studentWaqf) : null);
     if (!id) return Promise.resolve(false);
@@ -103,6 +114,7 @@
       p_id: id,
       p_role: role,
       p_subscription: subJson,
+      p_pin: authPinForSlot(role, id),
     }).then(function (res) {
       if (res.error) { console.warn('MadrasaPwa sub save:', res.error); return false; }
       return true;
@@ -135,6 +147,7 @@
         p_id: idOverride,
         p_role: role,
         p_subscription: subJson,
+        p_pin: authPinForSlot(role, idOverride),
       });
       if (res.error) { console.warn('MadrasaPwa shared sub save:', res.error); return false; }
       console.log('MadrasaPwa: push saved as', idOverride);

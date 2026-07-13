@@ -1119,6 +1119,7 @@
     saveTaskRemote, saveQuizRemote, saveStudentRemote, updateStudentPinRemote,
     submitDailyScheduleProposalRemote, setDailyScheduleTeacherRemote, resolveDailyScheduleProposalRemote,
     uploadFile, getSignedUrlForPath, consumeUploadResult,
+    getStudentPin: () => _studentPin,
     BUCKET, startRealtimeSync, pullRemoteSnapshot,
   };
 })(typeof window !== 'undefined' ? window : globalThis);
