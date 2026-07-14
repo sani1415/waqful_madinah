@@ -1,0 +1,1 @@
+-- see supabase/migrations/20260624150000_mdr_admin_madrasa_bootstrap_perf.sql;

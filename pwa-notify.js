@@ -159,7 +159,7 @@
   }
 
   // একই origin-এ teacher + student PWA = একটাই push endpoint (এক SW)।
-  // দুটো অ্যাপ এক ডিভাইসে থাকলে subscription সব স্লটে mirror করতে হয়।
+  // তাই role mirror করলে একই browser/PWA-তে দুই দিকের notification মিশে যায়।
   var SLOT_TEACHER = 'madrasa_push_slot_teacher';
   var SLOT_STUDENT = 'madrasa_push_slot_student';
   var LAST_STUDENT_WAQF = 'madrasa_last_student_waqf';
@@ -183,17 +183,8 @@
     if (role === 'teacher') add('teacher', 'teacher');
     else if (role === 'student') {
       if (opts.waqfId) add('student', opts.waqfId);
-      if (opts.idOverride) add('student', opts.idOverride);
-      else if (!opts.waqfId) add('student', getOrCreateSharedDeviceId());
+      else if (opts.idOverride) add('student', opts.idOverride);
     }
-    try {
-      if (localStorage.getItem(SLOT_TEACHER) === '1') add('teacher', 'teacher');
-      if (localStorage.getItem(SLOT_STUDENT) === '1') {
-        add('student', getOrCreateSharedDeviceId());
-        var wq = opts.waqfId || localStorage.getItem(LAST_STUDENT_WAQF);
-        if (wq) add('student', wq);
-      }
-    } catch (e) {}
     return targets;
   }
 
@@ -315,11 +306,11 @@
     return id;
   }
 
-  // Call this when student panel is first opened (before login)
-  // Each device subscribes with its own unique ID so multiple shared devices all get notifications
+  // Kept only for explicit legacy calls. Do not auto-register anonymous shared devices;
+  // personal student notification is saved after login with the student's waqfId.
   async function enableSharedStudentDevice() {
-    var deviceId = getOrCreateSharedDeviceId();
-    await subscribeToPush('student', deviceId);
+    await register();
+    return false;
   }
 
   // Expose device ID so Edge Function lookup works

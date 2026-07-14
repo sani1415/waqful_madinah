@@ -37,6 +37,7 @@ function makePayload(body: string, target: "teacher" | "student", tag: string): 
     title: "Waqful Madinah",
     body,
     url: target === "teacher" ? "/teacher/" : "/student/",
+    icon: target === "teacher" ? "icons/icon-teacher-192.png" : "icons/icon-student-192.png",
     tag,
   });
 }
@@ -60,8 +61,9 @@ async function getAllStudentSubs(sb: ReturnType<typeof createClient>): Promise<S
   const subs: SubJson[] = [];
   // New table
   const { data: relRows } = await sb
-    .from("waqf_pwa_subscriptions").select("subscription").eq("role", "student");
+    .from("waqf_pwa_subscriptions").select("id, subscription").eq("role", "student");
   for (const row of relRows || []) {
+    if (String(row.id || "").startsWith("shared_device_")) continue;
     const s = pickSubscription({ subscription: row.subscription });
     if (s) subs.push(s);
   }
@@ -202,14 +204,6 @@ Deno.serve(async (req: Request) => {
           if (personalSub?.endpoint) {
             await trySend(personalSub, makePayload(msgBody, "student", `msg-out-${waqfId}`));
             sentEndpoints.add(personalSub.endpoint);
-          }
-        }
-        // Notify ALL shared devices (skip duplicates)
-        const sharedSubs = await getAllSharedDeviceSubs(sb);
-        for (const sharedSub of sharedSubs) {
-          if (sharedSub.endpoint && !sentEndpoints.has(sharedSub.endpoint)) {
-            await trySend(sharedSub, makePayload(msgBody, "student", `msg-out-${waqfId || "unknown"}`));
-            sentEndpoints.add(sharedSub.endpoint);
           }
         }
       }

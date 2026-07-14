@@ -19,6 +19,7 @@ const API = (() => {
   const safeFilePart = name => String(name||'file').replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,80);
   /** একক আপলোড সর্বোচ্চ আকার (রিমোট: Supabase Storage; মেটা `docs_meta` এ KV তে) */
   const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+  const MAX_ORAL_AUDIO_BYTES = 8 * 1024 * 1024;
 
   function fileWithinUploadLimit(file) {
     return file && typeof file.size === 'number' && file.size > 0 && file.size <= MAX_UPLOAD_BYTES;
@@ -27,6 +28,15 @@ const API = (() => {
   function looksLikeImageFile(f) {
     if (f.type && f.type.startsWith('image/')) return true;
     return /\.(jpe?g|png|gif|webp|bmp)$/i.test(f.name || '');
+  }
+
+  function blobToDataUrl(blob) {
+    return new Promise((resolve, reject) => {
+      const fr = new FileReader();
+      fr.onload = () => resolve(String(fr.result || ''));
+      fr.onerror = () => reject(fr.error || new Error('read_fail'));
+      fr.readAsDataURL(blob);
+    });
   }
 
   async function prepareFilesForUpload(fileList) {
@@ -1074,11 +1084,12 @@ const API = (() => {
     getSubmission(qid, sid)     { return this.getSubmissions().find(s=>s.quizId===qid&&s.studentId===sid)||null; },
     getSubmissionsForQuiz(qid)  { return this.getSubmissions().filter(s=>s.quizId===qid); },
 
-    async addQuiz({ title, subject, desc, timeLimit, passPercent, deadline, assigneeIds, questions }) {
+    async addQuiz({ title, subject, desc, timeLimit, audioLimitSeconds, passPercent, deadline, assigneeIds, questions }) {
       const data=this._readAll();
       const quiz={
         id:uid('q'), title, subject:subject||'', desc:desc||'',
         timeLimit:parseInt(timeLimit)||30,
+        audioLimitSeconds:Math.max(15, Math.min(parseInt(audioLimitSeconds)||120, 600)),
         passPercent:parseInt(passPercent)||60,
         deadline:deadline||'', created:today(),
         assigneeIds:assigneeIds||[],
@@ -1096,13 +1107,52 @@ const API = (() => {
       this._write(data);
     },
 
+    async _prepareAnswersForSubmit(quiz, sid, answers) {
+      const out = { ...(answers || {}) };
+      for (const q of (quiz.questions || [])) {
+        if (q.type !== 'audio') continue;
+        const ans = out[q.id];
+        if (!ans || !ans.blob) continue;
+        const blob = ans.blob;
+        if (typeof blob.size !== 'number' || blob.size <= 0) throw new Error('audio_empty');
+        if (blob.size > MAX_ORAL_AUDIO_BYTES) throw new Error('audio_too_large');
+        const mimeType = ans.mimeType || blob.type || 'audio/webm';
+        const ext = mimeType.includes('mp4') ? 'm4a' : mimeType.includes('ogg') ? 'ogg' : 'webm';
+        const baseMeta = {
+          kind: 'audio',
+          mimeType,
+          size: blob.size,
+          duration: Math.max(0, Math.round(Number(ans.duration || 0))),
+          recordedAt: ans.recordedAt || new Date().toISOString(),
+        };
+        if (_useRemote && RS.uploadFile) {
+          const path = `oral-exams/${safeFilePart(quiz.id)}/${safeFilePart(sid)}/${safeFilePart(q.id)}_${Date.now()}_${uid('aud')}.${ext}`;
+          const res = await RS.uploadFile(path, blob);
+          const { fileUrl, storagePath } = RS.consumeUploadResult(res);
+          out[q.id] = { ...baseMeta, storagePath: storagePath || path, fileUrl };
+        } else {
+          out[q.id] = { ...baseMeta, dataUrl: await blobToDataUrl(blob) };
+        }
+      }
+      return out;
+    },
+
+    resolveAudioUrl(answer) {
+      if (!answer) return null;
+      if (answer.dataUrl) return answer.dataUrl;
+      if (_useRemote && answer.storagePath && RS.getSignedUrlForPath)
+        return RS.getSignedUrlForPath(answer.storagePath);
+      return answer.fileUrl || null;
+    },
+
     async submitQuiz(qid, sid, answers) {
       const quiz=this.getQuizById(qid); if(!quiz) throw new Error('quiz_not_found');
       const student=Students.getById(sid);
+      const finalAnswers = await this._prepareAnswersForSubmit(quiz, sid, answers || {});
       let score=0, total=0;
       quiz.questions.forEach(q=>{
         total+=q.marks||1;
-        const ans=answers[q.id];
+        const ans=finalAnswers[q.id];
         if(q.type==='multiple_choice'||q.type==='true_false'){
           if(String(ans).trim().toLowerCase()===String(q.correctAnswer).trim().toLowerCase()) score+=q.marks||1;
         } else if(q.type==='fill_blank'){
@@ -1115,10 +1165,10 @@ const API = (() => {
       const sub={
         id:uid('sub'), quizId:qid, studentId:sid,
         studentName:student?.name||sid,
-        answers, score, total,
+        answers:finalAnswers, score, total,
         passed:total>0?(score/total*100)>=(quiz.passPercent||60):false,
         submittedAt:new Date().toISOString(),
-        needsManualGrade: quiz.questions.some(q=>['short_answer','essay','file_upload'].includes(q.type)),
+        needsManualGrade: quiz.questions.some(q=>['short_answer','essay','file_upload','audio'].includes(q.type)),
       };
       if (_useRemote && RS.submitQuizRemote) await RS.submitQuizRemote(sub);
       if(existing>=0) data.submissions[existing]=sub; else data.submissions.push(sub);

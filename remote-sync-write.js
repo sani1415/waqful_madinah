@@ -72,7 +72,7 @@
       if (ctx.getRole() !== 'teacher' || !tPin) return;
       for (const q of (exams?.quizzes || [])) {
         const p_quiz = { id: q.id, title: q.title, subject: q.subject || '', description: q.desc || '',
-          time_limit: q.timeLimit || 30, pass_percent: q.passPercent || 60,
+          time_limit: q.timeLimit || 30, audio_limit_seconds: q.audioLimitSeconds || 120, pass_percent: q.passPercent || 60,
           deadline: q.deadline || '', created_at: q.created || '' };
         const p_questions = (q.questions || []).map(qq => ({ id: qq.id, type: qq.type, text: qq.text,
           options: qq.options || [], correct_answer: qq.correctAnswer, marks: qq.marks || 1,

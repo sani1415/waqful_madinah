@@ -254,6 +254,12 @@
 .quiz-option input[type=radio]{accent-color:#4CAF50}
 .quiz-answer-input{width:100%;border:1.5px solid var(--gray-300);border-radius:var(--radius);padding:10px 12px;font-family:var(--font);font-size:14px;outline:none}
 .quiz-answer-input:focus{border-color:#4CAF50}
+.quiz-audio-box{border:1.5px solid var(--gray-200);border-radius:10px;padding:10px;background:#fafafa;display:flex;flex-direction:column;gap:8px}
+.quiz-audio-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.quiz-audio-btn{width:auto;border:none;border-radius:8px;background:#075E54;color:#fff;padding:8px 12px;font-family:var(--font);font-weight:700;font-size:13px}
+.quiz-audio-btn.recording{background:#D32F2F}
+.quiz-audio-status{font-size:12px;color:var(--gray-500);font-weight:600}
+.quiz-audio-player{width:100%;height:34px}
 .quiz-footer{padding:12px 16px;border-top:1px solid var(--gray-200);background:#fff}
 
 /* ── Documents (ছাত্র — কমপ্যাক্ট) ── */
@@ -747,6 +753,7 @@ function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay(
 // ══ State ══════════════════════════════════════════════════
 let me=null, tFilter='all', gFilter='all', replyingTo=null, studentDocTab='sent';
 let activeQuizId=null, quizAnswers={}, quizTimerInterval=null, quizSecondsLeft=0;
+let quizAudioState={}, activeQuizAudioId=null;
 let pendingFile=null, chatPendingFile=null;
 let studentChatPreviewDocId=null;
 let dailyNoteSecondsLeft=120;
@@ -786,9 +793,7 @@ function init(){
     updateNotifBtn();
     // Remote bootstrap শেষে lock hints refresh করো
     Promise.resolve(API.refreshStudentLockHints()).then(()=>renderPendingSection()).catch(()=>{});
-    // Subscribe this device for all student notifications (shared device mode)
-    // Delay slightly so RemoteSync bootstrap has time to complete
-    setTimeout(() => void API.Pwa.enableSharedStudentDevice().then(updateNotifBtn), 2000);
+    // Personal student notifications are registered after login with that student's waqfId.
   }).catch(e=>{ console.error(e); const la=document.getElementById('lockAppName'); if(la){ la.textContent='সার্ভার সংযোগ ব্যর্থ'; la.removeAttribute('dir'); la.removeAttribute('lang'); la.classList.add('lock-soft-app-name--err'); } });
 }
 window.addEventListener('madrasa-remote-sync',()=>{ try{ const u=document.getElementById('lockScreen').style.display==='none'; if(u&&me) renderAll(); else renderPendingSection(); }catch(e){ console.error(e); } });
@@ -831,10 +836,9 @@ async function enableSharedNotif(){
   const btn=document.getElementById('notifBtn');
   if(btn){ btn.innerHTML=notifBtnSvgSpinner(); btn.disabled=true; btn.setAttribute('aria-label','নোটিফিকেশন চালু করা হচ্ছে'); }
   try{
-    await API.Pwa.enableSharedStudentDevice();
+    await API.Pwa.registerServiceWorker();
     updateNotifBtn();
-    if(Notification.permission==='granted') showToast('নোটিফিকেশন চালু হয়েছে।');
-    else showToast('নোটিফিকেশন অনুমতি দেওয়া হয়নি।');
+    showToast('ছাত্র হিসেবে লগইন করলে এই ডিভাইসে ব্যক্তিগত নোটিফিকেশন চালু হবে।');
   }catch(e){ console.error('notif error',e); updateNotifBtn(); }
   finally{ if(btn) btn.disabled=false; }
 }
@@ -1670,9 +1674,11 @@ function renderExamList(){
 
 function startQuiz(qid){
   const quiz=API.Exams.getQuizById(qid); if(!quiz){ showToast('পরীক্ষা পাওয়া যায়নি!'); return; }
-  activeQuizId=qid; quizAnswers={};
+  activeQuizId=qid; quizAnswers={}; quizAudioState={}; activeQuizAudioId=null;
   document.getElementById('quizViewTitle').textContent=quiz.title;
-  document.getElementById('quizViewMeta').textContent=`${quiz.subject||''} · ${quiz.questions?.length||0}টি প্রশ্ন`;
+  const oralCount=(quiz.questions||[]).filter(q=>q.type==='audio').length;
+  const oralMeta=oralCount?` · মৌখিক ${Math.ceil((quiz.audioLimitSeconds||120)/60)} মিনিট`:'';
+  document.getElementById('quizViewMeta').textContent=`${quiz.subject||''} · ${quiz.questions?.length||0}টি প্রশ্ন${oralMeta}`;
   renderQuizBody(quiz);
   startQuizTimer(quiz.timeLimit*60);
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -1711,10 +1717,80 @@ function renderQuizAnswer(q,i){
     return `<p style="font-size:13px;color:var(--gray-500);padding:8px 0">${esc(q.uploadInstructions||'ফাইল আপলোড করুন।')}</p>
             <input type="file" class="form-input" onchange="setAnswer('${q.id}',this.files[0]?.name||'')">`;
   }
+  if(q.type==='audio'){
+    const quiz=API.Exams.getQuizById(activeQuizId)||{};
+    const limit=Math.max(15,Math.min(parseInt(quiz.audioLimitSeconds)||120,600));
+    return `<div class="quiz-audio-box" id="qaBox_${q.id}">
+      <div class="quiz-audio-row">
+        <button type="button" class="quiz-audio-btn" id="qaBtn_${q.id}" onclick="toggleQuizAudio('${q.id}',${limit})">রেকর্ড শুরু</button>
+        <span class="quiz-audio-status" id="qaStatus_${q.id}">সর্বোচ্চ ${Math.ceil(limit/60)} মিনিট</span>
+      </div>
+      <audio class="quiz-audio-player" id="qaPlayer_${q.id}" controls style="display:none"></audio>
+    </div>`;
+  }
   return '';
 }
 function highlightOption(qi,selected,count){ for(let i=0;i<count;i++){ const el=document.getElementById(`opt_${qi}_${i}`); if(el) el.classList.toggle('selected',i===selected); } }
 function setAnswer(qid,val){ quizAnswers[qid]=val; }
+function pickQuizAudioMime(){
+  if(typeof MediaRecorder==='undefined') return '';
+  const cands=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus'];
+  for(const m of cands){ try{ if(MediaRecorder.isTypeSupported(m)) return m; }catch(e){} }
+  return '';
+}
+function quizAudioStatus(qid,text,recording){
+  const st=document.getElementById('qaStatus_'+qid), btn=document.getElementById('qaBtn_'+qid);
+  if(st) st.textContent=text;
+  if(btn){ btn.textContent=recording?'রেকর্ড বন্ধ':'আবার রেকর্ড'; btn.classList.toggle('recording',!!recording); }
+}
+async function toggleQuizAudio(qid,limit){
+  const s=quizAudioState[qid];
+  if(s&&s.recording){ await stopQuizAudio(qid); return; }
+  if(activeQuizAudioId&&activeQuizAudioId!==qid){ showToast('আরেকটি রেকর্ডিং চলছে'); return; }
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||typeof MediaRecorder==='undefined'){ showToast('এই ডিভাইসে অডিও রেকর্ড সাপোর্ট নেই'); return; }
+  let stream;
+  try{ stream=await navigator.mediaDevices.getUserMedia({audio:true}); }
+  catch(e){ showToast('মাইকের অনুমতি পাওয়া যায়নি'); return; }
+  const mime=pickQuizAudioMime();
+  let recorder;
+  try{ recorder=mime?new MediaRecorder(stream,{mimeType:mime}):new MediaRecorder(stream); }
+  catch(e){ stream.getTracks().forEach(t=>t.stop()); showToast('রেকর্ডার চালু হয়নি'); return; }
+  const state={recorder,stream,chunks:[],recording:true,left:limit,limit,mime:recorder.mimeType||mime||'audio/webm',startedAt:Date.now()};
+  quizAudioState[qid]=state; activeQuizAudioId=qid;
+  recorder.ondataavailable=ev=>{ if(ev.data&&ev.data.size>0) state.chunks.push(ev.data); };
+  recorder.onerror=()=>stopQuizAudio(qid,false);
+  recorder.start(250);
+  quizAudioStatus(qid,`বাকি ${String(Math.floor(limit/60)).padStart(2,'0')}:${String(limit%60).padStart(2,'0')}`,true);
+  state.timer=setInterval(()=>{
+    state.left-=1;
+    const m=Math.floor(Math.max(0,state.left)/60), sec=Math.max(0,state.left)%60;
+    quizAudioStatus(qid,`বাকি ${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`,true);
+    if(state.left<=0) stopQuizAudio(qid);
+  },1000);
+}
+function stopQuizAudio(qid,keep=true){
+  const state=quizAudioState[qid];
+  if(!state||!state.recording) return Promise.resolve();
+  state.recording=false;
+  clearInterval(state.timer);
+  return new Promise(resolve=>{
+    const finish=()=>{
+      state.stream&&state.stream.getTracks().forEach(t=>t.stop());
+      activeQuizAudioId=null;
+      if(!keep){ quizAudioStatus(qid,'রেকর্ডিং বাতিল হয়েছে',false); resolve(); return; }
+      const blob=new Blob(state.chunks,{type:state.mime||'audio/webm'});
+      const duration=Math.max(1,Math.round((Date.now()-(state.startedAt||Date.now()))/1000));
+      const url=URL.createObjectURL(blob);
+      const player=document.getElementById('qaPlayer_'+qid);
+      if(player){ player.src=url; player.style.display='block'; }
+      quizAnswers[qid]={kind:'audio',blob,mimeType:blob.type||state.mime,duration,size:blob.size,recordedAt:new Date().toISOString()};
+      quizAudioStatus(qid,`রেকর্ড হয়েছে · ${duration}s · ${Math.ceil(blob.size/1024)} KB`,false);
+      resolve();
+    };
+    state.recorder.onstop=finish;
+    try{ state.recorder.stop(); }catch(e){ finish(); }
+  });
+}
 function startQuizTimer(seconds){
   quizSecondsLeft=seconds;
   clearInterval(quizTimerInterval);
@@ -1730,6 +1806,7 @@ function startQuizTimer(seconds){
 async function submitQuiz(auto=false){
   clearInterval(quizTimerInterval);
   if(!activeQuizId) return;
+  if(activeQuizAudioId) await stopQuizAudio(activeQuizAudioId);
   const answered=Object.keys(quizAnswers).length;
   const quiz=API.Exams.getQuizById(activeQuizId);
   const total=quiz?.questions?.length||0;
@@ -1752,6 +1829,7 @@ async function submitQuiz(auto=false){
   renderExamList(); updateBadges();
 }
 function exitQuiz(){
+  if(activeQuizAudioId) stopQuizAudio(activeQuizAudioId,false);
   clearInterval(quizTimerInterval); activeQuizId=null;
   const qv=document.getElementById('quizView');
   let finished=false;

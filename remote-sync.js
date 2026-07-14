@@ -197,7 +197,7 @@
     });
     const quizzes = (bundle.quizzes || []).map(q => ({
       id: q.id, title: q.title, subject: q.subject || '', desc: q.description || '',
-      timeLimit: q.time_limit || 30, passPercent: q.pass_percent || 60,
+      timeLimit: q.time_limit || 30, audioLimitSeconds: q.audio_limit_seconds || 120, passPercent: q.pass_percent || 60,
       deadline: q.deadline || '', created: q.created_at || '',
       questions: qByQ[q.id] || [], assigneeIds: aByQ[q.id] || [] }));
     const submissions = (bundle.quiz_submissions || []).map(qs => ({
@@ -290,7 +290,7 @@
     const quizzes = (bundle.quizzes || []).filter(Boolean).map(item => {
       const q = item.quiz || item;
       return { id: q.id, title: q.title, subject: q.subject || '', desc: q.description || '',
-        timeLimit: q.time_limit || 30, passPercent: q.pass_percent || 60,
+        timeLimit: q.time_limit || 30, audioLimitSeconds: q.audio_limit_seconds || 120, passPercent: q.pass_percent || 60,
         deadline: q.deadline || '', created: q.created_at || '',
         questions: (item.questions || []).map(qq => ({ id: qq.id, type: qq.type, text: qq.text,
           options: qq.options || [], correctAnswer: qq.correct_answer, marks: qq.marks || 1 })),

@@ -581,6 +581,7 @@
         <div class="form-group" style="flex:1"><label class="form-label">সময়সীমা (মিনিট)</label><input class="form-input" id="q_time" type="number" value="30" min="5"></div>
         <div class="form-group" style="flex:1"><label class="form-label">পাস নম্বর (%)</label><input class="form-input" id="q_pass" type="number" value="60" min="1" max="100"></div>
       </div>
+      <div class="form-group"><label class="form-label">মৌখিক উত্তরের সময়সীমা (মিনিট)</label><input class="form-input" id="q_audio_time" type="number" value="2" min="1" max="10"></div>
       <div class="form-group"><label class="form-label">শেষ তারিখ</label><input class="form-input" id="q_deadline" type="date"></div>
       <div class="form-group">
         <label class="form-label">ছাত্র নির্বাচন</label>
@@ -996,6 +997,7 @@
     <div class="form-group" style="flex:1"><label class="form-label">সময় (মিনিট)</label><input class="form-input" type="number" id="ec_time" value="30" min="1"></div>
     <div class="form-group" style="flex:1"><label class="form-label">পাস (%)</label><input class="form-input" type="number" id="ec_pass" value="60" min="0" max="100"></div>
   </div>
+  <div class="form-group"><label class="form-label">মৌখিক উত্তরের সময়সীমা (মিনিট)</label><input class="form-input" type="number" id="ec_audio_time" value="2" min="1" max="10"></div>
   <div class="form-group"><label class="form-label">শেষ তারিখ</label><input class="form-input" type="date" id="ec_deadline"></div>
   <div id="ecQList"></div>
   <button onclick="addQuestion()" style="width:100%;background:var(--gray-100);border:1.5px dashed var(--gray-300);color:var(--gray-600);border-radius:10px;padding:10px;font-family:var(--font);font-size:13px;cursor:pointer;margin-bottom:12px">＋ প্রশ্ন যোগ করুন</button>
@@ -1922,7 +1924,8 @@ function renderChatExams(){
     const grade=sub&&sub.needsManualGrade
       ?`<div class="csp-exam-grade"><input class="marks-input" type="number" placeholder="নম্বর" value="${sub.score||0}" min="0" max="${sub.total}" style="width:72px" onchange="updateChatExamScore('${sub.id}',this.value)"><span style="font-size:11px;color:var(--gray-400)">/ ${sub.total}</span></div>`
       :'';
-    return `<div class="csp-row"><div class="csp-row-main">${esc(q.title)}${bits.length?' · '+esc(bits.join(' · ')):''}</div><span class="csp-row-meta ${mCls}">${meta}</span></div>${grade}`;
+    const oral=sub?renderOralAnswerButtons(q,sub):'';
+    return `<div class="csp-row"><div class="csp-row-main">${esc(q.title)}${bits.length?' · '+esc(bits.join(' · ')):''}</div><span class="csp-row-meta ${mCls}">${meta}</span></div>${oral}${grade}`;
   }).join('');
 }
 function renderChatGoals(){
@@ -2892,6 +2895,7 @@ function initCreateQuiz(){
   document.getElementById('q_subject').value='';
   document.getElementById('q_desc').value='';
   document.getElementById('q_time').value='30';
+  document.getElementById('q_audio_time').value='2';
   document.getElementById('q_pass').value='60';
   document.getElementById('q_deadline').value='';
   document.getElementById('qSelAll').checked=false;
@@ -2919,6 +2923,7 @@ function renderQuestions(){
         <option value="fill_blank"      ${q.type==='fill_blank'?'selected':''}>শূন্যস্থান পূরণ</option>
         <option value="short_answer"    ${q.type==='short_answer'?'selected':''}>সংক্ষিপ্ত উত্তর</option>
         <option value="essay"           ${q.type==='essay'?'selected':''}>রচনামূলক</option>
+        <option value="audio"           ${q.type==='audio'?'selected':''}>মৌখিক উত্তর</option>
         <option value="file_upload"     ${q.type==='file_upload'?'selected':''}>ফাইল আপলোড</option>
       </select>
       <textarea class="form-input" rows="2" placeholder="প্রশ্নের বিবরণ লিখুন..." style="margin-bottom:10px" onchange="qChange(${i},'text',this.value)">${esc(q.text)}</textarea>
@@ -2949,6 +2954,9 @@ function renderQuestionOptions(q,i){
   if(q.type==='file_upload'){
     return `<input type="text" class="form-input" placeholder="ফাইল আপলোডের নির্দেশনা" value="${esc(q.uploadInstructions||'')}" onchange="qChange(${i},'uploadInstructions',this.value)">`;
   }
+  if(q.type==='audio'){
+    return `<p style="font-size:12px;color:var(--gray-400);padding:4px 0">ছাত্র অডিও রেকর্ড করে জমা দেবে। এই পরীক্ষার মৌখিক সময়সীমা আলাদাভাবে উপরে নির্ধারণ করুন।</p>`;
+  }
   return `<p style="font-size:12px;color:var(--gray-400);padding:4px 0">জিম্মাদার নিজে নম্বর দেবেন।</p>`;
 }
 function qChange(i,key,val){ questions[i][key]=val; }
@@ -2967,6 +2975,7 @@ async function saveQuiz(){
     title, subject:document.getElementById('q_subject').value.trim(),
     desc:document.getElementById('q_desc').value.trim(),
     timeLimit:document.getElementById('q_time').value,
+    audioLimitSeconds:(parseInt(document.getElementById('q_audio_time').value)||2)*60,
     passPercent:document.getElementById('q_pass').value,
     deadline:document.getElementById('q_deadline').value,
     assigneeIds:checked.map(c=>c.value),
@@ -2982,6 +2991,7 @@ function openAddExamForChat(sid){
   document.getElementById('ecStudentName').textContent=s?(s.waqfId?API.Students.displayWaqfId(s.waqfId)+' · ':'')+s.name:'';
   ['ec_title','ec_subject','ec_desc'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('ec_time').value='30';
+  document.getElementById('ec_audio_time').value='2';
   document.getElementById('ec_pass').value='60';
   document.getElementById('ec_deadline').value='';
   renderQuestions();
@@ -2994,6 +3004,7 @@ async function saveExamFromChat(){
     title, subject:document.getElementById('ec_subject').value.trim(),
     desc:document.getElementById('ec_desc').value.trim(),
     timeLimit:document.getElementById('ec_time').value,
+    audioLimitSeconds:(parseInt(document.getElementById('ec_audio_time').value)||2)*60,
     passPercent:document.getElementById('ec_pass').value,
     deadline:document.getElementById('ec_deadline').value,
     assigneeIds:[examChatSid], questions,
@@ -3033,6 +3044,30 @@ function initResultsQuizSelect(){
   sel.innerHTML='<option value="">পরীক্ষা বেছে নিন...</option>'+quizzes.map(q=>`<option value="${q.id}">${esc(q.title)}</option>`).join('');
   renderResults();
 }
+function oralAnswersFor(quiz, sub){
+  if(!quiz||!sub||!sub.answers) return [];
+  return (quiz.questions||[])
+    .filter(q=>q.type==='audio' && sub.answers[q.id])
+    .map((q,i)=>({ q, answer:sub.answers[q.id], index:i+1 }));
+}
+function renderOralAnswerButtons(quiz, sub){
+  const list=oralAnswersFor(quiz, sub);
+  if(!list.length) return '';
+  return `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">${list.map(x=>`
+    <button type="button" class="btn-secondary" style="width:auto;padding:4px 9px;font-size:12px" onclick="playOralAnswer('${sub.id}','${x.q.id}')">▶ মৌখিক ${x.index}${x.answer.duration?' · '+Math.round(x.answer.duration)+'s':''}</button>
+  `).join('')}</div>`;
+}
+async function playOralAnswer(subId, questionId){
+  const sub=API.Exams.getSubmissions().find(s=>s.id===subId);
+  const answer=sub&&sub.answers?sub.answers[questionId]:null;
+  if(!answer){ showToast('অডিও পাওয়া যায়নি'); return; }
+  try{
+    const url=await API.Exams.resolveAudioUrl(answer);
+    if(!url){ showToast('অডিও লিংক তৈরি হয়নি'); return; }
+    const audio=new Audio(url);
+    await audio.play();
+  }catch(e){ console.error(e); showToast('অডিও চালু হয়নি'); }
+}
 function renderResults(){
   const qid=document.getElementById('resultQuizSelect').value;
   const el=document.getElementById('resultsList');
@@ -3046,7 +3081,7 @@ function renderResults(){
     return `
     <div class="result-item">
       <div style="flex:1"><div class="result-name">${wid?'<span style="color:#128C7E;font-weight:600;font-size:13px">'+esc(wid)+'</span> · ':''}${esc(s.studentName)}</div>
-      <div class="result-meta">${formatDate(s.submittedAt)} ${s.needsManualGrade?'· ✏️ ম্যানুয়াল গ্রেডিং প্রয়োজন':''}</div></div>
+      <div class="result-meta">${formatDate(s.submittedAt)} ${s.needsManualGrade?'· ✏️ ম্যানুয়াল গ্রেডিং প্রয়োজন':''}</div>${renderOralAnswerButtons(quiz,s)}</div>
       ${s.needsManualGrade
         ? `<input class="marks-input" type="number" placeholder="নম্বর" value="${s.score||0}" min="0" max="${s.total}" onchange="updateScore('${s.id}',this.value,${s.total},${quiz.passPercent||60})">`
         : `<div class="result-score ${s.passed?'result-pass':'result-fail'}">${s.score}/${s.total}<br><small style="font-size:11px">${s.passed?'✅ পাস':'❌ ফেল'}</small></div>`

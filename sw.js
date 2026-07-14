@@ -1,5 +1,5 @@
 /* Waqful Madinah — full-app shell cache + Web Push display */
-var CACHE = 'waqful-full-v176';
+var CACHE = 'waqful-full-v177';
 
 var CDN_ASSETS = [
   'https://unpkg.com/@supabase/supabase-js@2.49.8/dist/umd/supabase.js',
@@ -34,8 +34,10 @@ var LOCAL_SHELL = [
   'pwa-notify.js',
   'manifest-teacher.webmanifest',
   'manifest-student.webmanifest',
-  'icons/icon-192.png',
-  'icons/icon-512.png',
+  'icons/icon-teacher-192.png',
+  'icons/icon-teacher-512.png',
+  'icons/icon-student-192.png',
+  'icons/icon-student-512.png',
   'supabase-config.js',
   'pwa-config.js',
 ].map(absLocal);
@@ -181,12 +183,27 @@ function _idbClear() {
   }).catch(function () {});
 }
 
+function setBadgeCount(n) {
+  var count = Math.max(0, Number(n) || 0);
+  try {
+    if (count > 0) {
+      if (self.registration && self.registration.setAppBadge) return self.registration.setAppBadge(count);
+      if (self.navigator && self.navigator.setAppBadge) return self.navigator.setAppBadge(count);
+    } else {
+      if (self.registration && self.registration.clearAppBadge) return self.registration.clearAppBadge();
+      if (self.navigator && self.navigator.clearAppBadge) return self.navigator.clearAppBadge();
+    }
+  } catch (e) {}
+  return Promise.resolve();
+}
+
 // ── Push notification ─────────────────────────────────────────────────────────
 self.addEventListener('push', function (e) {
   var title = 'Waqful Madinah';
   var body = 'নতুন আপডেট আছে।';
   var openUrl = absLocal('index.html');
   var tag = 'waqful-push';
+  var iconPath = 'icons/icon-student-192.png';
   if (e.data) {
     try {
       var j = e.data.json();
@@ -194,6 +211,7 @@ self.addEventListener('push', function (e) {
       if (j.body) body = j.body;
       if (j.url) openUrl = new URL(j.url, baseHref()).href;
       if (j.tag) tag = j.tag;
+      if (j.icon) iconPath = j.icon;
     } catch (err) {
       var t = e.data.text();
       if (t) body = t.slice(0, 200);
@@ -213,15 +231,15 @@ self.addEventListener('push', function (e) {
           : _body;
         return self.registration.showNotification(title, {
           body: displayBody,
-          icon: absLocal('icons/icon-192.png'),
-          badge: absLocal('icons/icon-192.png'),
+          icon: absLocal(iconPath),
+          badge: absLocal(iconPath),
           tag: _tag,
           renotify: true,
           silent: false,
           vibrate: [200, 100, 200],
           data: { url: openUrl, tag: _tag },
         }).then(function () {
-          if ('setAppBadge' in navigator) navigator.setAppBadge(total);
+          setBadgeCount(total);
           // Tell any open page to refresh data immediately
           return self.clients.matchAll({ type: 'window', includeUncontrolled: true })
             .then(function (clients) {
@@ -238,16 +256,23 @@ self.addEventListener('notificationclick', function (e) {
   e.notification.close();
   var clickedTag = (e.notification.data && e.notification.data.tag) || e.notification.tag;
   var url = (e.notification.data && e.notification.data.url) || absLocal('index.html');
+  var targetUrl = new URL(url, self.location.origin).href;
   e.waitUntil(
     _idbSet(clickedTag, 0).then(function () {
       return _idbTotal();
     }).then(function (remaining) {
-      if ('setAppBadge' in navigator) {
-        return remaining > 0 ? navigator.setAppBadge(remaining) : navigator.clearAppBadge();
-      }
+      return setBadgeCount(remaining);
     }).then(function () {
       return self.clients.matchAll({ type: 'window', includeUncontrolled: true });
     }).then(function (list) {
+      for (var j = 0; j < list.length; j++) {
+        var tc = list[j];
+        if (tc.url && tc.url.indexOf(targetUrl) === 0 && 'focus' in tc) {
+          return tc.focus().then(function (fc) {
+            if (fc) fc.postMessage({ type: 'REFRESH_DATA' });
+          });
+        }
+      }
       for (var i = 0; i < list.length; i++) {
         var c = list[i];
         if (c.url && 'focus' in c) {
@@ -266,7 +291,7 @@ self.addEventListener('message', function (e) {
   if (!e.data) return;
   if (e.data.type === 'CLEAR_BADGE') {
     _idbClear().then(function () {
-      if ('clearAppBadge' in navigator) navigator.clearAppBadge();
+      setBadgeCount(0);
     });
   }
   // Page থেকে force-activate অনুরোধ এলে নতুন SW সক্রিয় করো
@@ -281,8 +306,7 @@ self.addEventListener('message', function (e) {
     _idbSet(e.data.tag, 0).then(function() {
       return _idbTotal();
     }).then(function(total) {
-      if (total > 0) navigator.setAppBadge && navigator.setAppBadge(total);
-      else navigator.clearAppBadge && navigator.clearAppBadge();
+      setBadgeCount(total);
     });
   }
 });
