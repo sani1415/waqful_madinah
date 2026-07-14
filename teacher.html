@@ -11,7 +11,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="জিম্মাদার">
 <link rel="manifest" href="manifest-teacher.webmanifest">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-teacher-192.png">
+<link rel="apple-touch-icon" href="icons/icon-teacher-192.png">
 <title>জিম্মাদার প্যানেল · Waqful Madinah</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -389,6 +390,30 @@
 .exam-tabs{display:flex;gap:0;border-bottom:2px solid var(--gray-200)}
 .exam-tab-btn{flex:1;background:none;border:none;padding:12px 4px 10px;font-family:var(--font);font-size:13px;font-weight:600;color:var(--gray-500);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .2s}
 .exam-tab-btn.active{color:#075E54;border-bottom-color:#075E54}
+#examCreatePane{padding-bottom:120px!important}
+.exam-form-row{display:grid;gap:10px;align-items:start}
+.exam-form-row.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.exam-form-row.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.exam-student-picker{border:1.5px solid var(--gray-200);background:#fff;border-radius:var(--radius);padding:10px;margin-bottom:12px}
+.exam-picker-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px;align-items:center}
+.exam-picker-action{border:1.5px solid #B2DFDB;background:#E0F2F1;color:#075E54;border-radius:10px;padding:10px 12px;font-family:var(--font);font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
+.exam-selected-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:9px;font-size:12px;font-weight:800;color:var(--gray-500)}
+.exam-clear-btn{border:none;background:transparent;color:#C62828;font-family:var(--font);font-size:12px;font-weight:800;cursor:pointer;padding:2px 0}
+.exam-selected-students{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;min-height:30px}
+.exam-student-chip{display:inline-flex;align-items:center;gap:6px;max-width:100%;background:#F8FAFC;border:1px solid #E2E8F0;color:#334155;border-radius:999px;padding:5px 8px;font-size:12px;font-weight:700}
+.exam-student-chip span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.exam-student-chip button{width:18px;height:18px;border:none;border-radius:50%;background:#E2E8F0;color:#64748B;display:flex;align-items:center;justify-content:center;font-size:12px;line-height:1;cursor:pointer;flex-shrink:0}
+.exam-student-empty{font-size:12px;color:var(--gray-400);padding:6px 2px}
+@media(max-width:560px){
+  .exam-form-row{gap:6px}
+  .exam-form-row.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .exam-form-row.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .exam-form-row .form-label{font-size:11px;line-height:1.2}
+  .exam-form-row .form-input{padding:8px 9px;font-size:13px}
+  .exam-picker-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 52px;gap:6px}
+  .exam-picker-row .form-input{padding:8px 9px;font-size:13px}
+  .exam-picker-action{padding:8px 6px;font-size:11px}
+}
 .question-card{background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:var(--radius);padding:14px;margin-bottom:12px;position:relative}
 .q-num{font-size:12px;font-weight:700;color:var(--gray-400);margin-bottom:8px}
 .q-type-select{width:100%;border:1.5px solid var(--gray-300);border-radius:8px;padding:8px 10px;font-family:var(--font);font-size:13px;margin-bottom:10px;background:#fff}
@@ -574,23 +599,33 @@
     </div>
     <!-- Create quiz -->
     <div id="examCreatePane" style="display:none;padding:12px">
-      <div class="form-group"><label class="form-label">পরীক্ষার শিরোনাম *</label><input class="form-input" id="q_title" placeholder="যেমন: ১ম সাময়িক পরীক্ষা"></div>
-      <div class="form-group"><label class="form-label">বিষয়</label><input class="form-input" id="q_subject" placeholder="কুরআন / আরবি / ইসলামিয়াত"></div>
+      <div class="exam-form-row two">
+        <div class="form-group"><label class="form-label">পরীক্ষার শিরোনাম *</label><input class="form-input" id="q_title" placeholder="যেমন: ১ম সাময়িক পরীক্ষা"></div>
+        <div class="form-group"><label class="form-label">বিষয়</label><input class="form-input" id="q_subject" placeholder="কুরআন / আরবি / ইসলামিয়াত"></div>
+      </div>
       <div class="form-group"><label class="form-label">বিবরণ</label><textarea class="form-input" id="q_desc" rows="2" placeholder="পরীক্ষার বিবরণ..."></textarea></div>
-      <div style="display:flex;gap:10px">
-        <div class="form-group" style="flex:1"><label class="form-label">সময়সীমা (মিনিট)</label><input class="form-input" id="q_time" type="number" value="30" min="5"></div>
-        <div class="form-group" style="flex:1"><label class="form-label">পাস নম্বর (%)</label><input class="form-input" id="q_pass" type="number" value="60" min="1" max="100"></div>
+      <div class="exam-form-row three">
+        <div class="form-group"><label class="form-label">সময় (মিনিট)</label><input class="form-input" id="q_time" type="number" value="30" min="5"></div>
+        <div class="form-group"><label class="form-label">উত্তীর্ণ (%)</label><input class="form-input" id="q_pass" type="number" value="60" min="1" max="100"></div>
+        <div class="form-group"><label class="form-label">শেষ তারিখ</label><input class="form-input" id="q_deadline" type="date"></div>
       </div>
-      <div class="form-group"><label class="form-label">মৌখিক উত্তরের সময়সীমা (মিনিট)</label><input class="form-input" id="q_audio_time" type="number" value="2" min="1" max="10"></div>
-      <div class="form-group"><label class="form-label">শেষ তারিখ</label><input class="form-input" id="q_deadline" type="date"></div>
-      <div class="form-group">
-        <label class="form-label">ছাত্র নির্বাচন</label>
-        <div class="select-all-bar"><label style="font-size:13px;font-weight:600;color:var(--gray-600)">সবাইকে</label><input type="checkbox" id="qSelAll" onchange="toggleQAll(this)" style="accent-color:#128C7E;width:16px;height:16px"></div>
-        <div id="qStudents"></div>
-      </div>
+      <div class="form-group" id="q_audio_group" style="display:none"><label class="form-label">মৌখিক উত্তরের সময় (মিনিট)</label><input class="form-input" id="q_audio_time" type="number" value="2" min="1" max="10"></div>
       <div class="sec-hd" style="margin:0 -12px 12px;padding:8px 12px">প্রশ্নসমূহ</div>
       <div id="questionList"></div>
       <button class="btn-secondary" style="margin-bottom:10px" onclick="addQuestion()">＋ প্রশ্ন যোগ করুন</button>
+      <div class="form-group">
+        <label class="form-label">ছাত্র নির্বাচন</label>
+        <div class="exam-student-picker">
+          <div class="exam-picker-row">
+            <input class="form-input" id="qStudentSearch" placeholder="নাম বা ওয়াকফ লিখুন" oninput="renderQStudentPicker()">
+            <select class="form-input" id="qStudentPicker" onchange="addQuizStudent(this.value)"></select>
+            <button type="button" class="exam-picker-action" onclick="selectAllQuizStudents()">সবাই</button>
+          </div>
+          <div class="exam-selected-head"><span id="qSelectedCount">কোনো ছাত্র নির্বাচিত নয়</span><button type="button" class="exam-clear-btn" onclick="clearQuizStudents()">মুছুন</button></div>
+          <div class="exam-selected-students" id="qSelectedStudents"></div>
+          <div id="qStudents" style="display:none"></div>
+        </div>
+      </div>
       <button class="btn-primary" onclick="saveQuiz()">✅ পরীক্ষা সংরক্ষণ</button>
       <div style="height:20px"></div>
     </div>
@@ -990,15 +1025,17 @@
   <div class="modal-handle"></div>
   <div class="modal-title">📝 নতুন পরীক্ষা দিন</div>
   <div style="background:#E8EAF6;border-radius:8px;padding:8px 12px;font-size:13px;color:#3949AB;margin-bottom:12px;font-weight:600">👤 <span id="ecStudentName"></span></div>
-  <div class="form-group"><label class="form-label">শিরোনাম *</label><input class="form-input" id="ec_title" placeholder="পরীক্ষার নাম"></div>
-  <div class="form-group"><label class="form-label">বিষয়</label><input class="form-input" id="ec_subject" placeholder="কুরআন / হাদিস..."></div>
-  <div class="form-group"><label class="form-label">বিবরণ</label><textarea class="form-input" id="ec_desc" rows="2" placeholder="পরীক্ষার বিবরণ..."></textarea></div>
-  <div style="display:flex;gap:10px">
-    <div class="form-group" style="flex:1"><label class="form-label">সময় (মিনিট)</label><input class="form-input" type="number" id="ec_time" value="30" min="1"></div>
-    <div class="form-group" style="flex:1"><label class="form-label">পাস (%)</label><input class="form-input" type="number" id="ec_pass" value="60" min="0" max="100"></div>
+  <div class="exam-form-row two">
+    <div class="form-group"><label class="form-label">শিরোনাম *</label><input class="form-input" id="ec_title" placeholder="পরীক্ষার নাম"></div>
+    <div class="form-group"><label class="form-label">বিষয়</label><input class="form-input" id="ec_subject" placeholder="কুরআন / হাদিস..."></div>
   </div>
-  <div class="form-group"><label class="form-label">মৌখিক উত্তরের সময়সীমা (মিনিট)</label><input class="form-input" type="number" id="ec_audio_time" value="2" min="1" max="10"></div>
-  <div class="form-group"><label class="form-label">শেষ তারিখ</label><input class="form-input" type="date" id="ec_deadline"></div>
+  <div class="form-group"><label class="form-label">বিবরণ</label><textarea class="form-input" id="ec_desc" rows="2" placeholder="পরীক্ষার বিবরণ..."></textarea></div>
+  <div class="exam-form-row three">
+    <div class="form-group"><label class="form-label">সময় (মিনিট)</label><input class="form-input" type="number" id="ec_time" value="30" min="1"></div>
+    <div class="form-group"><label class="form-label">উত্তীর্ণ (%)</label><input class="form-input" type="number" id="ec_pass" value="60" min="0" max="100"></div>
+    <div class="form-group"><label class="form-label">শেষ তারিখ</label><input class="form-input" type="date" id="ec_deadline"></div>
+  </div>
+  <div class="form-group" id="ec_audio_group" style="display:none"><label class="form-label">মৌখিক উত্তরের সময় (মিনিট)</label><input class="form-input" type="number" id="ec_audio_time" value="2" min="1" max="10"></div>
   <div id="ecQList"></div>
   <button onclick="addQuestion()" style="width:100%;background:var(--gray-100);border:1.5px dashed var(--gray-300);color:var(--gray-600);border-radius:10px;padding:10px;font-family:var(--font);font-size:13px;cursor:pointer;margin-bottom:12px">＋ প্রশ্ন যোগ করুন</button>
   <button class="btn-primary" onclick="saveExamFromChat()">✅ পরীক্ষা সংরক্ষণ করুন</button>
@@ -1036,7 +1073,7 @@ let _bcReadCounts={}; // { [bc_id]: {read_count, total_count} }
 let currentGrpId=null;
 let newTaskType='daily';
 let examTab='list', docViewTab='received', docExpandedSid=null;
-let questions=[], curQContainer='questionList', examChatSid=null;
+let questions=[], curQContainer='questionList', examChatSid=null, qSelectedIds=[];
 let curPreviewDocId=null;
 let chatTeacherPendingFile=null;
 let curProfileSid=null;
@@ -1267,6 +1304,7 @@ function refreshBCReadCounts(){
 }
 function renderAll(){
   renderChatList(); renderBiboronSummary(); renderStudentList(); renderTaskList(); renderQuizList(); renderDocsGrouped(); updateBadge(); updateDocBadge();
+  syncAppBadge();
   refreshBCReadCounts();
   if(curChat){
     if(curChatTab==='msg') renderMsgs(curChat);
@@ -2747,6 +2785,22 @@ function updateBadge(){
   const sc=API.DailySchedule&&API.DailySchedule.pendingApprovalCount?API.DailySchedule.pendingApprovalCount():0;
   const sb=document.getElementById('schedBadge');
   if(sb){ sb.textContent=sc||''; sb.classList.toggle('show',sc>0); }
+  syncAppBadge();
+}
+function teacherAppBadgeCount(){
+  const msg=API.Students.getAll().reduce((sum,s)=>sum+API.Messages.unreadCount(s.id,'in'),0);
+  const task=API.Tasks.pendingCount();
+  const sched=API.DailySchedule&&API.DailySchedule.pendingApprovalCount?API.DailySchedule.pendingApprovalCount():0;
+  const docs=API.Docs?Math.max(API.Docs.unreadCount(),API.Docs.getAll().filter(d=>d.sentBy!=='teacher'&&d.reviewStatus==='pending').length):0;
+  return Math.max(0,msg+task+sched+docs);
+}
+function syncAppBadge(){
+  const n=teacherAppBadgeCount();
+  if('setAppBadge' in navigator){
+    try{ if(n>0) navigator.setAppBadge(n); else if('clearAppBadge' in navigator) navigator.clearAppBadge(); }catch(e){}
+  }
+  if(navigator.serviceWorker&&navigator.serviceWorker.controller)
+    navigator.serviceWorker.controller.postMessage({type:'SET_BADGE',count:n});
 }
 
 // ── আমল sub-tabs ─────────────────────────────────────────────
@@ -2884,13 +2938,20 @@ function goExamTab(tab,btn){
   document.getElementById('examListPane').style.display    = tab==='list'?'block':'none';
   document.getElementById('examCreatePane').style.display  = tab==='create'?'block':'none';
   document.getElementById('examResultsPane').style.display = tab==='results'?'block':'none';
+  syncExamFab();
   if(tab==='list')    renderQuizList();
   if(tab==='create')  initCreateQuiz();
   if(tab==='results') initResultsQuizSelect();
 }
+function syncExamFab(){
+  const fab=document.getElementById('fab');
+  if(!fab) return;
+  if(curTab==='settings'||curTab==='diary'||(curTab==='exams'&&examTab==='create')) fab.style.display='none';
+  else fab.style.display='flex';
+}
 
 function initCreateQuiz(){
-  questions=[]; curQContainer='questionList';
+  questions=[]; curQContainer='questionList'; qSelectedIds=[];
   document.getElementById('q_title').value='';
   document.getElementById('q_subject').value='';
   document.getElementById('q_desc').value='';
@@ -2898,13 +2959,47 @@ function initCreateQuiz(){
   document.getElementById('q_audio_time').value='2';
   document.getElementById('q_pass').value='60';
   document.getElementById('q_deadline').value='';
-  document.getElementById('qSelAll').checked=false;
+  const search=document.getElementById('qStudentSearch'); if(search) search.value='';
+  renderQStudentPicker();
   document.getElementById('qStudents').innerHTML=API.Students.getAll().map(s=>`
     <div class="s-check-item"><input type="checkbox" id="qc_${s.id}" value="${s.id}" style="accent-color:#128C7E">
     <label for="qc_${s.id}" style="font-size:14px;cursor:pointer"><span style="color:#128C7E;font-weight:600;font-size:12px">${esc(API.Students.displayWaqfId(s.waqfId))}</span> · ${esc(s.name)}${s.responsibility?` <span style="font-size:11px;font-weight:700;color:#E65100;background:#FFF3E0;border-radius:5px;padding:1px 5px">${esc(s.responsibility)}</span>`:''}</label></div>`).join('');
   renderQuestions();
 }
-function toggleQAll(cb){ document.querySelectorAll('#qStudents input').forEach(c=>c.checked=cb.checked); }
+function studentOptionLabel(s){
+  return `${API.Students.displayWaqfId(s.waqfId)} · ${s.name}${s.responsibility?' · '+s.responsibility:''}`;
+}
+function renderQStudentPicker(){
+  const picker=document.getElementById('qStudentPicker');
+  const chips=document.getElementById('qSelectedStudents');
+  const count=document.getElementById('qSelectedCount');
+  if(!picker||!chips||!count) return;
+  const q=(document.getElementById('qStudentSearch')?.value||'').trim().toLowerCase();
+  const all=API.Students.getAll();
+  const selected=new Set(qSelectedIds);
+  const available=all.filter(s=>{
+    if(selected.has(s.id)) return false;
+    if(!q) return true;
+    const hay=[s.name,s.waqfId,API.Students.displayWaqfId(s.waqfId),s.responsibility].filter(Boolean).join(' ').toLowerCase();
+    return hay.includes(q);
+  });
+  picker.innerHTML='<option value="">'+(all.length?'ছাত্র বেছে নিন...':'ছাত্র নেই')+'</option>'+available.map(s=>`<option value="${s.id}">${esc(studentOptionLabel(s))}</option>`).join('');
+  const selectedRows=qSelectedIds.map(id=>all.find(s=>s.id===id)).filter(Boolean);
+  count.textContent=selectedRows.length?`${selectedRows.length} জন ছাত্র নির্বাচিত`:'কোনো ছাত্র নির্বাচিত নয়';
+  chips.innerHTML=selectedRows.length?selectedRows.map(s=>`
+    <span class="exam-student-chip"><span>${esc(studentOptionLabel(s))}</span><button type="button" onclick="removeQuizStudent('${s.id}')" aria-label="মুছুন">×</button></span>
+  `).join(''):`<div class="exam-student-empty">${all.length?(available.length?'ড্রপডাউন থেকে ছাত্র নির্বাচন করুন।':'এই খোঁজে ছাত্র মেলেনি।'):'আগে ছাত্র যোগ করুন।'}</div>`;
+}
+function addQuizStudent(id){
+  if(!id) return;
+  if(!qSelectedIds.includes(id)) qSelectedIds.push(id);
+  const picker=document.getElementById('qStudentPicker'); if(picker) picker.value='';
+  renderQStudentPicker();
+}
+function removeQuizStudent(id){ qSelectedIds=qSelectedIds.filter(x=>x!==id); renderQStudentPicker(); }
+function clearQuizStudents(){ qSelectedIds=[]; renderQStudentPicker(); }
+function selectAllQuizStudents(){ qSelectedIds=API.Students.getAll().map(s=>s.id); renderQStudentPicker(); }
+function toggleQAll(cb){ qSelectedIds=cb&&cb.checked?API.Students.getAll().map(s=>s.id):[]; renderQStudentPicker(); }
 
 function addQuestion(){
   questions.push({ type:'multiple_choice', text:'', options:['','','',''], correctAnswer:'', marks:1 });
@@ -2912,6 +3007,7 @@ function addQuestion(){
 }
 function renderQuestions(){
   const el=document.getElementById(curQContainer);
+  updateExamOralFields();
   if(!questions.length){ el.innerHTML='<div style="text-align:center;padding:16px;color:var(--gray-400);font-size:13px">প্রশ্ন যোগ করুন।</div>'; return; }
   el.innerHTML=questions.map((q,i)=>`
     <div class="question-card">
@@ -2929,6 +3025,13 @@ function renderQuestions(){
       <textarea class="form-input" rows="2" placeholder="প্রশ্নের বিবরণ লিখুন..." style="margin-bottom:10px" onchange="qChange(${i},'text',this.value)">${esc(q.text)}</textarea>
       ${renderQuestionOptions(q,i)}
     </div>`).join('');
+}
+function updateExamOralFields(){
+  const hasAudio=questions.some(q=>q.type==='audio');
+  ['q_audio_group','ec_audio_group'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.display=hasAudio?'':'none';
+  });
 }
 function renderQuestionOptions(q,i){
   if(q.type==='multiple_choice'){
@@ -2955,7 +3058,7 @@ function renderQuestionOptions(q,i){
     return `<input type="text" class="form-input" placeholder="ফাইল আপলোডের নির্দেশনা" value="${esc(q.uploadInstructions||'')}" onchange="qChange(${i},'uploadInstructions',this.value)">`;
   }
   if(q.type==='audio'){
-    return `<p style="font-size:12px;color:var(--gray-400);padding:4px 0">ছাত্র অডিও রেকর্ড করে জমা দেবে। এই পরীক্ষার মৌখিক সময়সীমা আলাদাভাবে উপরে নির্ধারণ করুন।</p>`;
+    return `<p style="font-size:12px;color:var(--gray-400);padding:4px 0">ছাত্র অডিও রেকর্ড করে জমা দেবে। এই পরীক্ষার মৌখিক সময় উপরে নির্ধারণ করুন।</p>`;
   }
   return `<p style="font-size:12px;color:var(--gray-400);padding:4px 0">জিম্মাদার নিজে নম্বর দেবেন।</p>`;
 }
@@ -2969,8 +3072,7 @@ function deleteQuestion(i){ questions.splice(i,1); renderQuestions(); }
 async function saveQuiz(){
   const title=document.getElementById('q_title').value.trim(); if(!title){ showToast('শিরোনাম লিখুন!'); return; }
   if(!questions.length){ showToast('কমপক্ষে একটি প্রশ্ন যোগ করুন!'); return; }
-  const checked=[...document.querySelectorAll('#qStudents input:checked')];
-  if(!checked.length){ showToast('কমপক্ষে একজন ছাত্র নির্বাচন করুন!'); return; }
+  if(!qSelectedIds.length){ showToast('কমপক্ষে একজন ছাত্র নির্বাচন করুন!'); return; }
   try{ await API.Exams.addQuiz({
     title, subject:document.getElementById('q_subject').value.trim(),
     desc:document.getElementById('q_desc').value.trim(),
@@ -2978,7 +3080,7 @@ async function saveQuiz(){
     audioLimitSeconds:(parseInt(document.getElementById('q_audio_time').value)||2)*60,
     passPercent:document.getElementById('q_pass').value,
     deadline:document.getElementById('q_deadline').value,
-    assigneeIds:checked.map(c=>c.value),
+    assigneeIds:qSelectedIds.slice(),
     questions,
   }); }catch(e){ console.error(e); showToast('❌ পরীক্ষা সেভ হয়নি'); return; }
   showToast('✅ পরীক্ষা সংরক্ষিত হয়েছে!');
@@ -3104,6 +3206,7 @@ function updateDocBadge(){
   const pending=API.Docs.getAll().filter(d=>d.sentBy!=='teacher'&&d.reviewStatus==='pending').length;
   const n=Math.max(unread,pending);
   const b=document.getElementById('docBadge'); b.textContent=n; b.classList.toggle('show',n>0);
+  syncAppBadge();
 }
 function goDocTab(tab, btn){
   docViewTab=tab;
@@ -3978,14 +4081,13 @@ if(window.visualViewport) window.visualViewport.addEventListener('resize',fixVH)
 
 document.addEventListener('visibilitychange', () => {
   if(document.visibilityState==='visible') {
-    if('clearAppBadge' in navigator) navigator.clearAppBadge();
-    if(navigator.serviceWorker && navigator.serviceWorker.controller)
-      navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_BADGE' });
+    syncAppBadge();
     if(typeof RemoteSync !== 'undefined' && RemoteSync.pullRemoteSnapshot) RemoteSync.pullRemoteSnapshot();
   }
 });
 if(navigator.serviceWorker) navigator.serviceWorker.addEventListener('message', function(e){
-  if(e.data && e.data.type==='REFRESH_DATA' && typeof RemoteSync!=='undefined' && RemoteSync.pullRemoteSnapshot) RemoteSync.pullRemoteSnapshot();
+  if(e.data && e.data.type==='REFRESH_DATA' && typeof RemoteSync!=='undefined' && RemoteSync.pullRemoteSnapshot)
+    RemoteSync.pullRemoteSnapshot().finally(()=>syncAppBadge());
 });
 
 init();

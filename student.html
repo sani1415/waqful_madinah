@@ -11,7 +11,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="واقف">
 <link rel="manifest" href="manifest-student.webmanifest">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" href="icons/icon-student-192.png">
+<link rel="apple-touch-icon" href="icons/icon-student-192.png">
 <title>وقف المدينة</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
@@ -1861,6 +1862,7 @@ function exitQuiz(){
 function updateExamBadge(){
   const n=API.Exams.getQuizzesForStudent(me?.id||'').filter(q=>!API.Exams.getSubmission(q.id,me?.id||'')).length;
   const b=document.getElementById('examBadge'); b.textContent=n; b.classList.toggle('show',n>0);
+  syncAppBadge();
 }
 
 // ══ DOCUMENTS ══════════════════════════════════════════════
@@ -2366,6 +2368,22 @@ function updateBadges(){
   const ur=API.Messages.unreadCount(me.id,'out'); const ub=document.getElementById('urBadge'); ub.textContent=ur; ub.classList.toggle('show',ur>0);
   const pn=API.Tasks.pendingCount(me.id);          const tb=document.getElementById('tBadge');  tb.textContent=pn; tb.classList.toggle('show',pn>0);
   updateExamBadge();
+  syncAppBadge();
+}
+function studentAppBadgeCount(){
+  if(!me) return 0;
+  const ur=API.Messages.unreadCount(me.id,'out');
+  const pn=API.Tasks.pendingCount(me.id);
+  const ex=API.Exams.getQuizzesForStudent(me.id).filter(q=>!API.Exams.getSubmission(q.id,me.id)).length;
+  return Math.max(0,ur+pn+ex);
+}
+function syncAppBadge(){
+  const n=studentAppBadgeCount();
+  if('setAppBadge' in navigator){
+    try{ if(n>0) navigator.setAppBadge(n); else if('clearAppBadge' in navigator) navigator.clearAppBadge(); }catch(e){}
+  }
+  if(navigator.serviceWorker&&navigator.serviceWorker.controller)
+    navigator.serviceWorker.controller.postMessage({type:'SET_BADGE',count:n});
 }
 
 // ══ NAV ════════════════════════════════════════════════════
@@ -2411,9 +2429,7 @@ window.addEventListener('storage', e => {
 // Fires when user switches back to this tab / app (same device)
 document.addEventListener('visibilitychange', () => {
   if(document.visibilityState==='visible') {
-    if('clearAppBadge' in navigator) navigator.clearAppBadge();
-    if(navigator.serviceWorker && navigator.serviceWorker.controller)
-      navigator.serviceWorker.controller.postMessage({ type: 'CLEAR_BADGE' });
+    syncAppBadge();
     API.Tasks.resetDailyForToday();
     if(typeof RemoteSync !== 'undefined' && RemoteSync.pullRemoteSnapshot) RemoteSync.pullRemoteSnapshot();
     else if(me) renderAll();

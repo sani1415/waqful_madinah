@@ -9,6 +9,8 @@ node_modules/
 # ── Build-generated config (Vercel injects these at build time) ──
 supabase-config.js
 pwa-config.js
+teacher/
+student/
 
 # ── Supabase secrets ─────────────────────────────────────────
 supabase/.secrets.local.env
@@ -26,6 +28,8 @@ tmp-*.txt
 
 # ── AI session / editor internals ────────────────────────────
 .claude/
+.playwright-cli/
+output/
 
 # ── OS / editor noise ────────────────────────────────────────
 .DS_Store
