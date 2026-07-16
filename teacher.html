@@ -178,6 +178,37 @@
 .csp-note-cat{display:inline-flex;align-items:center;border-radius:7px;background:#E3F2FD;color:#1565C0;font-size:10px;font-weight:800;padding:2px 6px;margin-left:5px}
 .csp-note-body{font-size:13px;color:var(--gray-700);line-height:1.45;white-space:pre-wrap}
 .csp-note-time{font-size:11px;color:var(--gray-400);margin-top:3px}
+.csp-amal-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.csp-amal-kpi{background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:8px 5px;text-align:center;min-width:0}
+.csp-amal-kpi-val{display:block;font-size:15px;font-weight:900;color:#0f172a;line-height:1}
+.csp-amal-kpi-lbl{display:block;margin-top:4px;font-size:9px;font-weight:800;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.csp-amal-section-title{font-size:11px;font-weight:900;color:#64748b;padding:6px 2px 2px}
+.csp-amal-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.csp-amal-day{background:#fff;border:1px solid #f1f5f9;border-radius:9px;padding:6px 3px;text-align:center;min-width:0}
+.csp-amal-day-date{display:block;font-size:9px;font-weight:900;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.csp-amal-day-val{display:block;margin-top:3px;font-size:11px;font-weight:900;color:#0f172a;line-height:1}
+.csp-amal-day.ok{background:#E8F5E9;border-color:#C8E6C9}.csp-amal-day.warn{background:#FFF8E1;border-color:#FFE0B2}.csp-amal-day.bad{background:#FFEBEE;border-color:#FFCDD2}
+.csp-amal-months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.csp-amal-month{background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:7px 5px;text-align:center;min-width:0}
+.csp-amal-month-name{display:block;font-size:10px;font-weight:900;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.csp-amal-month-val{display:block;margin-top:4px;font-size:12px;font-weight:900;color:#0f172a}
+.csp-week-grid-card{background:#fff;border:1px solid #e8eef3;border-radius:12px;padding:9px 10px}
+.csp-week-grid-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.csp-week-grid-title{font-size:12px;font-weight:900;color:#0f172a;line-height:1.3}
+.csp-week-grid-meta{font-size:10px;font-weight:700;color:#64748b;margin-top:2px;line-height:1.25}
+.csp-week-grid-status{flex-shrink:0;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:900;line-height:1.15;background:#E8F5E9;color:#2E7D32;white-space:nowrap}
+.csp-week-grid-status.pending{background:#FFF3E0;color:#E65100}
+.csp-week-grid-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid #edf2f7;border-radius:10px;background:#f8fafc}
+.csp-week-grid{display:grid;grid-template-columns:minmax(110px,1.15fr) repeat(var(--week-cols),40px);min-width:390px}
+.csp-week-cell,.csp-week-day,.csp-week-task,.csp-week-corner{min-height:32px;border-right:1px solid #edf2f7;border-bottom:1px solid #edf2f7}
+.csp-week-corner,.csp-week-day{display:flex;align-items:center;justify-content:center;background:#f1f5f9;color:#475569;font-size:9px;font-weight:900}
+.csp-week-day.future{background:#f8fafc;color:#cbd5e1}
+.csp-week-task{display:flex;align-items:center;padding:0 7px;background:#fff;color:#1e293b;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.csp-week-cell{display:flex;align-items:center;justify-content:center;background:#fff;color:#cbd5e1;font-size:13px;font-weight:900}
+.csp-week-cell.on{background:#E8F5E9;color:#2E7D32}
+.csp-week-cell.future{background:#f8fafc;color:#e2e8f0}
+.csp-week-review-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px}
+.csp-week-review-row .csp-note-time{margin-top:0}
 .csp-note-add{background:#fff;border:1px solid #f1f5f9;border-radius:10px;padding:8px 10px;display:flex;gap:8px;align-items:flex-end;flex-shrink:0;margin-top:4px}
 .csp-note-add textarea{flex:1;border:1px solid var(--gray-200);border-radius:8px;padding:7px 9px;font-family:var(--font);font-size:13px;resize:none;min-height:34px;outline:none;color:var(--gray-700)}
 .csp-note-add button{background:#128C7E;color:#fff;border:none;border-radius:8px;padding:7px 12px;font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0}
@@ -258,12 +289,13 @@
 .biboron-action-card.blue{background:#E3F2FD}.biboron-action-card.green{background:#E8F5E9}.biboron-action-card.orange{background:#FFF3E0}.biboron-action-card.red{background:#FFEBEE}
 .biboron-action-val{display:block;font-size:17px;font-weight:800;line-height:1;color:#0f172a;font-variant-numeric:tabular-nums}
 .biboron-action-lbl{display:block;margin-top:4px;font-size:10px;font-weight:700;line-height:1.15;color:var(--gray-500);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.biboron-detail-panel{display:none;background:#fff;border-bottom:1px solid var(--gray-100);padding:8px 12px 10px;flex-shrink:0}
-.biboron-detail-panel.open{display:block}
-.biboron-detail-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.biboron-detail-panel{display:none;background:#fff;border-bottom:1px solid var(--gray-100);padding:8px 12px 10px;flex-shrink:0;min-height:0}
+.biboron-detail-panel.open{display:flex;flex-direction:column;flex:1;border-bottom:none}
+.biboron-detail-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;flex-shrink:0}
 .biboron-detail-title{font-size:12px;font-weight:800;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .biboron-detail-close{width:28px;height:28px;border:none;border-radius:8px;background:#f1f5f9;color:#64748b;font-family:var(--font);font-size:16px;line-height:1;cursor:pointer}
 .biboron-detail-list{max-height:min(34vh,260px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-right:2px}
+.biboron-detail-panel.open .biboron-detail-list{flex:1;max-height:none;min-height:0}
 .biboron-detail-list::-webkit-scrollbar{width:3px}
 .biboron-detail-list::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:2px}
 .biboron-detail-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid #f1f5f9}
@@ -324,11 +356,20 @@
 .stu-more-item{display:block;width:100%;border:none;border-top:1px solid var(--gray-100);background:#fff;color:var(--gray-700);text-align:left;padding:10px 14px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer}
 .stu-more-item:first-child{border-top:none}
 .stu-more-item:active{background:var(--gray-100)}
-.s-avatar.s-avatar-pct,.chat-avatar.s-avatar-pct,.doc-group-avatar.s-avatar-pct,.header-avatar.s-avatar-pct,.tea-lb-avatar.s-avatar-pct{position:relative;background:var(--gray-200)!important;color:#075E54;font-size:12px;font-weight:800;overflow:hidden}
-.chat-avatar.s-avatar-pct{font-size:13px}.doc-group-avatar.s-avatar-pct,.tea-lb-avatar.s-avatar-pct{font-size:11px}.header-avatar.s-avatar-pct{font-size:11px;color:#075E54!important;background:#E0F2F1!important}
-.s-avatar-pct::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(#25D366 calc(var(--pct,0)*1%),#E0E0E0 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px));mask:radial-gradient(farthest-side,transparent calc(100% - 5px),#000 calc(100% - 4px))}
-.header-avatar.s-avatar-pct::before{background:conic-gradient(#25D366 calc(var(--pct,0)*1%),rgba(255,255,255,.35) 0)}
-.s-avatar-pct>span{position:relative;z-index:1;line-height:1;background:rgba(255,255,255,.86);border-radius:999px;padding:1px 3px;color:#075E54}
+.s-avatar.s-avatar-pct,.chat-avatar.s-avatar-pct,.doc-group-avatar.s-avatar-pct,.header-avatar.s-avatar-pct,.tea-lb-avatar.s-avatar-pct{position:relative;width:44px;height:16px;min-width:44px;border-radius:4px;background:#E8EEF1!important;color:#075E54;font-size:10px;font-weight:800;overflow:hidden;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-sizing:border-box}
+.chat-avatar.s-avatar-pct{width:48px;height:16px;min-width:48px;font-size:10px}
+.doc-group-avatar.s-avatar-pct,.tea-lb-avatar.s-avatar-pct{width:40px;height:14px;min-width:40px;font-size:9px}
+.header-avatar.s-avatar-pct{width:48px;height:16px;min-width:48px;font-size:10px;color:#075E54!important;background:rgba(255,255,255,.28)!important}
+.s-avatar-pct::before{content:'';position:absolute;left:0;top:0;bottom:0;width:calc(var(--pct,0)*1%);max-width:100%;background:#25D366;border-radius:4px;transition:width .2s ease}
+.header-avatar.s-avatar-pct::before{background:#A7F3D0}
+.s-avatar-pct>span{position:relative;z-index:1;line-height:1;font-variant-numeric:tabular-nums;color:#075E54;text-shadow:0 0 3px #fff,0 0 2px #fff;background:none;border-radius:0;padding:0}
+.header-avatar.s-avatar-pct>span{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.chat-item:has(.chat-avatar.s-avatar-pct){align-items:flex-start}
+.chat-item .chat-avatar.s-avatar-pct{margin-top:2px}
+.settings-tabs{display:flex;background:#fff;border-bottom:2px solid var(--gray-200);flex-shrink:0}
+.settings-tab{flex:1;border:none;background:none;padding:10px 4px 8px;font-family:var(--font);font-size:12px;font-weight:700;color:var(--gray-500);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.settings-tab.active{color:#075E54;border-bottom-color:#075E54}
+.settings-pane{padding-bottom:4px}
 .prog-mode-opt{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--gray-700);padding:6px 0;cursor:pointer}
 .prog-mode-opt input{accent-color:#075E54;width:16px;height:16px}
 .header-btn svg{display:block;width:20px;height:20px}
@@ -681,72 +722,86 @@
 
 <!-- ══ SETTINGS ═══════════════════════════════════════════ -->
 <div class="screen" id="screen-settings">
-  <div class="list-scroll">
-    <div class="sec-hd">জিম্মাদারের তথ্য</div>
-    <div class="backup-card">
-      <div class="form-group"><label class="form-label">আপনার নাম</label><input class="form-input" id="tName" placeholder="জিম্মাদারের নাম"></div>
-      <div class="form-group" style="margin-bottom:0"><label class="form-label">মাদরাসার নাম</label><input class="form-input" id="tMadrasa" placeholder="মাদরাসার নাম"></div>
-      <button class="btn-primary" style="margin-top:12px" onclick="saveInfo()">✅ সংরক্ষণ</button>
-    </div>
-    <div class="sec-hd">পিন পরিবর্তন</div>
-    <div class="backup-card">
-      <p>জিম্মাদার প্যানেলের পিন পরিবর্তন করুন।</p>
-      <div class="form-group" style="margin-top:8px"><label class="form-label">নতুন পিন (৪ সংখ্যা)</label><input class="form-input" id="newTPin" type="number" placeholder="যেমন: 5678"></div>
-      <button class="backup-btn" onclick="changeTPin()">🔑 পিন পরিবর্তন</button>
-    </div>
-    <div class="sec-hd">বিবরণ তালিকার অবস্থা %</div>
-    <div class="backup-card">
-      <p style="margin-bottom:10px">গোল ঘরের পার্সেন্টেজ কোন তারিখ থেকে হিসাব হবে।</p>
-      <label class="prog-mode-opt"><input type="radio" name="progMode" value="enrollment" onchange="onProgModeChange()"> ভর্তির তারিখ থেকে</label>
-      <label class="prog-mode-opt"><input type="radio" name="progMode" value="custom" onchange="onProgModeChange()"> নির্দিষ্ট তারিখ থেকে</label>
-      <div class="form-group" id="progCustomWrap" style="margin-top:10px;display:none">
-        <label class="form-label">শুরুর তারিখ</label>
-        <input class="form-input" type="date" id="progCustomFrom">
+  <div class="settings-tabs" id="settingsTabs">
+    <button type="button" class="settings-tab active" data-tab="profile" onclick="goSettingsTab('profile',this)">প্রোফাইল</button>
+    <button type="button" class="settings-tab" data-tab="biboron" onclick="goSettingsTab('biboron',this)">বিবরণ</button>
+    <button type="button" class="settings-tab" data-tab="backup" onclick="goSettingsTab('backup',this)">ব্যাকআপ</button>
+    <button type="button" class="settings-tab" data-tab="more" onclick="goSettingsTab('more',this)">অন্যান্য</button>
+  </div>
+  <div class="list-scroll" id="settingsScroll">
+    <div class="settings-pane" id="settings-pane-profile">
+      <div class="sec-hd">জিম্মাদারের তথ্য</div>
+      <div class="backup-card">
+        <div class="form-group"><label class="form-label">আপনার নাম</label><input class="form-input" id="tName" placeholder="জিম্মাদারের নাম"></div>
+        <div class="form-group" style="margin-bottom:0"><label class="form-label">মাদরাসার নাম</label><input class="form-input" id="tMadrasa" placeholder="মাদরাসার নাম"></div>
+        <button class="btn-primary" style="margin-top:12px" onclick="saveInfo()">✅ সংরক্ষণ</button>
       </div>
-      <button class="btn-primary" style="margin-top:12px" onclick="saveProgressSettings()">✅ সংরক্ষণ</button>
-    </div>
-    <div class="sec-hd">বিবরণ ক্যাটাগরি</div>
-    <div class="backup-card">
-      <p style="margin-bottom:8px">ছাত্র নোটের ক্যাটাগরি। নতুন যোগ করতে পারেন; «সাধারণ» মুছা যাবে না।</p>
-      <div id="noteCatList"></div>
-      <div class="note-cat-add">
-        <input class="form-input" id="noteCatNewIn" placeholder="নতুন ক্যাটাগরির নাম" maxlength="40" onkeydown="if(event.key==='Enter'){event.preventDefault();addNoteCategory();}">
-        <button type="button" class="btn-primary" style="width:auto;padding:10px 14px;flex-shrink:0" onclick="addNoteCategory()">যোগ</button>
+      <div class="sec-hd">পিন পরিবর্তন</div>
+      <div class="backup-card">
+        <p>জিম্মাদার প্যানেলের পিন পরিবর্তন করুন।</p>
+        <div class="form-group" style="margin-top:8px"><label class="form-label">নতুন পিন (৪ সংখ্যা)</label><input class="form-input" id="newTPin" type="number" placeholder="যেমন: 5678"></div>
+        <button class="backup-btn" onclick="changeTPin()">🔑 পিন পরিবর্তন</button>
       </div>
     </div>
-    <div class="sec-hd">পাক্ষিক বিবরণ লক</div>
-    <div class="backup-card">
-      <p style="margin-bottom:8px">চালু করলে, নির্ধারিত দিন পার হয়ে গেলে ছাত্র লগইন করার পর সরাসরি পাক্ষিক বিবরণ লেখার পেইজে যাবে — বিবরণ জমা না দেওয়া পর্যন্ত অ্যাপের বাকি অংশ ব্যবহার করতে পারবে না।</p>
-      <label class="prog-mode-opt"><input type="checkbox" id="fnEnabled"> লক চালু রাখুন</label>
-      <div class="form-group" style="margin-top:10px">
-        <label class="form-label">কত দিন পর পর জমা দিতে হবে</label>
-        <input class="form-input" type="number" id="fnIntervalDays" min="1" value="15">
+    <div class="settings-pane" id="settings-pane-biboron" style="display:none">
+      <div class="sec-hd">বিবরণ তালিকার অবস্থা %</div>
+      <div class="backup-card">
+        <p style="margin-bottom:10px">শতাংশ বার কোন তারিখ থেকে হিসাব হবে।</p>
+        <label class="prog-mode-opt"><input type="radio" name="progMode" value="enrollment" onchange="onProgModeChange()"> ভর্তির তারিখ থেকে</label>
+        <label class="prog-mode-opt"><input type="radio" name="progMode" value="custom" onchange="onProgModeChange()"> নির্দিষ্ট তারিখ থেকে</label>
+        <div class="form-group" id="progCustomWrap" style="margin-top:10px;display:none">
+          <label class="form-label">শুরুর তারিখ</label>
+          <input class="form-input" type="date" id="progCustomFrom">
+        </div>
+        <button class="btn-primary" style="margin-top:12px" onclick="saveProgressSettings()">✅ সংরক্ষণ</button>
       </div>
-      <div class="form-group">
-        <label class="form-label">কোন ক্যাটাগরি «পাক্ষিক বিবরণ» হিসেবে গণ্য হবে</label>
-        <select class="form-input" id="fnCategorySelect"></select>
-      </div>
-      <div class="form-group" style="margin-bottom:0">
-        <label class="form-label">প্রশ্ন (ঐচ্ছিক — দিলে ছাত্রকে প্রতিটির উত্তর দিতেই হবে)</label>
-        <div id="fnQuestionList"></div>
+      <div class="sec-hd">বিবরণ ক্যাটাগরি</div>
+      <div class="backup-card">
+        <p style="margin-bottom:8px">ছাত্র নোটের ক্যাটাগরি। নতুন যোগ করতে পারেন; «সাধারণ» মুছা যাবে না।</p>
+        <div id="noteCatList"></div>
         <div class="note-cat-add">
-          <input class="form-input" id="fnQuestionNewIn" placeholder="নতুন প্রশ্ন লিখুন" maxlength="200" onkeydown="if(event.key==='Enter'){event.preventDefault();addFnQuestion();}">
-          <button type="button" class="btn-primary" style="width:auto;padding:10px 14px;flex-shrink:0" onclick="addFnQuestion()">যোগ</button>
+          <input class="form-input" id="noteCatNewIn" placeholder="নতুন ক্যাটাগরির নাম" maxlength="40" onkeydown="if(event.key==='Enter'){event.preventDefault();addNoteCategory();}">
+          <button type="button" class="btn-primary" style="width:auto;padding:10px 14px;flex-shrink:0" onclick="addNoteCategory()">যোগ</button>
         </div>
       </div>
-      <button class="btn-primary" style="margin-top:12px" onclick="saveFortnightlySettings()">✅ সংরক্ষণ</button>
+      <div class="sec-hd">পাক্ষিক বিবরণ লক</div>
+      <div class="backup-card">
+        <p style="margin-bottom:8px">চালু করলে, নির্ধারিত দিন পার হয়ে গেলে ছাত্র লগইন করার পর সরাসরি পাক্ষিক বিবরণ লেখার পেইজে যাবে — বিবরণ জমা না দেওয়া পর্যন্ত অ্যাপের বাকি অংশ ব্যবহার করতে পারবে না।</p>
+        <label class="prog-mode-opt"><input type="checkbox" id="fnEnabled"> লক চালু রাখুন</label>
+        <div class="form-group" style="margin-top:10px">
+          <label class="form-label">কত দিন পর পর জমা দিতে হবে</label>
+          <input class="form-input" type="number" id="fnIntervalDays" min="1" value="15">
+        </div>
+        <div class="form-group">
+          <label class="form-label">কোন ক্যাটাগরি «পাক্ষিক বিবরণ» হিসেবে গণ্য হবে</label>
+          <select class="form-input" id="fnCategorySelect"></select>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">প্রশ্ন (ঐচ্ছিক — দিলে ছাত্রকে প্রতিটির উত্তর দিতেই হবে)</label>
+          <div id="fnQuestionList"></div>
+          <div class="note-cat-add">
+            <input class="form-input" id="fnQuestionNewIn" placeholder="নতুন প্রশ্ন লিখুন" maxlength="200" onkeydown="if(event.key==='Enter'){event.preventDefault();addFnQuestion();}">
+            <button type="button" class="btn-primary" style="width:auto;padding:10px 14px;flex-shrink:0" onclick="addFnQuestion()">যোগ</button>
+          </div>
+        </div>
+        <button class="btn-primary" style="margin-top:12px" onclick="saveFortnightlySettings()">✅ সংরক্ষণ</button>
+      </div>
     </div>
-    <div class="sec-hd">ব্যাকআপ</div>
-    <div class="backup-card">
-      <h3>📤 ডেটা ব্যাকআপ</h3><p>সমস্ত ডেটা JSON ফাইলে সেভ করুন।</p>
-      <button class="backup-btn" onclick="doExport()">💾 ব্যাকআপ</button>
-      <input type="file" id="impFile" accept=".json" style="display:none" onchange="doImport(this)">
-      <button class="restore-btn" onclick="document.getElementById('impFile').click()">📂 পুনরুদ্ধার</button>
+    <div class="settings-pane" id="settings-pane-backup" style="display:none">
+      <div class="sec-hd">ব্যাকআপ</div>
+      <div class="backup-card">
+        <h3>📤 ডেটা ব্যাকআপ</h3><p>সমস্ত ডেটা JSON ফাইলে সেভ করুন।</p>
+        <button class="backup-btn" onclick="doExport()">💾 ব্যাকআপ</button>
+        <input type="file" id="impFile" accept=".json" style="display:none" onchange="doImport(this)">
+        <button class="restore-btn" onclick="document.getElementById('impFile').click()">📂 পুনরুদ্ধার</button>
+      </div>
     </div>
-    <div class="sec-hd">সম্পর্কে</div>
-    <div class="backup-card"><p style="font-size:13px;color:var(--gray-500);line-height:1.7"><strong>Waqful Madinah ম্যানেজার</strong><br>v3.0 · teacher.html + student.html + api.js + style.css</p></div>
-    <div class="backup-card" style="text-align:center">
-      <button class="backup-btn" style="background:#1565C0" onclick="localStorage.setItem('madrasa_lastPanel','student');location.href='/student/'">🎒 ছাত্র প্যানেলে যান</button>
+    <div class="settings-pane" id="settings-pane-more" style="display:none">
+      <div class="sec-hd">সম্পর্কে</div>
+      <div class="backup-card"><p style="font-size:13px;color:var(--gray-500);line-height:1.7"><strong>Waqful Madinah ম্যানেজার</strong><br>v3.0 · teacher.html + student.html + api.js + style.css</p></div>
+      <div class="backup-card" style="text-align:center">
+        <button class="backup-btn" style="background:#1565C0" onclick="localStorage.setItem('madrasa_lastPanel','student');location.href='/student/'">🎒 ছাত্র প্যানেলে যান</button>
+      </div>
     </div>
     <div style="height:20px"></div>
   </div>
@@ -1734,9 +1789,10 @@ function renderChatInfo(){
   const academic=API.AcademicHistory.getAll(s.id);
   const subLine=[s.waqfId?API.Students.displayWaqfId(s.waqfId):'',batchLbl||'',s.cls||''].filter(Boolean).join(' · ')||'পরিচয়';
   const quizCount=(row.pendingQuiz||0)+(row.manualQuiz||0);
-  const latestStudentNote=(API.StudentNotes?API.StudentNotes.getAll(s.id):[])[0];
+  const latestStudentNote=(API.StudentNotes?API.StudentNotes.getAll(s.id):[]).filter(n=>!isWeeklyReceiptNote(n)||n.reviewStatus!=='done')[0];
   const actions=[];
   if(row.unreadMessages>0) actions.push(stuDashAction(`${row.unreadMessages}টি অপঠিত রিসালা আছে`,'msg'));
+  if(row.pendingSchedule) actions.push(stuDashAction('সময়সূচি অনুমোদন বাকি','msg'));
   if(row.pendingDocs>0) actions.push(stuDashAction(`${row.pendingDocs}টি ডক রিভিউ বাকি`,'doc'));
   if(quizCount>0) actions.push(stuDashAction(`${quizCount}টি পরীক্ষা/নম্বর বাকি`,'exam'));
   if(row.dayTotal>0&&row.dayDone<row.dayTotal) actions.push(stuDashAction(`গতকাল আমল অসম্পূর্ণ: ${row.dayDone}/${row.dayTotal}`,'task'));
@@ -1918,14 +1974,66 @@ function goProfileEditTab(tab,btn){
   pane.classList.add('active');
   if(tab==='schedule'&&curProfileSid&&typeof renderSchedulePane==='function') renderSchedulePane(API.Students.getById(curProfileSid));
 }
+function chatAmalKpi(val,label){
+  return `<div class="csp-amal-kpi"><span class="csp-amal-kpi-val">${esc(val)}</span><span class="csp-amal-kpi-lbl">${esc(label)}</span></div>`;
+}
+function chatAmalDateLabel(date){
+  try{ return new Date(date+'T12:00:00Z').toLocaleDateString('bn-BD',{day:'numeric',month:'short',timeZone:'Asia/Dhaka'}); }
+  catch(e){ return date.slice(5); }
+}
+function chatAmalMonthStart(date){
+  return String(date||API.today()).slice(0,7)+'-01';
+}
+function chatAmalMonthAdd(date,delta){
+  const d=new Date(chatAmalMonthStart(date)+'T12:00:00Z');
+  d.setUTCMonth(d.getUTCMonth()+delta);
+  return d.toISOString().slice(0,10);
+}
+function chatAmalMonthEnd(date){
+  const d=new Date(chatAmalMonthStart(date)+'T12:00:00Z');
+  d.setUTCMonth(d.getUTCMonth()+1);
+  d.setUTCDate(0);
+  const end=d.toISOString().slice(0,10);
+  return end>API.today()?API.today():end;
+}
+function chatAmalMonthLabel(date){
+  try{ return new Date(chatAmalMonthStart(date)+'T12:00:00Z').toLocaleDateString('bn-BD',{month:'short',year:'numeric',timeZone:'Asia/Dhaka'}); }
+  catch(e){ return String(date||'').slice(0,7); }
+}
+function renderAmalHistoryBreakdown(sid){
+  const today=API.today();
+  const days=Array.from({length:7},(_,i)=>teacherWeekDateAdd(today,i-6));
+  const dayHtml=days.map(date=>{
+    const p=API.Tasks.getRangeProgress(sid,date,date);
+    const cls=p.total&&p.done===p.total?'ok':p.done>0?'warn':'bad';
+    return `<div class="csp-amal-day ${cls}"><span class="csp-amal-day-date">${esc(chatAmalDateLabel(date))}</span><span class="csp-amal-day-val">${p.done}/${p.total}</span></div>`;
+  }).join('');
+  const months=[0,-1,-2].map(offset=>chatAmalMonthAdd(today,offset));
+  const monthHtml=months.map(start=>{
+    const p=API.Tasks.getRangeProgress(sid,start,chatAmalMonthEnd(start));
+    return `<div class="csp-amal-month"><span class="csp-amal-month-name">${esc(chatAmalMonthLabel(start))}</span><span class="csp-amal-month-val">${p.percent}% · ${p.done}/${p.total}</span></div>`;
+  }).join('');
+  return `<div class="csp-amal-section-title">দিনভিত্তিক</div><div class="csp-amal-days">${dayHtml}</div>
+    <div class="csp-amal-section-title">মাসভিত্তিক</div><div class="csp-amal-months">${monthHtml}</div>`;
+}
 function renderChatTasks(){
   const el=document.getElementById('csp-task'); if(!el||!curChat) return;
   const tasks=API.Tasks.getAll().filter(t=>t.assignees&&curChat in t.assignees);
   const stLbl={done:'সম্পন্ন',pending:'বকেয়া',late:'দেরি'};
   const stCls={done:'ok',pending:'warn',late:'bad'};
   const addBtn=`<button type="button" class="csp-add-btn" onclick="openAddTask('${curChat}')">＋ নতুন আমল</button>`;
-  if(!tasks.length){ el.innerHTML=addBtn+'<div class="csp-empty">কোনো আমল নেই।</div>'; return; }
-  el.innerHTML=addBtn+tasks.map(t=>{
+  const prog=API.Tasks.getProgressSummary(curChat);
+  const weeklyNotes=getWeeklyReceiptNotes(curChat);
+  const summary=`<div class="csp-amal-summary">
+    ${chatAmalKpi(`${prog.today?.done||0}/${prog.today?.total||0}`,'আজ')}
+    ${chatAmalKpi(`${prog.week?.done||0}/${prog.week?.total||0}`,'সপ্তাহ')}
+    ${chatAmalKpi(`${prog.month?.done||0}/${prog.month?.total||0}`,'মাস')}
+    ${chatAmalKpi(`${prog.all?.percent||0}%`,'শুরু থেকে')}
+  </div>`;
+  const archive=weeklyNotes.length
+    ? `<div class="csp-amal-section-title">সাপ্তাহিক জমার ইতিহাস</div>${weeklyNotes.map(n=>renderWeeklyReceiptNote(n,'সাপ্তাহিক')).join('')}`
+    : '<div class="csp-amal-section-title">সাপ্তাহিক জমার ইতিহাস</div><div class="csp-empty" style="padding:12px 0">এখনও কোনো সাপ্তাহিক জমা নেই।</div>';
+  const taskRows=tasks.length?tasks.map(t=>{
     const isDaily=t.type==='daily';
     const st=isDaily?(API.Tasks.isDailyDoneToday(t,curChat)?'done':'pending'):(t.assignees[curChat]||'pending');
     const typeLbl=isDaily?'দৈনিক':'এককালীন';
@@ -1934,7 +2042,8 @@ function renderChatTasks(){
       <div class="csp-row-main">${esc(t.title)} · ${typeLbl} · ${esc(when)}</div>
       <span class="csp-row-meta ${stCls[st]||'warn'}">${stLbl[st]||st}</span>
     </div>`;
-  }).join('');
+  }).join(''):'<div class="csp-empty" style="padding:12px 0">কোনো আমল নেই।</div>';
+  el.innerHTML=addBtn+summary+renderAmalHistoryBreakdown(curChat)+archive+'<div class="csp-amal-section-title">বর্তমান আমল</div>'+taskRows;
 }
 function renderChatDocs(){
   const el=document.getElementById('csp-doc'); if(!el||!curChat) return;
@@ -1980,6 +2089,62 @@ function renderChatGoals(){
       ${g.deadline?`<span class="csp-row-meta">${esc(g.deadline)}</span>`:''}
     </div>`).join('');
 }
+function teacherWeekDateAdd(date,delta){
+  const d=new Date((date||API.today())+'T12:00:00Z');
+  d.setUTCDate(d.getUTCDate()+delta);
+  return d.toISOString().split('T')[0];
+}
+function teacherWeekDatesFromNote(n){
+  const text=[n.title||'',n.text||''].join('\n');
+  const m=text.match(/(\d{4}-\d{2}-\d{2})\s*-\s*(\d{4}-\d{2}-\d{2})/);
+  if(m) return Array.from({length:7},(_,i)=>teacherWeekDateAdd(m[1],i));
+  if(window.ApiAmal&&ApiAmal.getWeekDates) return ApiAmal.getWeekDates(n.date||API.today());
+  const start=teacherWeekDateAdd(n.date||API.today(),0);
+  return Array.from({length:7},(_,i)=>teacherWeekDateAdd(start,i));
+}
+function teacherWeekShortLabel(date){
+  try{ return new Date(date+'T12:00:00Z').toLocaleDateString('bn-BD',{weekday:'short',day:'numeric',timeZone:'Asia/Dhaka'}); }
+  catch(e){ return date.slice(5); }
+}
+function isWeeklyReceiptNote(n){
+  return /^সাপ্তাহিক আমল:/.test(String(n.title||'')) || /^সাপ্তাহিক আমল জমা/.test(String(n.text||''));
+}
+function getWeeklyReceiptNotes(sid){
+  if(!API.StudentNotes) return [];
+  return API.StudentNotes.getAll(sid).filter(isWeeklyReceiptNote)
+    .sort((a,b)=>String((b.title||'')+(b.date||'')+(b.time||'')).localeCompare(String((a.title||'')+(a.date||'')+(a.time||''))));
+}
+function renderWeeklyReceiptNote(n,cat){
+  const dates=teacherWeekDatesFromNote(n);
+  const tasks=API.Tasks.getForStudent(curChat).filter(t=>t.type==='daily');
+  const activeDates=dates.filter(d=>d<=API.today());
+  let done=0,total=tasks.length*activeDates.length;
+  tasks.forEach(t=>activeDates.forEach(date=>{ if(API.Tasks.isCompleted(t.id,curChat,date)) done++; }));
+  const pct=total?Math.round(done/total*100):0;
+  const pending=n.reviewStatus!=='done';
+  const title=n.title||`সাপ্তাহিক আমল: ${dates[0]} - ${dates[6]}`;
+  return `<div class="csp-week-grid-card">
+    <div class="csp-week-grid-head">
+      <div><div class="csp-week-grid-title">${esc(title)}</div><div class="csp-week-grid-meta">${esc(dates[0])} - ${esc(dates[6])} · ${done}/${total} · ${pct}%</div></div>
+      <span class="csp-week-grid-status ${pending?'pending':''}">${pending?'পর্যালোচনাধীন':'অনুমোদিত'}</span>
+    </div>
+    <div class="csp-week-grid-wrap">
+      <div class="csp-week-grid" style="--week-cols:${dates.length}">
+        <div class="csp-week-corner">আমল</div>
+        ${dates.map(date=>`<div class="csp-week-day ${date>API.today()?'future':''}">${esc(teacherWeekShortLabel(date))}</div>`).join('')}
+        ${tasks.map(t=>`<div class="csp-week-task">${esc(t.title)}</div>${dates.map(date=>{
+          const future=date>API.today();
+          const on=!future&&API.Tasks.isCompleted(t.id,curChat,date);
+          return `<div class="csp-week-cell ${on?'on':''} ${future?'future':''}">${future?'':on?'✓':'-'}</div>`;
+        }).join('')}`).join('')}
+      </div>
+    </div>
+    <div class="csp-week-review-row">
+      <div class="csp-note-time"><span class="csp-note-cat">${esc(cat)}</span> ${n.date||''} ${n.time||''}</div>
+      ${pending?`<button type="button" class="doc-btn done" onclick="markNoteReviewed('${esc(n.id)}')">অনুমোদন</button>`:''}
+    </div>
+  </div>`;
+}
 function renderChatNotes(){
   const el=document.getElementById('csp-note'); if(!el||!curChat) return;
   const view=chatNoteView==='student'?'student':'teacher';
@@ -1988,10 +2153,11 @@ function renderChatNotes(){
     <button type="button" class="${view==='teacher'?'active':''}" onclick="setChatNoteView('teacher')">জিম্মাদারের নোট</button>
   </div>`;
   if(view==='student'){
-    const notes=(API.StudentNotes?API.StudentNotes.getAll(curChat):[]).slice().sort((a,b)=>String((b.date||'')+(b.time||'')).localeCompare(String((a.date||'')+(a.time||''))));
+    const notes=(API.StudentNotes?API.StudentNotes.getAll(curChat):[]).filter(n=>!isWeeklyReceiptNote(n)||n.reviewStatus!=='done').slice().sort((a,b)=>String((b.date||'')+(b.time||'')).localeCompare(String((a.date||'')+(a.time||''))));
     el.innerHTML=sourceBar+(notes.length?notes.map(n=>{
       const cat=API.StudentNotes&&API.StudentNotes.catLabel?API.StudentNotes.catLabel(n.categoryId):'বিবরণ';
       const pending=n.reviewStatus!=='done';
+      if(isWeeklyReceiptNote(n)) return renderWeeklyReceiptNote(n,cat);
       return `<div class="csp-note-item">
         ${n.title?`<div class="csp-note-title">${esc(n.title)}</div>`:''}
         <div class="csp-note-body">${esc(n.text)}</div>
@@ -2366,7 +2532,7 @@ function closeBiboronMenu(){
   if(menu){ menu.style.display='none'; menu.innerHTML=''; }
 }
 function showBiboronDetail(mode){
-  biboronDetailMode=['amal','attention','msg','quiz','behind','doc','studentNote','teacherNote'].includes(mode)?mode:'';
+  biboronDetailMode=['amal','msg','quiz','behind','doc','studentNote','teacherNote','weekly'].includes(mode)?mode:'';
   renderBiboronDetailPanel();
   stuRowMenuId=null;
 }
@@ -2375,21 +2541,11 @@ function biboronTargetTab(mode,sid){
   if(mode==='doc') return 'doc';
   if(mode==='quiz') return 'exam';
   if(mode==='amal'||mode==='behind') return 'task';
-  if(mode==='studentNote'||mode==='teacherNote') return 'note';
-  if(mode==='attention'){
-    const row=API.Biboron&&sid?API.Biboron.getStudentRow(sid):null;
-    if(row){
-      if(row.unreadMessages>0) return 'msg';
-      if((row.pendingQuiz||0)+(row.manualQuiz||0)>0) return 'exam';
-      if(row.pendingDocs>0) return 'doc';
-      if(row.dayTotal>0&&row.dayDone<row.dayTotal) return 'task';
-      if(row.noteCount>0) return 'note';
-    }
-  }
+  if(mode==='studentNote'||mode==='teacherNote'||mode==='weekly') return 'note';
   return 'info';
 }
 function openBiboronTarget(sid,mode){
-  if(mode==='studentNote') chatNoteView='student';
+  if(mode==='studentNote'||mode==='weekly') chatNoteView='student';
   else if(mode==='teacherNote') chatNoteView='teacher';
   const tab=biboronTargetTab(mode,sid);
   openChat(sid,tab);
@@ -2410,11 +2566,14 @@ function stuRowAction(action,sid,ev){
 function renderBiboronSummary(){
   const el=document.getElementById('biboronSummary'); if(!el||!API.Biboron) return;
   const s=API.Biboron.getSummary();
+  const w=API.Biboron.getWeeklySummary?API.Biboron.getWeeklySummary():null;
+  const weeklyNeed=w?((w.missing||0)+(w.pendingReview||0)):0;
+  const msgNeed=(s.unreadMessages||0)+(s.pendingSched||0);
   el.innerHTML=`<div class="biboron-meta">গতকাল · ${esc(s.dateLabel)} · ${esc(s.progressLabel)}</div>
   <div class="summary-cards">
     ${biboronSummaryCard('blue',`${s.dayPct!=null?s.dayPct:s.todayPct}%`,'আমল','amal')}
-    ${biboronSummaryCard('orange',s.attentionCount||0,'মনোযোগ','attention')}
-    ${biboronSummaryCard('green',s.unreadMessages||0,'রিসালা','msg')}
+    ${biboronSummaryCard('orange',weeklyNeed,'সাপ্তাহিক','weekly')}
+    ${biboronSummaryCard('green',msgNeed,'রিসালা','msg')}
     ${biboronSummaryCard('red',(s.pendingQuiz||0)+(s.manualQuiz||0),'পরীক্ষা','quiz')}
   </div>
   <div class="biboron-action-board">
@@ -2438,14 +2597,19 @@ function renderBiboronHint(list){
   const filterLabel=studentYearFilter===1?'১ম বর্ষ':studentYearFilter===2?'২য় বর্ষ':studentYearFilter===3?'৩য় বর্ষ':'সব';
   const sortLabel=studentPctSort==='desc'?'% বেশি':studentPctSort==='asc'?'% কম':studentPctSort==='yesterday'?'গতকাল বাকি':'সাধারণ';
   el.classList.add('biboron-hint--tools');
-  el.innerHTML=`<span class="biboron-hint-text"><strong>${esc(h.prefix)}</strong> · গড় ${h.avgPct}% · গতকাল <strong>${behind}</strong> জন বাকি · মনোযোগ <strong>${h.attention||0}</strong></span>
+  el.innerHTML=`<span class="biboron-hint-text"><strong>${esc(h.prefix)}</strong> · গড় ${h.avgPct}% · গতকাল <strong>${behind}</strong> জন বাকি</span>
     <span class="biboron-list-controls" id="studentToolbar">
       <button type="button" class="biboron-tool-btn" id="biboronFilterBtn" onclick="toggleBiboronMenu('filter')" title="ফিল্টার" aria-label="ফিল্টার"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 5h16M7 12h10M10 19h4"/></svg><span id="biboronFilterLabel">${filterLabel}</span></button>
       <button type="button" class="biboron-tool-btn" id="biboronSortBtn" onclick="toggleBiboronMenu('sort')" title="সাজান" aria-label="সাজান"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 7h10M4 12h16M4 17h6"/><path d="M17 6v12M14 15l3 3 3-3"/></svg><span id="biboronSortLabel">${sortLabel}</span></button>
       <span class="biboron-control-menu" id="biboronControlMenu"></span>
     </span>`;
 }
-function biboronStudentMeta(s,row){
+function biboronStudentMeta(s,row,mode){
+  if(mode==='weekly'&&row.weekly){
+    const w=row.weekly;
+    const st=w.reviewed?'পর্যালোচনা সম্পন্ন':w.pendingReview?'পর্যালোচনাধীন':w.hasReceipt?'জমা আছে':w.submitted?'টিক ডাটা আছে':'জমা হয়নি';
+    return `${st} · ${w.done}/${w.total} · ${w.percent}%`;
+  }
   const batch=API.Students.formatBatchYear(s.enrollmentDate);
   return [s.waqfId?API.Students.displayWaqfId(s.waqfId):'',batch||'',s.cls||''].filter(Boolean).join(' · ');
 }
@@ -2453,33 +2617,54 @@ function biboronDetailRows(mode){
   const rows=API.Students.getAll().map(s=>({s,row:API.Biboron.getStudentRow(s.id)}));
   const filters={
     amal:x=>x.row.dayTotal>0,
-    attention:x=>x.row.needsAttention,
-    msg:x=>x.row.unreadMessages>0,
+    msg:x=>x.row.unreadMessages>0||!!x.row.pendingSchedule,
     quiz:x=>(x.row.pendingQuiz||0)+(x.row.manualQuiz||0)>0,
     behind:x=>x.row.dayTotal>0&&x.row.dayDone<x.row.dayTotal,
     doc:x=>x.row.pendingDocs>0,
     studentNote:x=>x.row.studentNoteCount>0,
     teacherNote:x=>x.row.teacherNoteCount>0,
+    weekly:x=>!x.row.weekly?.submitted||x.row.weekly?.pendingReview,
   };
   return rows.filter(filters[mode]||(()=>false)).sort((a,b)=>{
     if(mode==='amal'||mode==='behind') return (a.row.dayDone/a.row.dayTotal||0)-(b.row.dayDone/b.row.dayTotal||0);
-    const key={attention:'lastActivity',msg:'unreadMessages',quiz:'pendingQuiz',doc:'pendingDocs',studentNote:'studentNoteCount',teacherNote:'teacherNoteCount'}[mode];
+    if(mode==='msg'){
+      const sa=(a.row.unreadMessages||0)+(a.row.pendingSchedule?1:0);
+      const sb=(b.row.unreadMessages||0)+(b.row.pendingSchedule?1:0);
+      if(sa!==sb) return sb-sa;
+      return String(a.s.name||'').localeCompare(String(b.s.name||''),'bn');
+    }
+    const key={quiz:'pendingQuiz',doc:'pendingDocs',studentNote:'studentNoteCount',teacherNote:'teacherNoteCount'}[mode];
+    if(mode==='weekly') return (a.row.weekly?.submitted?1:0)-(b.row.weekly?.submitted?1:0)||String(a.s.name||'').localeCompare(String(b.s.name||''),'bn');
     if(key&&typeof a.row[key]==='number'&&a.row[key]!==b.row[key]) return b.row[key]-a.row[key];
     return String(a.s.name||'').localeCompare(String(b.s.name||''),'bn');
   });
 }
+function setBiboronListVisible(show){
+  const hint=document.getElementById('biboronHint');
+  const list=document.getElementById('studentList');
+  if(hint) hint.style.display=show?'':'none';
+  if(list) list.style.display=show?'':'none';
+}
 function renderBiboronDetailPanel(){
   const el=document.getElementById('biboronDetailPanel'); if(!el||!API.Biboron) return;
-  if(!biboronDetailMode){ el.style.display='none'; el.innerHTML=''; return; }
-  const titles={amal:'আমল অবস্থা',attention:'মনোযোগ দরকার',msg:'অপঠিত রিসালা',quiz:'পরীক্ষা বাকি',behind:'গতকাল বাকি',doc:'ডক বাকি',studentNote:'ছাত্রের বিবরণ',teacherNote:'জিম্মাদারের নোট'};
+  if(!biboronDetailMode){
+    el.style.display='none';
+    el.classList.remove('open');
+    el.innerHTML='';
+    setBiboronListVisible(true);
+    return;
+  }
+  const titles={amal:'আমল অবস্থা',msg:'রিসালা ও সময়সূচি',quiz:'পরীক্ষা বাকি',behind:'গতকাল বাকি',doc:'ডক বাকি',studentNote:'ছাত্রের বিবরণ',teacherNote:'জিম্মাদারের নোট',weekly:'সাপ্তাহিক আমল জমা'};
   const rows=biboronDetailRows(biboronDetailMode);
-  el.style.display='block';
+  setBiboronListVisible(false);
+  el.style.display='flex';
+  el.classList.add('open');
   el.innerHTML=`<div class="biboron-detail-head"><span class="biboron-detail-title">${titles[biboronDetailMode]||'তথ্য'}</span><button type="button" class="biboron-detail-close" onclick="showBiboronDetail('')">×</button></div>
     <div class="biboron-detail-list">${rows.length?rows.map(({s,row})=>`
       <div class="biboron-detail-row">
         <div class="biboron-detail-main">
           <div class="biboron-detail-name">${esc(s.name)}</div>
-          <div class="biboron-detail-meta">${esc(biboronStudentMeta(s,row))}</div>
+          <div class="biboron-detail-meta">${esc(biboronStudentMeta(s,row,biboronDetailMode))}</div>
         </div>
         <span class="stu360-tags">${biboronTags(row)}</span>
         <button type="button" class="biboron-detail-act" onclick="openBiboronTarget('${s.id}','${biboronDetailMode}')">দেখুন</button>
@@ -2492,10 +2677,12 @@ function biboronTags(row){
     doc:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
     quiz:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M9 12h6M9 16h4"/></svg>',
     note:'<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h6"/></svg>',
-    task:'<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>'
+    task:'<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>',
+    sched:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>'
   };
   if(row.dayTotal>0) out.push(`<span class="stu360-pill"><span class="ic-svg">${icon.task}</span>${row.dayDone}/${row.dayTotal}</span>`);
   if(row.unreadMessages>0) out.push(`<span class="stu360-pill warn"><span class="ic-svg">${icon.msg}</span>${row.unreadMessages}</span>`);
+  if(row.pendingSchedule) out.push(`<span class="stu360-pill warn"><span class="ic-svg">${icon.sched}</span>সময়সূচি</span>`);
   if(row.pendingDocs>0) out.push(`<span class="stu360-pill warn"><span class="ic-svg">${icon.doc}</span>${row.pendingDocs}</span>`);
   const q=(row.pendingQuiz||0)+(row.manualQuiz||0);
   if(q>0) out.push(`<span class="stu360-pill bad"><span class="ic-svg">${icon.quiz}</span>${q}</span>`);
@@ -2660,7 +2847,7 @@ function renderStudentList(){
     const row=API.Biboron?API.Biboron.getStudentRow(s.id):{todayDone:0,todayTotal:0,flags:[]};
     const idLbl=s.waqfId?API.Students.displayWaqfId(s.waqfId):'';
     const meta=[idLbl,batch].filter(Boolean).map(x=>`<span class="stu360-chip">${esc(x)}</span>`).join('');
-    const sub=[s.cls||'',row.needsAttention?'মনোযোগ দরকার':''].filter(Boolean).join(' · ');
+    const sub=s.cls||'';
     const tags=biboronTags(row);
     const subLine=(sub||tags)?`<div class="stu360-sub">${sub?`<span class="stu360-sub-text">${esc(sub)}</span>`:''}${tags}</div>`:'';
     const menuOpen=stuRowMenuId===s.id;
@@ -3387,6 +3574,21 @@ function renderStorageTree(){
 }
 
 // ══ SETTINGS ═══════════════════════════════════════════════
+let settingsTab='profile';
+function goSettingsTab(tab){
+  settingsTab=['profile','biboron','backup','more'].includes(tab)?tab:'profile';
+  document.querySelectorAll('#settingsTabs .settings-tab').forEach(b=>b.classList.toggle('active',b.getAttribute('data-tab')===settingsTab));
+  document.querySelectorAll('#settingsScroll .settings-pane').forEach(p=>{
+    p.style.display=p.id==='settings-pane-'+settingsTab?'':'none';
+  });
+  if(settingsTab==='biboron'){
+    loadProgressSettingsUI();
+    renderNoteCatSettings();
+    renderFortnightlySettings();
+  }
+  const sc=document.getElementById('settingsScroll');
+  if(sc) sc.scrollTop=0;
+}
 async function sendBC(){ const text=document.getElementById('bcText').value.trim(); if(!text){ showToast('বার্তা লিখুন!'); return; } try{ await API.Messages.broadcast(text); closeModal('bcModal'); document.getElementById('bcText').value=''; renderChatList(); showToast('📢 সবাইকে পাঠানো হয়েছে'); }catch(e){ console.error(e); showToast('❌ বার্তা পাঠানো হয়নি'); } }
 async function saveInfo(){ try{ await API.DB.saveTeacher({name:document.getElementById('tName').value.trim()||'জিম্মাদার',madrasa:document.getElementById('tMadrasa').value.trim()||BRAND_AR}); setAppHeaderTitle(API.DB.getTeacher().madrasa); showToast('✅ সংরক্ষিত'); }catch(e){ console.error(e); showToast('❌ সংরক্ষণ হয়নি'); } }
 async function changeTPin(){ const p=String(document.getElementById('newTPin').value).trim(); if(!/^\d{4}$/.test(p)){ showToast('৪ সংখ্যার পিন দিন!'); return; } try{ await API.Auth.setTeacherPin(p); document.getElementById('newTPin').value=''; showToast('✅ পিন পরিবর্তন হয়েছে'); }catch(e){ console.error(e); showToast('❌ পিন পরিবর্তন হয়নি'); } }
@@ -3479,7 +3681,7 @@ function goTab(tab, opts){
     hAvTab.style.display='none';
   }
   document.getElementById('fab').style.display=(tab==='settings'||tab==='diary')?'none':'flex';
-  if(tab==='settings'){ loadProgressSettingsUI(); renderNoteCatSettings(); renderFortnightlySettings(); }
+  if(tab==='settings'){ goSettingsTab(settingsTab||'profile'); }
   if(tab==='diary'){ renderDiaryList(); }
   if(tab==='students'){ renderBiboronSummary(); renderStudentList(); }
   if(tab==='exams')  { renderQuizList(); goExamTab('list'); }

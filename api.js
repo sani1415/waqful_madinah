@@ -1445,6 +1445,17 @@ const API = (() => {
   // ── বিবরণ (জিম্মাদার ড্যাশবোর্ড) ───────────────────────────
   // দৈনিক আমল সারি/সারাংশ = গতকাল (দিন শেষ হওয়া স্থির তথ্য)
   const _yesterday = () => nextDate(-1);
+  const _dateAdd = (date, delta) => {
+    const d = new Date((date || today()) + 'T12:00:00Z');
+    d.setUTCDate(d.getUTCDate() + delta);
+    return d.toISOString().split('T')[0];
+  };
+  const _weekStart = (date) => {
+    if (typeof window !== 'undefined' && window.ApiAmal && window.ApiAmal.getWeekStart) return window.ApiAmal.getWeekStart(date || today());
+    const d = new Date((date || today()) + 'T12:00:00Z');
+    d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 1) % 7));
+    return d.toISOString().split('T')[0];
+  };
   const Biboron = {
     yesterdayDate() { return _yesterday(); },
     _dayProgress(sid) {
@@ -1455,6 +1466,52 @@ const API = (() => {
     _studentNotes(sid) {
       const SN = typeof window !== 'undefined' ? window.API?.StudentNotes : null;
       return SN && SN.getAll ? SN.getAll(sid) : [];
+    },
+    _isWeeklyReceiptNote(n) {
+      return /^সাপ্তাহিক আমল:/.test(String(n.title || '')) || /^সাপ্তাহিক আমল জমা/.test(String(n.text || ''));
+    },
+    _visibleStudentNotes(sid) {
+      return this._studentNotes(sid).filter(n => !this._isWeeklyReceiptNote(n) || n.reviewStatus !== 'done');
+    },
+    _weekDates(date) {
+      if (typeof window !== 'undefined' && window.ApiAmal && window.ApiAmal.getWeekDates) return window.ApiAmal.getWeekDates(date || today());
+      const start = _weekStart(date || today());
+      return Array.from({ length: 7 }, (_, i) => _dateAdd(start, i));
+    },
+    _weeklyNote(sid, dates) {
+      const title = `সাপ্তাহিক আমল: ${dates[0]} - ${dates[6]}`;
+      return this._studentNotes(sid).find(n => String(n.title || '') === title) || null;
+    },
+    getWeeklyStatus(sid) {
+      const dates = this._weekDates(today());
+      const activeDates = dates.filter(d => d <= today());
+      const countedTo = activeDates[activeDates.length - 1] || dates[0];
+      const p = Tasks.getRangeProgress(sid, dates[0], countedTo);
+      const note = this._weeklyNote(sid, dates);
+      const hasData = (p.done | 0) > 0;
+      return {
+        from: dates[0], to: dates[6], countedTo,
+        done: p.done | 0, total: p.total | 0, percent: p.percent | 0,
+        submitted: !!note || hasData,
+        hasReceipt: !!note,
+        reviewed: !!note && note.reviewStatus === 'done',
+        pendingReview: !!note && note.reviewStatus !== 'done',
+        noteId: note ? note.id : '',
+      };
+    },
+    getWeeklySummary() {
+      const students = Students.getAll();
+      const rows = students.map(s => this.getWeeklyStatus(s.id));
+      const start = _weekStart(today());
+      return {
+        submitted: rows.filter(r => r.submitted).length,
+        pendingReview: rows.filter(r => r.pendingReview).length,
+        reviewed: rows.filter(r => r.reviewed).length,
+        missing: rows.filter(r => !r.submitted).length,
+        total: students.length,
+        from: rows[0]?.from || start,
+        to: rows[0]?.to || _dateAdd(start, 6),
+      };
     },
     _noteTs(n) {
       const raw = [n.date || n.note_date || '', n.time || n.note_time || '00:00'].join(' ').trim();
@@ -1477,7 +1534,7 @@ const API = (() => {
       set(this._msgTs(lastMsg), lastMsg?.role === 'in' ? 'রিসালা এসেছে' : 'রিসালা পাঠানো');
       Docs.getForStudent(sid).forEach(d => set(Date.parse(d.uploadedAt || ''), d.sentBy === 'teacher' ? 'ডক পাঠানো' : 'ডক এসেছে'));
       TeacherNotes.getAll(sid).forEach(n => set(this._noteTs(n), 'শিক্ষক নোট'));
-      this._studentNotes(sid).forEach(n => set(this._noteTs(n), 'বিবরণ নোট'));
+      this._visibleStudentNotes(sid).forEach(n => set(this._noteTs(n), 'বিবরণ নোট'));
       return { ts: best, label };
     },
     _activePendingQuizzes(sid) {
@@ -1542,34 +1599,33 @@ const API = (() => {
       const unreadMessages = Messages.unreadCount(sid, 'in') | 0;
       if (unreadMessages) flags.push('msg');
       const prog = Tasks.getListProgress(sid);
+      const weekly = this.getWeeklyStatus(sid);
       const teacherNoteCount = TeacherNotes.getAll(sid).length;
-      const studentNoteCount = this._studentNotes(sid).length;
+      const studentNoteCount = this._visibleStudentNotes(sid).length;
       const noteCount = teacherNoteCount + studentNoteCount;
       const lastActivity = this._lastActivity(sid);
       const progressPct = Math.max(0, Math.min(100, prog.percent | 0));
-      const needsAttention = unreadMessages > 0 || pendingDocs > 0 || pendingSchedule || quiz.pending > 0 || quiz.manual > 0 || (t.total > 0 && t.done < t.total);
+      const needsAttention = unreadMessages > 0 || pendingDocs > 0 || pendingSchedule || quiz.pending > 0 || quiz.manual > 0 || (t.total > 0 && t.done < t.total) || !weekly.submitted || weekly.pendingReview;
       return {
         dayDone: t.done, dayTotal: t.total, todayDone: t.done, todayTotal: t.total,
         progressPct, unreadMessages, pendingDocs, pendingSchedule,
         pendingQuiz: quiz.pending, manualQuiz: quiz.manual,
-        teacherNoteCount, studentNoteCount, noteCount,
+        teacherNoteCount, studentNoteCount, noteCount, weekly,
         lastActivity, needsAttention, flags,
       };
     },
     getBatchHint(students, yearFilter) {
       if (!students.length) return { count: 0, avgPct: 0, behindDay: 0, behindToday: 0, prefix: 'মোট ০ জন' };
-      let sum = 0, behind = 0, attention = 0;
+      let sum = 0, behind = 0;
       students.forEach(s => {
         sum += Math.max(0, Math.min(100, Tasks.getListProgress(s.id).percent | 0));
         const t = this._dayProgress(s.id);
         if (t.total > 0 && t.done < t.total) behind++;
-        const row = this.getStudentRow(s.id);
-        if (row.needsAttention) attention++;
       });
       const avg = Math.round(sum / students.length);
       const y = yearFilter === 1 ? '১ম বর্ষ' : yearFilter === 2 ? '২য় বর্ষ' : yearFilter === 3 ? '৩য় বর্ষ' : '';
       const prefix = y ? `${y} · ${students.length} জন` : `মোট ${students.length} জন`;
-      return { count: students.length, avgPct: avg, behindDay: behind, behindToday: behind, attention, prefix };
+      return { count: students.length, avgPct: avg, behindDay: behind, behindToday: behind, prefix };
     },
   };
 

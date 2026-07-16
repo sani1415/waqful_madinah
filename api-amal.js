@@ -20,6 +20,21 @@
     const d = _bdNow();
     return `${d.getUTCFullYear()}-${_pad(d.getUTCMonth()+1)}-01`;
   }
+  function _dateAdd(date, delta) {
+    const d = new Date((date || _today()) + 'T12:00:00Z');
+    d.setUTCDate(d.getUTCDate() + delta);
+    return d.toISOString().split('T')[0];
+  }
+  function getWeekStart(dateStr) {
+    const d = new Date((dateStr || _today()) + 'T12:00:00Z');
+    const day = d.getUTCDay();
+    d.setUTCDate(d.getUTCDate() - ((day + 1) % 7)); // Saturday
+    return d.toISOString().split('T')[0];
+  }
+  function getWeekDates(dateStr) {
+    const start = getWeekStart(dateStr || _today());
+    return Array.from({ length: 7 }, (_, i) => _dateAdd(start, i));
+  }
   function _daysBetween(from, to) {
     return Math.round((new Date(to) - new Date(from)) / 86400000);
   }
@@ -227,6 +242,7 @@
 
   w.ApiAmal = { Completions, markCompleted, unmarkCompleted, isCompleted,
     syncTodayFromCompletions, getStreak, getProgressSummary, getRangeProgress,
-    getListProgress, getTodayOverview, getLeaderboard, getCalendarData };
+    getListProgress, getTodayOverview, getLeaderboard, getCalendarData,
+    getWeekStart, getWeekDates };
 
 })(typeof window!=='undefined'?window:globalThis);

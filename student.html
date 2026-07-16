@@ -502,18 +502,13 @@ function skd(field){if(field==='id'){_skId=_skId.slice(0,-1);_skUpdateIdDisplay(
 <!-- ══ TASKS ══════════════════════════════════════════════ -->
 <div class="screen active" id="screen-tasks">
   <div class="amal-sub-tabs">
-    <button type="button" class="amal-sub-tab active" onclick="goAmalTab('today',this)"><span class="amal-sub-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6M9 16h6"/></svg></span><span class="amal-sub-lbl">আজ</span></button>
+    <button type="button" class="amal-sub-tab active" onclick="goAmalTab('today',this)"><span class="amal-sub-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6M9 16h6"/></svg></span><span class="amal-sub-lbl">সপ্তাহ</span></button>
     <button type="button" class="amal-sub-tab"        onclick="goAmalTab('biboron',this)"><span class="amal-sub-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 1v11"/><path d="M19 10a7 7 0 01-14 0"/><path d="M12 19v4M8 23h8"/></svg></span><span class="amal-sub-lbl">বিবরণ</span></button>
     <button type="button" class="amal-sub-tab"        onclick="goAmalTab('schedule',this)"><span class="amal-sub-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="amal-sub-lbl">নিজামুল আওকাত</span></button>
   </div>
   <div id="amal-panel-today" class="amal-panel">
     <div id="amalDashboard"></div>
-    <div class="stu-amal-filters no-scrollbar">
-      <button type="button" class="stu-filter-pill active" onclick="fTask('all',this)">সব</button>
-      <button type="button" class="stu-filter-pill"        onclick="fTask('daily',this)">দৈনিক</button>
-      <button type="button" class="stu-filter-pill"        onclick="fTask('onetime',this)">এককালীন</button>
-      <button type="button" class="stu-filter-pill"        onclick="fTask('done',this)">সম্পন্ন</button>
-    </div>
+    <div id="weeklyAmalEntry"></div>
     <div class="list-scroll stu-amal-list" id="taskList"></div>
   </div>
   <div id="amal-panel-biboron" class="amal-panel" style="display:none">
@@ -764,6 +759,7 @@ let dailyNoteCatId='general';
 let dailyNoteListFilter='all';
 let dailyNoteForced=false;
 let amalWorkDate=null; /* null = আজ; YYYY-MM-DD = নির্বাচিত দিন */
+let weeklyAmalDraft=null;
 
 function showUploadPrepError(e){
   const m=e && e.message;
@@ -1480,22 +1476,156 @@ function atCardHtml(task){
 function renderTaskList(f){
   if(f) tFilter=f; const el=document.getElementById('taskList');
   const tasks=API.Tasks.getForStudent(me.id);
-  const daily=tasks.filter(t=>t.type==='daily');
   const onetime=tasks.filter(t=>t.type!=='daily');
   let h='';
-  if((tFilter==='all'||tFilter==='daily')&&daily.length){
-    daily.forEach(t=>{ h+=atCardHtml(t); });
-  } else if(tFilter==='done'&&daily.length){
-    const wd=getAmalWorkDate();
-    const doneDaily=daily.filter(t=>API.Tasks.isCompleted(t.id,me.id,wd));
-    doneDaily.forEach(t=>{ h+=atCardHtml(t); });
+  if(onetime.length){
+    h+='<div class="stu-onetime-section-title">এককালীন আমল</div>';
+    onetime.forEach(t=>{ h+=atCardHtml(t); });
   }
-  if((tFilter==='all'||tFilter==='onetime'||tFilter==='done')&&onetime.length){
-    const filtered=tFilter==='done'?onetime.filter(t=>t.assignees[me.id]==='done'):onetime;
-    filtered.forEach(t=>{ h+=atCardHtml(t); });
-  }
-  if(!h) h=`<div class="empty-state"><div class="icon">📋</div><p>${tFilter==='all'?'উস্তাদ এখনো কোনো আমল দেননি।':'এই ফিল্টারে কিছু নেই।'}</p></div>`;
-  el.innerHTML=h+'<div style="height:20px"></div>';
+  el.innerHTML=h? h+'<div style="height:20px"></div>' : '';
+}
+function weekDatesFor(date){
+  if(window.ApiAmal&&ApiAmal.getWeekDates) return ApiAmal.getWeekDates(date||API.today());
+  const base=new Date((date||API.today())+'T12:00:00Z');
+  base.setUTCDate(base.getUTCDate()-((base.getUTCDay()+1)%7));
+  return Array.from({length:7},(_,i)=>{const d=new Date(base);d.setUTCDate(base.getUTCDate()+i);return d.toISOString().split('T')[0];});
+}
+function canEditWeeklyDate(date){
+  return String(date||'')<=String(API.today());
+}
+function weekShortLabel(date){
+  return new Date(date+'T12:00:00Z').toLocaleDateString('bn-BD',{weekday:'short',day:'numeric',timeZone:'Asia/Dhaka'});
+}
+function weeklyNoteTitle(dates){
+  return `সাপ্তাহিক আমল: ${dates[0]} - ${dates[6]}`;
+}
+function weeklyNoteCategoryId(){
+  if(!API.StudentNotes) return 'general';
+  const cats=API.StudentNotes.getCategories();
+  const found=cats.find(c=>/সাপ্তাহিক|মুহাসাবা|বিবরণ/.test(c.label||''));
+  return (found&&found.id)||'general';
+}
+function getWeeklyReceiptNote(dates){
+  if(!API.StudentNotes||!me) return null;
+  const title=weeklyNoteTitle(dates);
+  return API.StudentNotes.getAll(me.id).find(n=>String(n.title||'')===title)||null;
+}
+function buildWeeklyDraft(){
+  if(!me) return null;
+  const dates=weekDatesFor(API.today());
+  const tasks=API.Tasks.getForStudent(me.id).filter(t=>t.type==='daily');
+  const cells={};
+  tasks.forEach(t=>dates.forEach(d=>{ cells[`${t.id}|${d}`]=canEditWeeklyDate(d)&&!!API.Tasks.isCompleted(t.id,me.id,d); }));
+  return { dates, tasks, cells, dirty:false };
+}
+function renderWeeklyAmalEntry(){
+  const el=document.getElementById('weeklyAmalEntry');
+  if(!el||!me) return;
+  if(!weeklyAmalDraft||!weeklyAmalDraft.dates) weeklyAmalDraft=buildWeeklyDraft();
+  const d=weeklyAmalDraft;
+  if(!d||!d.tasks.length){ el.innerHTML=''; return; }
+  const activeDates=d.dates.filter(canEditWeeklyDate);
+  let done=0,total=d.tasks.length*activeDates.length;
+  d.tasks.forEach(t=>activeDates.forEach(date=>{ if(d.cells[`${t.id}|${date}`]) done++; }));
+  const pct=total?Math.round(done/total*100):0;
+  const receipt=getWeeklyReceiptNote(d.dates);
+  const status=receipt?(receipt.reviewStatus==='done'?'পর্যালোচনা সম্পন্ন':'জমা আছে, পর্যালোচনাধীন'):(done>0?'টিক ডাটা সেভ আছে':'এখনো জমা হয়নি');
+  const activeInfo=`আজ পর্যন্ত ${activeDates.length} দিন`;
+  el.innerHTML=`<div class="weekly-amal-card">
+    <div class="weekly-amal-head">
+      <div><div class="weekly-amal-title">সাপ্তাহিক আমল জমা</div><div class="weekly-amal-sub">${esc(d.dates[0])} - ${esc(d.dates[6])} · ${esc(activeInfo)} · ${done}/${total} · ${pct}%</div></div>
+      <span class="weekly-amal-status ${receipt&&receipt.reviewStatus==='done'?'done':receipt?'pending':done>0?'data':''}">${esc(status)}</span>
+    </div>
+    <div class="weekly-amal-grid-wrap">
+      <div class="weekly-amal-grid" style="--week-cols:${d.dates.length}">
+        <div class="weekly-amal-corner">আমল</div>
+        ${d.dates.map(date=>`<div class="weekly-amal-day ${canEditWeeklyDate(date)?'':'future'}">${esc(weekShortLabel(date))}</div>`).join('')}
+        ${d.tasks.map(t=>`<div class="weekly-amal-task">${esc(t.title)}</div>${d.dates.map(date=>{
+          const key=`${t.id}|${date}`;
+          const on=!!d.cells[key];
+          const locked=!canEditWeeklyDate(date);
+          return `<button type="button" class="weekly-amal-cell ${on?'on':''} ${locked?'locked':''}" ${locked?'disabled':''} onclick="toggleWeeklyAmalCell('${esc(t.id)}','${esc(date)}')" aria-label="${esc(t.title)} ${esc(date)}">${locked?'':on?'✓':''}</button>`;
+        }).join('')}`).join('')}
+      </div>
+    </div>
+    <div class="weekly-amal-actions">
+      <button type="button" class="weekly-amal-btn secondary" onclick="resetWeeklyAmalDraft()">রিসেট</button>
+      <button type="button" class="weekly-amal-btn" onclick="saveWeeklyAmalEntry()">${d.dirty?'সেভ করুন':'আজ পর্যন্ত জমা'}</button>
+      <button type="button" class="weekly-amal-btn note" onclick="openWeeklyMuhasaba()">মুহাসাবা</button>
+    </div>
+  </div>`;
+}
+function toggleWeeklyAmalCell(tid,date){
+  if(!canEditWeeklyDate(date)){ showToast('আজকের পরের দিনের টিক দেওয়া যাবে না'); return; }
+  if(!weeklyAmalDraft) weeklyAmalDraft=buildWeeklyDraft();
+  const key=`${tid}|${date}`;
+  weeklyAmalDraft.cells[key]=!weeklyAmalDraft.cells[key];
+  weeklyAmalDraft.dirty=true;
+  renderWeeklyAmalEntry();
+}
+function resetWeeklyAmalDraft(){
+  weeklyAmalDraft=buildWeeklyDraft();
+  renderWeeklyAmalEntry();
+}
+function weeklySummaryText(dates,tasks,cells){
+  let total=0,done=0;
+  const activeDates=dates.filter(canEditWeeklyDate);
+  const lines=activeDates.map(date=>{
+    const d=tasks.filter(t=>cells[`${t.id}|${date}`]).length;
+    total+=tasks.length; done+=d;
+    return `${date}: ${d}/${tasks.length}`;
+  });
+  return `সাপ্তাহিক আমল জমা\nসপ্তাহ: ${dates[0]} - ${dates[6]}\nহিসাব: আজ পর্যন্ত ${activeDates.length} দিন\nমোট: ${done}/${total}\n\nদিনভিত্তিক:\n${lines.join('\n')}`;
+}
+async function saveWeeklyReceipt(dates,tasks,cells){
+  if(!API.StudentNotes||!me) return;
+  const prev=getWeeklyReceiptNote(dates);
+  const title=weeklyNoteTitle(dates);
+  const text=weeklySummaryText(dates,tasks,cells);
+  const categoryId='general';
+  if(prev&&prev.reviewStatus!=='done') await API.StudentNotes.update(me.id,prev.id,{title,text,categoryId});
+  else await API.StudentNotes.add(me.id,{title,text,categoryId});
+}
+async function saveWeeklyAmalEntry(){
+  if(!weeklyAmalDraft||!me) return;
+  const d=weeklyAmalDraft;
+  try{
+    for(const t of d.tasks){
+      for(const date of d.dates){
+        const want=!!d.cells[`${t.id}|${date}`];
+        const have=!!API.Tasks.isCompleted(t.id,me.id,date);
+        if(!canEditWeeklyDate(date)){
+          if(have) await API.Tasks.unmarkCompleted(t.id,me.id,date);
+          continue;
+        }
+        if(want&&!have) await API.Tasks.markCompleted(t.id,me.id,{date,status:'done'});
+        if(!want&&have) await API.Tasks.unmarkCompleted(t.id,me.id,date);
+      }
+    }
+    let receiptSaved=true;
+    try{
+      await saveWeeklyReceipt(d.dates,d.tasks,d.cells);
+    }catch(receiptErr){
+      receiptSaved=false;
+      console.warn('weekly receipt save failed', receiptErr);
+    }
+    weeklyAmalDraft=null;
+    renderAll();
+    showToast(receiptSaved?'সাপ্তাহিক আমল জমা হয়েছে':'সাপ্তাহিক আমল সেভ হয়েছে, রিভিউ রসিদ সেভ হয়নি');
+  }catch(e){ console.error(e); showToast('সাপ্তাহিক আমল সেভ হয়নি'); }
+}
+function openWeeklyMuhasaba(){
+  const dates=weekDatesFor(API.today());
+  openDailyNoteModal();
+  setTimeout(()=>{
+    dailyNoteCatId=weeklyNoteCategoryId();
+    renderDailyNoteCats();
+    const title=document.getElementById('dailyNoteTitle');
+    const txt=document.getElementById('dailyNoteText');
+    if(title&&!title.value) title.value=`সাপ্তাহিক মুহাসাবা: ${dates[0]} - ${dates[6]}`;
+    if(txt&&!txt.value) txt.placeholder='এই সপ্তাহে সবচেয়ে ভালো কী হয়েছে?\nসবচেয়ে বড় ঘাটতি কী ছিল?\nআগামী সপ্তাহে কোন একটি জিনিস ঠিক করব?';
+    updateDailyNoteSaveState();
+  },0);
 }
 function fTask(f,btn){ document.querySelectorAll('#amal-panel-today .stu-filter-pill').forEach(c=>c.classList.remove('active')); btn.classList.add('active'); renderTaskList(f); }
 async function markDailyDone(tid){
@@ -1547,9 +1677,7 @@ function amalDashDateLabel(){
   }catch(e){ return d; }
 }
 function amalDashHeaderHtml(){
-  const yActive=isAmalYesterdayMode();
   return `<div class="stu-amal-dash-hd">
-    <button type="button" class="stu-amal-yday-btn${yActive?' active':''}" onclick="toggleAmalYesterday()" title="গতকালের আমল" aria-label="গতকালের আমল" aria-pressed="${yActive?'true':'false'}"><span class="stu-amal-yday-txt"><span>গত</span><span>কাল</span></span></button>
     <div class="stu-amal-dash-title-wrap">
       <div class="stu-amal-dash-title">আমলের বিবরণ</div>
       <div class="stu-amal-dash-date">${esc(amalDashDateLabel())}</div>
@@ -1589,8 +1717,10 @@ function renderAmalDashboard(){
   const hd=amalDashHeaderHtml();
   if(!dailyTasks.length){
     el.innerHTML=`<div class="stu-amal-dash-wrap"><div class="stu-amal-dash-card stu-amal-dash-card--empty">${hd}<p class="stu-amal-dash-hint">উস্তাদ দৈনিক আমল যোগ করলে এখানে অগ্রগতি দেখা যাবে।</p></div></div>`;
+    const weeklyEl=document.getElementById('weeklyAmalEntry'); if(weeklyEl) weeklyEl.innerHTML='';
     return;
   }
+  weeklyAmalDraft=null;
   const all=prog.all||{percent:0};
   const wd=getAmalWorkDate();
   const yMode=isAmalYesterdayMode();
@@ -1602,6 +1732,7 @@ function renderAmalDashboard(){
       <div class="stu-amal-rings">${ringCol(dayProg.percent||0,'#4CAF50',dayLbl)}${ringCol(prog.week.percent,'#43A047','সপ্তাহ')}${ringCol(prog.month.percent,'#42A5F5','মাস')}${ringCol(all.percent,'#8D6E63','শুরু থেকে')}</div>
     </div>
   </div>`;
+  renderWeeklyAmalEntry();
 }
 function openAmalCalendar(){
   const pop=document.getElementById('amalCalPopover');
@@ -1977,7 +2108,10 @@ function catIc(c){
 }
 function getDailyNotes(){
   if(!me||!API.StudentNotes) return [];
-  return API.StudentNotes.getAll(me.id);
+  return API.StudentNotes.getAll(me.id).filter(n=>!isWeeklyReceiptNote(n)||n.reviewStatus!=='done');
+}
+function isWeeklyReceiptNote(n){
+  return /^সাপ্তাহিক আমল:/.test(String(n&&n.title||'')) || /^সাপ্তাহিক আমল জমা/.test(String(n&&n.text||''));
 }
 function dailyNoteDateLabel(date){
   if(!date) return '';

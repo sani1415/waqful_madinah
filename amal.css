@@ -155,12 +155,36 @@
 .stu-svg-ring-wrap{position:relative;width:52px;height:52px;display:flex;align-items:center;justify-content:center}
 .stu-ring-pct{position:absolute;font-size:11px;font-weight:800;color:#334155;left:50%;top:50%;transform:translate(-50%,-50%)}
 .stu-ring-lbl{margin-top:4px;font-size:10px;font-weight:700;color:#64748b;line-height:1.2}
+.weekly-amal-card{margin:8px 10px 4px;background:#fff;border:1px solid #e8eef3;border-radius:16px;padding:10px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.weekly-amal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.weekly-amal-title{font-size:14px;font-weight:800;color:#0f172a;line-height:1.25}
+.weekly-amal-sub{font-size:10px;font-weight:700;color:#64748b;margin-top:2px;line-height:1.25}
+.weekly-amal-status{flex-shrink:0;max-width:128px;border-radius:999px;background:#f1f5f9;color:#64748b;padding:4px 7px;font-size:9px;font-weight:900;line-height:1.15;text-align:center}
+.weekly-amal-status.pending{background:#FFF8E1;color:#E65100}
+.weekly-amal-status.done{background:#E8F5E9;color:#2E7D32}
+.weekly-amal-status.data{background:#E3F2FD;color:#1565C0}
+.weekly-amal-grid-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid #edf2f7;border-radius:12px;background:#f8fafc}
+.weekly-amal-grid{display:grid;grid-template-columns:minmax(112px,1.15fr) repeat(var(--week-cols),44px);min-width:420px}
+.weekly-amal-corner,.weekly-amal-day,.weekly-amal-task,.weekly-amal-cell{min-height:34px;border:0;border-right:1px solid #edf2f7;border-bottom:1px solid #edf2f7}
+.weekly-amal-corner,.weekly-amal-day{display:flex;align-items:center;justify-content:center;background:#f1f5f9;color:#475569;font-size:10px;font-weight:900}
+.weekly-amal-day.future{background:#f8fafc;color:#cbd5e1}
+.weekly-amal-task{display:flex;align-items:center;padding:0 8px;background:#fff;color:#1e293b;font-size:12px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.weekly-amal-cell{display:flex;align-items:center;justify-content:center;background:#fff;color:#fff;font-family:var(--font);font-size:14px;font-weight:900;cursor:pointer}
+.weekly-amal-cell.on{background:#E8F5E9;color:#2E7D32}
+.weekly-amal-cell:active{background:#DCFCE7}
+.weekly-amal-cell.locked{background:#f8fafc;color:#cbd5e1;cursor:not-allowed}
+.weekly-amal-cell.locked:active{background:#f8fafc}
+.weekly-amal-actions{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:6px;margin-top:8px}
+.weekly-amal-btn{border:none;border-radius:10px;background:#4CAF50;color:#fff;font-family:var(--font);font-size:12px;font-weight:900;padding:8px 6px;cursor:pointer;white-space:nowrap}
+.weekly-amal-btn.secondary{background:#f1f5f9;color:#475569}
+.weekly-amal-btn.note{background:#E3F2FD;color:#1565C0}
 
 .stu-amal-filters{display:flex;gap:6px;padding:8px 10px 6px;overflow-x:auto;-webkit-overflow-scrolling:touch}
 .stu-filter-pill{flex-shrink:0;border:1px solid #e2e8f0;background:#fff;color:#64748b;padding:5px 10px;border-radius:12px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;transition:background .2s,box-shadow .2s,color .2s}
 .stu-filter-pill:active{transform:scale(.98)}
 
 .stu-amal-list{padding:4px 10px 80px;background:transparent}
+.stu-onetime-section-title{font-size:11px;font-weight:900;color:#64748b;padding:8px 2px 7px}
 #amal-panel-today.amal-panel{background:#f3f4f6}
 #amal-panel-biboron.amal-panel{background:#f3f4f6}
 #amal-panel-today .stu-amal-filters{padding:8px 10px 6px}
@@ -230,7 +254,7 @@
 .tea-lb-rank--2{background:linear-gradient(145deg,#f1f5f9,#cbd5e1);color:#334155}
 .tea-lb-rank--3{background:linear-gradient(145deg,#ffedd5,#fdba74);color:#7c2d12}
 .tea-lb-avatar{width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
-.tea-lb-avatar.s-avatar-pct{border-radius:50%;color:#075E54;font-size:11px;background:var(--gray-200,#eee)!important}
+.tea-lb-avatar.s-avatar-pct{width:40px;height:14px;min-width:40px;border-radius:4px;color:#075E54;font-size:9px;background:#E8EEF1!important}
 .tea-lb-info{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 .tea-lb-name{font-size:14px;font-weight:700;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .tea-lb-meta{font-size:11px;font-weight:600;color:#64748b}
