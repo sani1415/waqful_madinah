@@ -32,14 +32,47 @@ async function sendPush(sub: SubJson, payload: string, vapidPublic: string, vapi
   );
 }
 
-function makePayload(body: string, target: "teacher" | "student", tag: string): string {
-  return JSON.stringify({
+function makePayload(
+  body: string,
+  target: "teacher" | "student",
+  tag: string,
+  count?: number,
+): string {
+  const payload: Record<string, unknown> = {
     title: "Waqful Madinah",
     body,
     url: target === "teacher" ? "/teacher/" : "/student/",
     icon: target === "teacher" ? "icons/icon-teacher-192.png" : "icons/icon-student-192.png",
     tag,
-  });
+  };
+  // Idarah-style: exact unread count for OS app-icon badge (Badging API)
+  if (typeof count === "number" && count >= 0) payload.count = count;
+  return JSON.stringify(payload);
+}
+
+/** Teacher unread = student→teacher messages not yet read (`role='in'`). */
+async function countTeacherUnread(sb: ReturnType<typeof createClient>): Promise<number> {
+  const { count } = await sb
+    .from("waqf_messages")
+    .select("id", { count: "exact", head: true })
+    .eq("role", "in")
+    .eq("is_read", false);
+  return typeof count === "number" ? count : 0;
+}
+
+/** Student unread in one thread = teacher→student messages not yet read (`role='out'`). */
+async function countStudentUnread(
+  sb: ReturnType<typeof createClient>,
+  threadId: string,
+): Promise<number> {
+  if (!threadId) return 0;
+  const { count } = await sb
+    .from("waqf_messages")
+    .select("id", { count: "exact", head: true })
+    .eq("thread_id", threadId)
+    .eq("role", "out")
+    .eq("is_read", false);
+  return typeof count === "number" ? count : 0;
 }
 
 // ── Subscription lookup from waqf_pwa_subscriptions + waqf_app_kv fallback ──
@@ -171,17 +204,38 @@ Deno.serve(async (req: Request) => {
         .from("waqf_students").select("name").eq("id", threadId).maybeSingle();
       const studentName = stuInfo?.name ? String(stuInfo.name) : "ছাত্র";
       const teacherSub = await getTeacherSub(sb);
-      if (teacherSub) await trySend(teacherSub,
-        makePayload(`${studentName}: নতুন বার্তা পাঠিয়েছে।`, "teacher", `msg-in-${threadId}`));
+      const teacherUnread = await countTeacherUnread(sb);
+      if (teacherSub) {
+        await trySend(
+          teacherSub,
+          makePayload(
+            `${studentName}: নতুন বার্তা পাঠিয়েছে।`,
+            "teacher",
+            `msg-in-${threadId}`,
+            teacherUnread,
+          ),
+        );
+      }
     } else if (msgRole === "out") {
       if (threadId === "_bc") {
-        // Broadcast → notify all students once per unique endpoint
-        const allSubs = await getAllStudentSubs(sb);
+        // Broadcast → each personal student sub gets its own unread count for badge
+        const { data: relRows } = await sb
+          .from("waqf_pwa_subscriptions").select("id, subscription").eq("role", "student");
         const bcSentEndpoints = new Set<string>();
-        for (const sub of allSubs) {
-          if (sub.endpoint && bcSentEndpoints.has(sub.endpoint)) continue;
-          await trySend(sub, makePayload("জিম্মাদারের নতুন বার্তা এসেছে।", "student", "msg-out-bc"));
-          if (sub.endpoint) bcSentEndpoints.add(sub.endpoint);
+        for (const row of relRows || []) {
+          const sid = String(row.id || "");
+          if (!sid || sid.startsWith("shared_device_")) continue;
+          const sub = pickSubscription({ subscription: row.subscription });
+          if (!sub?.endpoint || bcSentEndpoints.has(sub.endpoint)) continue;
+          const { data: stu } = await sb
+            .from("waqf_students").select("id").eq("waqf_id", sid).maybeSingle();
+          const stuThread = stu?.id ? String(stu.id) : "";
+          const unread = stuThread ? await countStudentUnread(sb, stuThread) : 1;
+          await trySend(
+            sub,
+            makePayload("জিম্মাদারের নতুন বার্তা এসেছে।", "student", "msg-out-bc", unread),
+          );
+          bcSentEndpoints.add(sub.endpoint);
         }
       } else {
         // Skip student-thread copies of broadcast messages — notification already sent via _bc row
@@ -195,15 +249,15 @@ Deno.serve(async (req: Request) => {
         const msgBody = studentName
           ? `${studentName}, জিম্মাদারের নতুন বার্তা এসেছে।`
           : "জিম্মাদারের নতুন বার্তা এসেছে।";
-        // Collect all endpoints to avoid duplicate pushes
-        const sentEndpoints = new Set<string>();
+        const studentUnread = await countStudentUnread(sb, threadId);
 
         if (waqfId) {
-          // Notify the student's personal device (if subscribed individually)
           const personalSub = await getStudentSubByWaqf(sb, waqfId);
           if (personalSub?.endpoint) {
-            await trySend(personalSub, makePayload(msgBody, "student", `msg-out-${waqfId}`));
-            sentEndpoints.add(personalSub.endpoint);
+            await trySend(
+              personalSub,
+              makePayload(msgBody, "student", `msg-out-${waqfId}`, studentUnread),
+            );
           }
         }
       }
@@ -239,10 +293,19 @@ Deno.serve(async (req: Request) => {
     (s) => !teacherEndpoint || s.endpoint !== teacherEndpoint
   );
 
-  for (const sub of dedupedStudentSubs)
-    await trySend(sub, makePayload("জিম্মাদারের নতুন আপডেট এসেছে। অ্যাপ খুলুন।", "student", `kv-student-${key}`));
-  if (teacherSub)
-    await trySend(teacherSub, makePayload("ছাত্রের নতুন আপডেট এসেছে।", "teacher", `kv-teacher-${key}`));
+  const teacherUnreadKv = await countTeacherUnread(sb);
+  for (const sub of dedupedStudentSubs) {
+    await trySend(
+      sub,
+      makePayload("জিম্মাদারের নতুন আপডেট এসেছে। অ্যাপ খুলুন।", "student", `kv-student-${key}`, 1),
+    );
+  }
+  if (teacherSub) {
+    await trySend(
+      teacherSub,
+      makePayload("ছাত্রের নতুন আপডেট এসেছে।", "teacher", `kv-teacher-${key}`, teacherUnreadKv),
+    );
+  }
 
   await removeStaleSubscriptions();
   return jsonResponse({ ok: true, table: "waqf_app_kv", sent, failed,

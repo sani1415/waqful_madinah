@@ -1,5 +1,5 @@
 /* Waqful Madinah — full-app shell cache + Web Push display */
-var CACHE = 'waqful-full-v187';
+var CACHE = 'waqful-full-v188';
 
 var CDN_ASSETS = [
   'https://unpkg.com/@supabase/supabase-js@2.49.8/dist/umd/supabase.js',
@@ -232,56 +232,58 @@ function setBadgeCount(n) {
 
 // ── Push notification ─────────────────────────────────────────────────────────
 self.addEventListener('push', function (e) {
-  var title = 'Waqful Madinah';
-  var body = 'নতুন আপডেট আছে।';
-  var openUrl = absLocal('index.html');
-  var tag = 'waqful-push';
-  var iconPath = 'icons/icon-student-192.png';
-  if (e.data) {
-    try {
-      var j = e.data.json();
-      if (j.title) title = j.title;
-      if (j.body) body = j.body;
-      if (j.url) openUrl = new URL(j.url, baseHref()).href;
-      if (j.tag) tag = j.tag;
-      if (j.icon) iconPath = j.icon;
-    } catch (err) {
-      var t = e.data.text();
-      if (t) body = t.slice(0, 200);
+  var data = {};
+  try { data = e.data ? e.data.json() : {}; } catch (err) { data = {}; }
+  var title = data.title || 'Waqful Madinah';
+  var body = data.body || 'নতুন আপডেট আছে।';
+  var openUrl = data.url ? new URL(data.url, baseHref()).href : absLocal('index.html');
+  var tag = data.tag || 'waqful-push';
+  var iconPath = data.icon || 'icons/icon-student-192.png';
+  var serverCount = typeof data.count === 'number' ? data.count : null;
+
+  e.waitUntil((async function () {
+    var prev = await _idbGet(tag);
+    var tagCount = prev + 1;
+    await _idbSet(tag, tagCount);
+    var displayBody = tagCount > 1 ? body + ' (' + tagCount + 'টি নতুন)' : body;
+
+    await self.registration.showNotification(title, {
+      body: displayBody,
+      icon: absLocal(iconPath),
+      badge: absLocal(iconPath),
+      tag: tag,
+      renotify: true,
+      silent: false,
+      vibrate: [200, 100, 200],
+      data: { url: openUrl, tag: tag },
+    });
+
+    // Idarah-style: prefer server unread `count` for OS app-icon badge
+    var role = tagRole(tag);
+    if (serverCount != null && serverCount > 0) {
+      if (role) {
+        await _idbClearRole(role);
+        await _idbSet('__app_' + role + '__', serverCount);
+        await setBadgeCount(await _idbTotal());
+      } else {
+        await setBadgeCount(serverCount);
+      }
+    } else if (serverCount === 0) {
+      if (role) await _idbClearRole(role);
+      await setBadgeCount(await _idbTotal());
+    } else {
+      // Fallback when older Edge Function has no count
+      try {
+        if (self.navigator && self.navigator.setAppBadge) await self.navigator.setAppBadge();
+        else await setBadgeCount(await _idbTotal());
+      } catch (err2) {
+        await setBadgeCount(await _idbTotal());
+      }
     }
-  }
-  var _body = body;
-  var _tag = tag;
-  e.waitUntil(
-    _idbGet(_tag).then(function (prev) {
-      var tagCount = prev + 1;
-      return _idbSet(_tag, tagCount).then(function () {
-        return _idbTotal();
-      }).then(function (total) {
-        // Show count in body when multiple messages from same sender
-        var displayBody = tagCount > 1
-          ? _body + ' (' + tagCount + 'টি নতুন)'
-          : _body;
-        return self.registration.showNotification(title, {
-          body: displayBody,
-          icon: absLocal(iconPath),
-          badge: absLocal(iconPath),
-          tag: _tag,
-          renotify: true,
-          silent: false,
-          vibrate: [200, 100, 200],
-          data: { url: openUrl, tag: _tag },
-        }).then(function () {
-          setBadgeCount(total);
-          // Tell any open page to refresh data immediately
-          return self.clients.matchAll({ type: 'window', includeUncontrolled: true })
-            .then(function (clients) {
-              clients.forEach(function (c) { c.postMessage({ type: 'REFRESH_DATA' }); });
-            });
-        });
-      });
-    })
-  );
+
+    var clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    clients.forEach(function (c) { c.postMessage({ type: 'REFRESH_DATA' }); });
+  })());
 });
 
 // ── Notification click ────────────────────────────────────────────────────────
