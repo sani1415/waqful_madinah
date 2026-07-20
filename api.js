@@ -1287,10 +1287,28 @@ const API = (() => {
       if(d){ d.read=true; this._writeMeta(list); }
     },
 
-    async markReviewed(id) {
+    async markReviewed(id, comment='') {
       const list=this._readMeta(); const d=list.find(x=>x.id===id);
-      if(_useRemote && RS.markDocReviewedRemote) await RS.markDocReviewedRemote(id);
-      if(d){ d.reviewStatus='done'; d.read=true; this._writeMeta(list); }
+      if(!d) throw new Error('document_not_found');
+      const reviewComment=String(comment||'').trim();
+      const messageId=uid('m');
+      let result=null;
+      if(_useRemote && RS.markDocReviewedRemote) result=await RS.markDocReviewedRemote(id,reviewComment,messageId);
+      const reviewedAt=result?.reviewed_at||new Date().toISOString();
+      const reviewMessageId=result?.message_id||messageId;
+      d.reviewStatus='done'; d.read=true; d.reviewComment=result?.review_comment??reviewComment;
+      d.reviewedAt=reviewedAt; d.reviewMessageId=reviewMessageId;
+      this._writeMeta(list);
+      const messageText=result?.message_text||`আপনার “${d.fileName||'ডকুমেন্ট'}” ডকুমেন্টটি পর্যালোচনা করা হয়েছে।${d.reviewComment?` · মন্তব্য: ${d.reviewComment}`:''}`;
+      const thread=Messages.getThread(d.studentId);
+      if(d.studentId&&!thread.some(m=>m.id===reviewMessageId)){
+        await Messages.send(d.studentId,messageText,'text',{
+          id:reviewMessageId, docId:d.id, fileName:d.fileName||'',
+          reviewComment:d.reviewComment||'', reviewedAt,
+          ...(_useRemote?{_skipRemote:true}:{}),
+        });
+      }
+      return d;
     },
 
     async delete(id) {

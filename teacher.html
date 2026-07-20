@@ -424,6 +424,18 @@
 .doc-btn:active{opacity:.7}
 .doc-btn.view{background:#E3F2FD;color:#1565C0}
 .doc-btn.del{background:#FFEBEE;color:#C62828}
+.doc-preview-sheet{max-height:92vh;overflow-y:auto}
+.doc-review-box{margin:0 0 10px;padding:10px;background:#fff8e1;border:1px solid #ffe0b2;border-radius:12px}
+.doc-review-label{display:block;font-size:12px;font-weight:800;color:#9a3412;margin-bottom:6px}
+.doc-review-input{width:100%;resize:vertical;min-height:72px;max-height:150px;box-sizing:border-box}
+.doc-review-result{margin:0 0 10px;padding:10px 12px;background:#ecfdf5;border:1px solid #bbf7d0;border-radius:12px;color:#166534}
+.doc-review-result-hd{font-size:12px;font-weight:900;display:flex;justify-content:space-between;gap:8px}
+.doc-review-result-date{font-size:10px;font-weight:700;color:#4d7c5b;white-space:nowrap}
+.doc-review-result-text{font-size:13px;line-height:1.5;margin-top:6px;white-space:pre-wrap;word-break:break-word}
+.doc-preview-actions{display:flex;justify-content:center;gap:10px;margin-top:2px}
+.doc-preview-icon-btn{width:42px;height:42px;border:0;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#475569;background:#f1f5f9}
+.doc-preview-icon-btn.download{color:#1565c0;background:#e3f2fd}
+.doc-preview-icon-btn svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .doc-storage-bar{margin:10px 12px;background:var(--gray-100);border-radius:var(--radius);padding:10px 14px}
 .doc-storage-label{font-size:12px;color:var(--gray-500);margin-bottom:6px;display:flex;justify-content:space-between}
 .doc-storage-track{height:6px;background:var(--gray-200);border-radius:3px;overflow:hidden}
@@ -1068,14 +1080,21 @@
 </div></div>
 
 <!-- Doc preview modal -->
-<div class="modal-overlay" id="docPreviewModal"><div class="modal-sheet">
+<div class="modal-overlay" id="docPreviewModal"><div class="modal-sheet doc-preview-sheet">
   <div class="modal-handle"></div>
   <div class="modal-title" id="docPreviewTitle">ডকুমেন্ট</div>
   <div id="docPreviewMeta" style="font-size:13px;color:var(--gray-500);margin-bottom:12px"></div>
   <div id="docPreviewContent" style="text-align:center;margin-bottom:12px"></div>
-  <button class="btn-primary" id="docReviewBtn" style="margin-bottom:8px;display:none;background:#E65100" onclick="markDocReviewedFromPreview()">✅ পর্যালোচনা সম্পন্ন</button>
-  <button class="btn-primary" id="docDownloadBtn" style="margin-bottom:8px;display:none" onclick="triggerDocDownload()">⬇️ ডাউনলোড</button>
-  <button class="btn-secondary" onclick="closeModal('docPreviewModal')">বন্ধ করুন</button>
+  <div class="doc-review-box" id="docReviewBox" style="display:none">
+    <label class="doc-review-label" for="docReviewComment">রিভিউ মন্তব্য</label>
+    <textarea class="form-input doc-review-input" id="docReviewComment" maxlength="1000" placeholder="ছাত্রের জন্য মন্তব্য লিখুন…"></textarea>
+    <button class="btn-primary" id="docReviewBtn" style="margin-top:8px;background:#E65100" onclick="markDocReviewedFromPreview()">রিভিউ সম্পূর্ণ ও পাঠান</button>
+  </div>
+  <div class="doc-review-result" id="docReviewResult" style="display:none"></div>
+  <div class="doc-preview-actions">
+    <button type="button" class="doc-preview-icon-btn download" id="docDownloadBtn" style="display:none" onclick="triggerDocDownload()" title="ডাউনলোড" aria-label="ডাউনলোড"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg></button>
+    <button type="button" class="doc-preview-icon-btn" onclick="closeModal('docPreviewModal')" title="বন্ধ করুন" aria-label="বন্ধ করুন"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+  </div>
 </div></div>
 
 <!-- Exam creation from chat modal -->
@@ -2059,6 +2078,24 @@ function renderChatDocs(){
     </div>`;
   }).join('');
 }
+function renderDocReviewState(meta){
+  const box=document.getElementById('docReviewBox');
+  const result=document.getElementById('docReviewResult');
+  const input=document.getElementById('docReviewComment');
+  const pending=meta&&meta.reviewStatus==='pending';
+  if(box) box.style.display=pending?'block':'none';
+  if(input) input.value=pending?'':(meta?.reviewComment||'');
+  if(!result) return;
+  if(pending){ result.style.display='none'; result.innerHTML=''; return; }
+  let reviewed='';
+  if(meta?.reviewedAt){
+    try{ reviewed=new Date(meta.reviewedAt).toLocaleString('bn-BD',{dateStyle:'medium',timeStyle:'short',timeZone:'Asia/Dhaka'}); }
+    catch(e){ reviewed=formatDate(meta.reviewedAt); }
+  }
+  const comment=String(meta?.reviewComment||'').trim();
+  result.innerHTML=`<div class="doc-review-result-hd"><span>পর্যালোচনা সম্পন্ন</span>${reviewed?`<span class="doc-review-result-date">${esc(reviewed)}</span>`:''}</div><div class="doc-review-result-text">${comment?esc(comment):'কোনো মন্তব্য দেওয়া হয়নি।'}</div>`;
+  result.style.display='block';
+}
 function renderChatExams(){
   const el=document.getElementById('csp-exam'); if(!el||!curChat) return;
   const quizzes=API.Exams.getQuizzes().filter(q=>q.assigneeIds?.includes(curChat));
@@ -2294,7 +2331,7 @@ async function openDocPreview(docId, markAsRead){
   }
   const btn=document.getElementById('docDownloadBtn');
   btn.style.display=data?'block':'none';
-  document.getElementById('docReviewBtn').style.display=meta.reviewStatus==='pending'?'block':'none';
+  renderDocReviewState(meta);
   if(markAsRead){ API.Docs.markRead(docId); updateDocBadge(); }
   openModal('docPreviewModal');
 }
@@ -3465,7 +3502,7 @@ function renderDocItem(d){
       <div class="doc-meta">${isPending?'<span class="doc-pending-badge">বাকি</span>':''}<span class="doc-cat-badge">${catLabel}</span>${formatBytes(d.fileSize)} · ${formatDate(d.uploadedAt)}</div>
     </div>
     <div class="doc-actions">
-      ${isPending?`<button class="doc-btn done" onclick="markDocReviewed('${d.id}')" title="সম্পন্ন করুন" aria-label="সম্পন্ন"><span class="ic-svg">${_svgCheck}</span></button>`:''}
+      ${isPending?`<button class="doc-btn done" onclick="previewDoc('${d.id}')" title="রিভিউ করুন" aria-label="রিভিউ করুন"><span class="ic-svg">${_svgCheck}</span></button>`:''}
       <button class="doc-btn view" onclick="previewDoc('${d.id}')" title="দেখুন" aria-label="দেখুন"><span class="ic-svg">${_svgEye}</span></button>
       <button class="doc-btn del"  onclick="deleteDoc('${d.id}')" title="মুছুন" aria-label="মুছুন"><span class="ic-svg">${_svgTrash}</span></button>
     </div>
@@ -3486,17 +3523,26 @@ function toggleDocGroup(grpId, sid){
   }
 }
 function previewDoc(id){ openDocPreview(id, true); }
-async function markDocReviewed(id){
+async function markDocReviewed(id,comment=''){
   const d=API.Docs.getById(id);
   try{
-    await API.Docs.markReviewed(id);
+    await API.Docs.markReviewed(id,comment);
     if(d&&d.studentId) docExpandedSid=d.studentId;
     renderDocsGrouped();
     updateDocBadge();
     showToast('✅ পর্যালোচনা সম্পন্ন');
   }catch(e){ console.error(e); showToast('❌ আপডেট হয়নি'); }
 }
-function markDocReviewedFromPreview(){ if(!curPreviewDocId) return; markDocReviewed(curPreviewDocId); document.getElementById('docReviewBtn').style.display='none'; const el=document.getElementById('ditem_'+curPreviewDocId); if(el) el.querySelector('.doc-pending-badge')?.remove(); }
+async function markDocReviewedFromPreview(){
+  if(!curPreviewDocId) return;
+  const btn=document.getElementById('docReviewBtn');
+  const comment=(document.getElementById('docReviewComment')?.value||'').trim();
+  if(btn){ btn.disabled=true; btn.textContent='পাঠানো হচ্ছে…'; }
+  await markDocReviewed(curPreviewDocId,comment);
+  const meta=API.Docs.getById(curPreviewDocId);
+  if(meta&&meta.reviewStatus==='done') renderDocReviewState(meta);
+  else if(btn){ btn.disabled=false; btn.textContent='রিভিউ সম্পূর্ণ ও পাঠান'; }
+}
 async function triggerDocDownload(){
   const meta=API.Docs.getById(curPreviewDocId);
   if(!meta) return;

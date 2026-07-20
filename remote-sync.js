@@ -209,7 +209,9 @@
       fileName: d.file_name, fileType: d.file_type || '', fileSize: d.file_size || 0,
       category: d.category || 'general', note: d.note || '',
       storage_path: d.storage_path, fileUrl: d.file_url, read: d.is_read || false,
-      uploadedAt: d.uploaded_at || '', reviewStatus: d.review_status || 'done' }));
+      uploadedAt: d.uploaded_at || '', reviewStatus: d.review_status || 'done',
+      reviewComment: d.review_comment || '', reviewedAt: d.reviewed_at || '',
+      reviewMessageId: d.review_message_id || '' }));
     const academic = {}, tnotes = {};
     (bundle.academic_history || []).forEach(ah => {
       (academic[ah.student_id] = academic[ah.student_id] || []).push(
@@ -306,7 +308,9 @@
       fileName: d.file_name, fileType: d.file_type || '', fileSize: d.file_size || 0,
       category: d.category || 'general', note: d.note || '',
       storage_path: d.storage_path, fileUrl: d.file_url, read: d.is_read || false,
-      uploadedAt: d.uploaded_at || '', reviewStatus: d.review_status || 'done' }));
+      uploadedAt: d.uploaded_at || '', reviewStatus: d.review_status || 'done',
+      reviewComment: d.review_comment || '', reviewedAt: d.reviewed_at || '',
+      reviewMessageId: d.review_message_id || '' }));
     const academic = {};
     (bundle.academic_history || []).forEach(ah => {
       (academic[ah.student_id] = academic[ah.student_id] || []).push(
@@ -381,13 +385,22 @@
     } catch (e) { console.error('flushAllFromMem:', e); }
   }
 
-  async function markDocReviewedRemote(docId) {
+  async function markDocReviewedRemote(docId, comment, messageId) {
     if (!usesSecureKv()) return;
     const sb = getClient(); if (!sb) throw new Error('remote_unavailable');
     const pin = _teacherPin; if (!pin) throw new Error('missing_pin');
-    await rpcOrThrow(sb, 'madrasa_rel_mark_doc_reviewed', { p_teacher_pin: pin, p_doc_id: docId });
+    const res=await rpcOrThrow(sb, 'madrasa_rel_review_document', {
+      p_teacher_pin: pin, p_doc_id: docId,
+      p_comment: String(comment || ''), p_message_id: messageId,
+    });
     const d = (mem.docs || []).find(x => x.id === docId);
-    if (d) { d.reviewStatus = 'done'; d.read = true; }
+    if (d) {
+      d.reviewStatus = 'done'; d.read = true;
+      d.reviewComment = res?.review_comment || '';
+      d.reviewedAt = res?.reviewed_at || new Date().toISOString();
+      d.reviewMessageId = res?.message_id || messageId || '';
+    }
+    return res;
   }
 
   async function markMessagesReadRemote(threadId, roleStr) {

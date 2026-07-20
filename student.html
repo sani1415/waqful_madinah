@@ -283,6 +283,7 @@
 .stu-doc-upload-arrow{color:#94a3b8;flex-shrink:0;line-height:0}
 .stu-doc-upload-arrow svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .stu-doc-preview{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:12px;margin-bottom:12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.stu-doc-review-note{margin-top:6px;padding:7px 9px;border-radius:9px;background:#ecfdf5;color:#166534;font-size:11px;font-weight:650;line-height:1.45;white-space:pre-wrap}
 .stu-doc-sec{font-size:11px;font-weight:700;color:#94a3b8;letter-spacing:.04em;margin:4px 2px 8px}
 .stu-doc-list{display:flex;flex-direction:column;gap:6px}
 .stu-doc-row{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #f1f5f9;border-radius:12px;padding:10px 12px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
@@ -2007,6 +2008,7 @@ function renderSentDocs(){
       <div class="stu-doc-row-mid">
         <div class="stu-doc-row-name">${esc(d.fileName)}</div>
         <div class="stu-doc-row-meta"><span class="stu-doc-pill">${esc(catLabel[d.category]||d.category||'সাধারণ')}</span><span>${formatBytes(d.fileSize)}</span><span>·</span><span>${formatDate(d.uploadedAt)}</span><span>·</span>${st}</div>
+        ${d.reviewStatus==='done'&&d.reviewComment?`<div class="stu-doc-review-note"><strong>উস্তাদের মন্তব্য:</strong> ${esc(d.reviewComment)}</div>`:''}
       </div>
     </div>`;
   }).join('');
