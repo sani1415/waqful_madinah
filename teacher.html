@@ -290,7 +290,7 @@
 .biboron-hint--tools{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:38px}
 .biboron-hint-text{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.35}
 .biboron-hint strong{color:var(--gray-700);font-weight:700}
-#biboronSummary .summary-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:8px 14px 0}
+#biboronSummary .summary-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:8px 14px 0}
 #biboronSummary .summary-card{min-width:0;border-radius:12px;padding:9px 4px 8px}
 #biboronSummary .sc-val{font-size:17px;line-height:1}
 #biboronSummary .sc-lbl{font-size:10px;font-weight:700;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -351,10 +351,6 @@
 .s-name-meta{display:inline;font-size:12px;font-weight:500;color:var(--gray-500);line-height:1.3;padding:0 1px}
 .s-name-meta.stu-today--zero{color:#C62828!important;font-weight:700}
 .s-name-meta.stu-today--done{color:var(--gray-500)!important;font-weight:600}
-#screen-students .s-name{font-size:14px;font-weight:600;line-height:1.3;overflow:visible}
-#screen-students .s-info{overflow:visible;min-width:0}
-#screen-students .list-scroll{overflow-x:visible}
-#screen-students .stu-flag-ic{flex:0 0 auto;margin-left:0}
 #screen-chats .chat-name-wrap{display:flex;align-items:baseline;gap:6px;min-width:0;flex:1;overflow:hidden}
 #screen-chats .chat-name{font-size:14px;font-weight:600;line-height:1.3;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #screen-chats .chat-waqf{font-size:12px;font-weight:600;color:#128C7E;flex-shrink:0;line-height:1.3}
@@ -617,15 +613,9 @@
 
 <!-- ══ CHATS ══════════════════════════════════════════════ -->
 <div class="screen active" id="screen-chats">
-  <div class="list-scroll" id="chatList"></div>
-</div>
-
-<!-- ══ STUDENTS / বিবরণ ════════════════════════════════════ -->
-<div class="screen" id="screen-students">
   <div id="biboronSummary"></div>
   <div class="biboron-detail-panel" id="biboronDetailPanel"></div>
-  <div class="biboron-hint" id="biboronHint"></div>
-  <div class="list-scroll" id="studentList"></div>
+  <div class="list-scroll" id="chatList"></div>
 </div>
 
 <!-- ══ TASKS ══════════════════════════════════════════════ -->
@@ -915,8 +905,7 @@
 <!-- ══ ফ্লোটিং নিচের ট্যাব বার ═══════════════════════════════ -->
 <nav id="teaBottomNav" class="tea-float-nav-wrap" aria-label="প্রধান মেনু">
   <div class="tea-float-nav-inner">
-    <button type="button" class="tab-btn active" onclick="goTab('chats')"    id="tab-chats"><span class="tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5a8.5 8.5 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.5 8.5 0 01-3.8-.9L3 21l1.9-5.7a8.5 8.5 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.5 8.5 0 013.8-.9h.5a8.5 8.5 0 018 8v.5z"/></svg></span><span class="tab-lbl">রিসালা</span><span class="tab-badge tab-badge--sched" id="schedBadge" title="সময়সূচি অনুমোদন"></span></button>
-    <button type="button" class="tab-btn"        onclick="goTab('students')" id="tab-students"><span class="tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></span><span class="tab-lbl">বিবরণ</span></button>
+    <button type="button" class="tab-btn active" onclick="goTab('chats')"    id="tab-chats"><span class="tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11.5a4.5 4.5 0 01-4.5 4.5H17l-3 2 1-3a4.5 4.5 0 117-3.5z"/></svg></span><span class="tab-lbl">ছাত্র</span><span class="tab-badge tab-badge--sched" id="schedBadge" title="সময়সূচি অনুমোদন"></span></button>
     <button type="button" class="tab-btn"        onclick="goTab('tasks')"    id="tab-tasks"><span class="tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M9 12h6M9 16h6"/></svg></span><span class="tab-lbl">আমল</span><span class="tab-badge" id="tBadge"></span></button>
     <button type="button" class="tab-btn"        onclick="goTab('exams')"    id="tab-exams"><span class="tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="15" y2="11"/></svg></span><span class="tab-lbl">পরীক্ষা</span></button>
     <button type="button" class="tab-btn"        onclick="goTab('docs')"     id="tab-docs"><span class="tab-ic" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></span><span class="tab-lbl">ডকুমেন্ট</span><span class="tab-badge" id="docBadge"></span></button>
@@ -1404,7 +1393,7 @@ function refreshBCReadCounts(){
   }
 }
 function renderAll(){
-  renderChatList(); renderBiboronSummary(); renderStudentList(); renderTaskList(); renderQuizList(); renderDocsGrouped(); updateBadge(); updateDocBadge();
+  renderBiboronSummary(); renderChatList(); renderTaskList(); renderQuizList(); renderDocsGrouped(); updateBadge(); updateDocBadge();
   syncAppBadge();
   refreshBCReadCounts();
   if(curChat){
@@ -1428,6 +1417,7 @@ function onGlobalMsgSearchInput(v){
   const box=document.getElementById('globalMsgSearchResults');
   if(!box) return;
   const q=String(v||'').trim();
+  if(biboronDetailMode) showBiboronDetail('');
   if(!q){ hideGlobalMsgSearchResults(); renderChatList(''); return; }
   // Always filter chat list by name/waqf
   renderChatList(q);
@@ -1681,8 +1671,7 @@ function closeChat(){
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   const tabBtn=document.getElementById('tab-'+curTab);
   if(tabBtn) tabBtn.classList.add('active');
-  if(curTab==='students') renderStudentList();
-  else if(curTab==='chats') renderChatList('');
+  if(curTab==='chats'){ renderBiboronSummary(); renderChatList(''); }
   updateBadge();
   syncHeaderBtns();
   });
@@ -2644,6 +2633,7 @@ function renderBiboronSummary(){
   const msgNeed=(s.unreadMessages||0)+(s.pendingSched||0);
   el.innerHTML=`<div class="biboron-meta">গতকাল · ${esc(s.dateLabel)} · ${esc(s.progressLabel)}</div>
   <div class="summary-cards">
+    ${biboronSummaryCard('orange',API.Students.getAll().length,'সকল ছাত্র','')}
     ${biboronSummaryCard('blue',`${s.dayPct!=null?s.dayPct:s.todayPct}%`,'আমল','amal')}
     ${biboronSummaryCard('green',msgNeed,'রিসালা','msg')}
     ${biboronSummaryCard('red',(s.pendingQuiz||0)+(s.manualQuiz||0),'পরীক্ষা','quiz')}
@@ -2705,9 +2695,7 @@ function biboronDetailRows(mode){
   });
 }
 function setBiboronListVisible(show){
-  const hint=document.getElementById('biboronHint');
-  const list=document.getElementById('studentList');
-  if(hint) hint.style.display=show?'':'none';
+  const list=document.getElementById('chatList');
   if(list) list.style.display=show?'':'none';
 }
 function renderBiboronDetailPanel(){
@@ -2903,6 +2891,7 @@ function renderStudentList(){
   }
   renderBiboronHint(list);
   const listEl=document.getElementById('studentList');
+  if(!listEl) return;
   if(!list.length){
     listEl.innerHTML=`<div class="empty-state"><div class="icon"><span class="ic-svg"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></span></div><p>${studentPctSort==='yesterday'?'গতকাল সবাই সম্পন্ন!':'ছাত্র নেই।'}</p></div>`;
     return;
@@ -3721,6 +3710,7 @@ function toggleDiary(){
 }
 function goTab(tab, opts){
   uiViewTransition(()=>{
+  if(tab==='students') tab='chats';
   if((tab==='settings'||tab==='diary')&&curTab!=='settings'&&curTab!=='diary')
     _tabBeforeHeader=curTab||'chats';
   curTab=tab;
@@ -3763,7 +3753,7 @@ function goTab(tab, opts){
   document.getElementById('fab').style.display=(tab==='settings'||tab==='diary')?'none':'flex';
   if(tab==='settings'){ goSettingsTab(settingsTab||'profile'); }
   if(tab==='diary'){ renderDiaryList(); }
-  if(tab==='students'){ renderBiboronSummary(); renderStudentList(); }
+  if(tab==='chats'){ renderBiboronSummary(); renderChatList(''); }
   if(tab==='exams')  { renderQuizList(); goExamTab('list'); }
   if(tab==='docs')   { renderDocsGrouped(); }
   if(tab==='tasks')  { if(_amalTab==='overview') renderAmalOverview(); else if(_amalTab==='students') renderAmalLeaderboard(); else renderTaskList(); }
@@ -3771,8 +3761,7 @@ function goTab(tab, opts){
   });
 }
 function fabClick(){
-  if(curTab==='students') openModal('addStudentModal');
-  else if(curTab==='tasks') openAddTask();
+  if(curTab==='tasks') openAddTask();
   else if(curTab==='exams') goExamTab('create', document.querySelectorAll('.exam-tab-btn')[1]);
   else openModal('fabMenu');
 }
